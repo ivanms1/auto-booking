@@ -1,25 +1,23 @@
 import React from 'react';
-import Button from '../components/Button';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Home from '../components/Home'
 
-const Home = () => (
-  <div>
-      <h1>Hello Marc</h1>
-      <Button></Button>
-    </div>
-)
+const router = createBrowserRouter([
+  {
+    id: 'root',
+    path: '/',
+    element: <Home />,
+  },
+]);
 
 function App(): JSX.Element {
   return (
-    <Router>
-      <div>
-        <Link  to="/">home</Link>
-      </div>
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </Router>
+    <div>
+      <RouterProvider
+        router={router}
+        fallbackElement={<p>Initial Load...</p>}
+      />
+    </div>
   );
 }
 
