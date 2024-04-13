@@ -12,12 +12,12 @@ export class BookingController {
     return this.bookingService.booking(id);
   }
 
-  @Get('')
+  @Get()
   async getBookings(@Param() params: SearchBookingsDto): Promise<Booking[]> {
     return this.bookingService.bookings(params);
   }
 
-  @Post('bookings')
+  @Post()
   async createBooking(
     @Body() data: Prisma.BookingCreateInput
   ): Promise<Booking> {

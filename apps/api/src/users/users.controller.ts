@@ -12,7 +12,7 @@ export class UserController {
     return this.userService.user(id);
   }
 
-  @Get('')
+  @Get()
   async getUsers(@Param() params: SearchUsersDto): Promise<User[]> {
     return this.userService.users(params);
   }
