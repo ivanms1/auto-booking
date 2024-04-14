@@ -5,7 +5,7 @@ import Input from '../../Input';
 const Home = () => (
   <div>
     <h1>Hello Marc</h1>
-    <Input></Input>
+    <Input placeholder='Hola'/>
     <Button title='Hola Mundo'/>
   </div>
 );

@@ -1,21 +1,20 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 import styles from './Layout.module.css';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-function Layout({ children }: LayoutProps) {
+function Layout() {
   return (
     <div className={styles.layout}>
       <Sidebar />
       <main className={styles.content}>
         <Navbar />
-        <div className={styles.children}> {children}</div>
+        <div className={styles.children}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

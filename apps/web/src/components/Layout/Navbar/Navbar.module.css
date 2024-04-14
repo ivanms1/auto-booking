@@ -1,5 +1,20 @@
 .navbar {
   display: flex;
-  padding: 1rem;
-  background-color: aliceblue;
+  padding: 10px;
+  background-color: var(--ligh);
+  justify-content: space-between;
+  flex-direction: row;
+}
+.search {
+  flex: 1; /* Para que el elemento de búsqueda ocupe el espacio restante */
+}
+
+.icons {
+  display: flex;
+}
+
+.icon {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
