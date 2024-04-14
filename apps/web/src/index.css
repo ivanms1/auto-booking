@@ -25,3 +25,14 @@ html {
 body {
   margin: 0;
 }
+
+:root {
+  --primary: #624BFF;
+  --secondary: #6C757D;
+  --success: #198754;
+  --danger: #DC3545;
+  --warning: #FFC107;
+  --info: #0DCAF0;
+  --ligh: #F8F9FA;
+  --dark: #212529;
+}
