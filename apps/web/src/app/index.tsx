@@ -1,6 +1,8 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from '../components/Home'
+
+import Home from '../components/Home';
+import Layout from '../components/Layout';
 
 const router = createBrowserRouter([
   {
@@ -12,12 +14,12 @@ const router = createBrowserRouter([
 
 function App(): JSX.Element {
   return (
-    <div>
+    <Layout>
       <RouterProvider
         router={router}
         fallbackElement={<p>Initial Load...</p>}
       />
-    </div>
+    </Layout>
   );
 }
 
