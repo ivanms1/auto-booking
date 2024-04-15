@@ -1,11 +1,11 @@
 import React from 'react';
 import styles from './Navbar.module.css';
-import Input from '../../Input';
+import Input from 'src/components/Input';
 /// <reference types="vite-plugin-svgr/client" />
 
 
-import Bell  from "../../../../assets/svg/bell.svg?react";
-import ProfilePicture from "../../../../assets/svg/profile.svg?react";
+import Bell  from "/assets/svg/bell.svg?react";
+import ProfilePicture from "/assets/svg/profile.svg?react";
 
 import { useNavigate } from 'react-router-dom';
 
