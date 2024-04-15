@@ -6,12 +6,8 @@
   border-radius: 1px;
 }
 
-.ul {
-  color: var(--ligh);
-}
-
 .title {
-  color: var(--ligh);
+  color: var(--light);
   font-weight: bold;
   font-size: 20px;
 }
@@ -20,4 +16,9 @@
   padding-top: 20px;
   list-style: none;
   font-weight: bold;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--light);
 }

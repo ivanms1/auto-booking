@@ -1,7 +1,7 @@
 .navbar {
   display: flex;
   padding: 10px;
-  background-color: var(--ligh);
+  background-color: var(--light);
   justify-content: space-between;
   flex-direction: row;
 }

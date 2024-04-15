@@ -1,12 +1,16 @@
 import React from 'react';
 import styles from './Navbar.module.css';
-import Input from '../../../Input';
-import ProfilePicture from '../../Icons/Profile';
-import Bell from '../../Icons/Bell';
+import Input from '../../Input';
+/// <reference types="vite-plugin-svgr/client" />
+
+
+//import Bell  from "../../svg/bell.svg?react";
+//import ProfilePicture from "../../svg/profile.svg?react"; Aquí está el error en estos dos componentes
+
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function handleClick(route: string) {
     navigate(route);

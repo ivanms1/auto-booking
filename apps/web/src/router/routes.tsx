@@ -1,13 +1,13 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Documentation from '../routes/Documentation';
-import Pages from '../routes/Pages';
-import Dashboard from '../routes/Dashboard';
-import Home from '../Home';
-import Layout from '../Layout';
-import Profile from '../routes/Profile';
+import Layout from '../components/Layout';
+import Home from '../components/Home';
+import Documentation from '../components/Dashboard/Documentation';
+import Pages from '../components/Dashboard/Pages';
+import Profile from '../components/Dashboard/Profile';
+import Features from '../components/Dashboard/Features';
 
-const browserRouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     id: 'root',
 
@@ -34,9 +34,9 @@ const browserRouter = createBrowserRouter([
         element: <Pages />,
       },
       {
-        id: 'dashboard',
-        path: '/dashboard',
-        element: <Dashboard />,
+        id: 'features',
+        path: '/features',
+        element: <Features />,
       },
       {
         id: 'profile',
@@ -47,4 +47,4 @@ const browserRouter = createBrowserRouter([
   },
 ]);
 
-export default browserRouter;
+export default router;

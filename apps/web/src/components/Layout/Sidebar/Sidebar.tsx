@@ -1,23 +1,16 @@
 import React from 'react';
 import styles from './Sidebar.module.css';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+const ITEMS = [{label: 'HOME', path: '/'}, {label: 'FEATURES', path: '/features'}, {label: 'DOCUMENTATION', path: '/documentation'}, {label: 'PAGES', path: '/pages'}]
 
 function Sidebar() {
-  const navigate = useNavigate();
-
-  function handleClick(route: string) {
-    navigate(route);
-  }
 
   return (
     <div className={styles.sidebar}>
       <p className={styles.title}>SIDEBAR</p>
-      <ul className={styles.ul}>
-        <li className={styles.li} onClick={() => handleClick('/')}>HOME</li>
-        <li className={styles.li} onClick={() => handleClick('/dashboard')}>DASHBOARD</li>
-        <li className={styles.li} onClick={() => handleClick('/documentation')}>DOCUMENTATION</li>
-        <li className={styles.li} onClick={() => handleClick('/pages')}>PAGES</li>
+      <ul>
+        {ITEMS.map((item, i) => (<li key={i}  className={styles.li} ><Link to={item.path} className={styles.link}>{item.label}</Link></li>))}
       </ul>
 
     </div>
