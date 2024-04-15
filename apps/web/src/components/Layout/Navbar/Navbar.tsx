@@ -4,8 +4,8 @@ import Input from '../../Input';
 /// <reference types="vite-plugin-svgr/client" />
 
 
-//import Bell  from "../../svg/bell.svg?react";
-//import ProfilePicture from "../../svg/profile.svg?react"; Aquí está el error en estos dos componentes
+import Bell  from "../../../../assets/svg/bell.svg?react";
+import ProfilePicture from "../../../../assets/svg/profile.svg?react";
 
 import { useNavigate } from 'react-router-dom';
 
