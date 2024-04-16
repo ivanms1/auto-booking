@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "prettier": "^3.2.5",
-    "turbo": "latest"
+    "turbo": "latest",
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "engines": {
     "node": ">=18"

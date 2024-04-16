@@ -1,13 +1,13 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Layout from 'src/components/Layout';
-import Home from 'src/components/Home';
-import Documentation from 'src/components/Dashboard/Documentation';
-import Pages from 'src/components/Dashboard/Pages';
-import Profile from 'src/components/Dashboard/Profile';
-import Features from 'src/components/Dashboard/Features';
+import Layout from '@/components/Layout';
+import Users from '@/pages/Users';
+import Bookings from '@/pages/Bookings';
+import Home from '@/pages/Home';
+import Profile from '@/pages/Profile';
+import Login from '@/pages/Login';
 
-const router = createBrowserRouter([
+const routerPath = createBrowserRouter([
   {
     id: 'root',
 
@@ -24,27 +24,27 @@ const router = createBrowserRouter([
         element: <p>About</p>,
       },
       {
-        id: 'documentation',
-        path: '/documentation',
-        element: <Documentation />,
+        id: 'users',
+        path: '/users',
+        element: <Users />,
       },
       {
-        id: 'pages',
-        path: '/pages',
-        element: <Pages />,
-      },
-      {
-        id: 'features',
-        path: '/features',
-        element: <Features />,
+        id: 'bookings',
+        path: '/bookings',
+        element: <Bookings />,
       },
       {
         id: 'profile',
         path: '/profile',
         element: <Profile />,
       },
+      {
+        id: 'login',
+        path: '/login',
+        element: <Login />,
+      },
     ],
   },
 ]);
 
-export default router;
+export default routerPath;

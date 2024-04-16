@@ -1,11 +1,11 @@
 import React from 'react';
 import { RouterProvider } from 'react-router-dom';
-import router from 'src/router/routes';
+import routerPath from '@/router/routes';
 
 function App(): JSX.Element {
   return (
     <RouterProvider
-      router={router}
+      router={routerPath}
       fallbackElement={<p>Initial Load...</p>}
     />
   );

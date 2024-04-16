@@ -4,7 +4,14 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": ".",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "components/*": ["components/*"],
+      "hooks/*": ["hooks/*"],
+      "pages/*": ["pages/*"],
+      "assets/*": ["assets/*"],
+    },
     "moduleResolution": "Bundler",
     "types": ["vite/client", "vite-plugin-svgr/client"]
   },
