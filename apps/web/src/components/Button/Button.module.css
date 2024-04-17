@@ -1,8 +1,9 @@
 .button {
   padding: 10px 20px;
-  background-color: var(--info);
+  margin: 30px 30px 30px 30px;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  background-color: var(--success);
 }
