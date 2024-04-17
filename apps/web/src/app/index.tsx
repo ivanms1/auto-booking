@@ -1,23 +1,13 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from '../components/Home'
-
-const router = createBrowserRouter([
-  {
-    id: 'root',
-    path: '/',
-    element: <Home />,
-  },
-]);
+import { RouterProvider } from 'react-router-dom';
+import routerPath from '@/router/routes';
 
 function App(): JSX.Element {
   return (
-    <div>
-      <RouterProvider
-        router={router}
-        fallbackElement={<p>Initial Load...</p>}
-      />
-    </div>
+    <RouterProvider
+      router={routerPath}
+      fallbackElement={<p>Initial Load...</p>}
+    />
   );
 }
 
