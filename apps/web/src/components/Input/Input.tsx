@@ -1,10 +1,15 @@
 import React from 'react';
 import styles from './Input.module.css'
+import classNames from 'classnames';
 
-function Input ({ placeholder }: { placeholder: string }) {
+type InputProps = {
+  className?: string,
+  placeholder?: string
+}
+function Input ({ className, placeholder = '' }: InputProps) {
   
   return (
-    <input className={styles.input} placeholder={placeholder} />
+    <input className={classNames(styles.input, className)} placeholder={placeholder}/>
   )
 }
 

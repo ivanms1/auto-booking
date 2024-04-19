@@ -1,9 +1,100 @@
 .button {
-  padding: 10px 20px;
-  margin: 30px;
+  display: flex;
   color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
+}
+
+.md {
+  border-radius: 4px;
+  height: 30px;
+  width: 104px;
+  padding: 8px 12px 8px 12px;
+}
+
+.lg {
+  border-radius: 8px;
+  font-size: 18px;
+  height: 48px;
+  width: 155px;
+  padding: 15px 24px 15px 24px;
+}
+
+.primary {
+  background-color: var(--primary);
+}
+
+.secondary {
+  background-color: var(--secondary);
+}
+
+.success {
   background-color: var(--success);
+}
+
+.danger {
+  background-color: var(--danger);
+}
+.warning {
+  background-color: var(--warning);
+}
+.info {
+  background-color: var(--info);
+}
+.dark {
+  background-color: var(--dark);
+}
+.light {
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.outline {
+  background-color: var(--ligth);
+  border-style: solid;
+  border-width: 1px;
+}
+
+.outline.primary {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.outline.secondary {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.outline.success {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.outline.danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.outline.warning {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.outline.info {
+  border-color: var(--info);
+  color: var(--info);
+}
+
+.outline.dark {
+  border-color: var(--dark);
+  color: var(--dark);
+}
+
+.outline.light {
+  border-color: var(--light);
+  color: var(--light);
 }

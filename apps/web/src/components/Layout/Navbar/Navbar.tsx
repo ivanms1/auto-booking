@@ -15,7 +15,7 @@ function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.search}>
-        <Input placeholder='Search' />
+        <Input placeholder='Search' className={styles.inputSearch}/>
       </div>
       <div className={styles.icons}>
         <div className={styles.icon}>
