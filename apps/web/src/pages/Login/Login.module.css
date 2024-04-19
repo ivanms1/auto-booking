@@ -1,0 +1,36 @@
+.main{
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 50px);
+  width: 100%;
+}
+
+.box {
+  display: flex;
+  height: 400px;
+  width: 369px;
+  background-color: var(--light);
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--dark);
+  border-radius: 10px;
+  flex-direction: column;
+}
+
+.footer {
+  display: flex;;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.username{
+  margin: 30px 30px 30px 30px;
+}
+
+.wordfooter1 {
+  margin-left: 6px;
+}
+
+.wordfooter2 {
+  margin-right: 6px;
+}
