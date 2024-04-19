@@ -15,7 +15,7 @@ function Login() {
           <p>Password</p>
           <Input placeholder=''></Input>
         </div>
-        <Button title='Sign In' ></Button>
+        <Button title='Sign In'></Button>
         <div className={styles.footer}>
           <p className={styles.wordfooter1}>Create an Account</p>
           <p className={styles.wordfooter2}>Forgot Password</p>
