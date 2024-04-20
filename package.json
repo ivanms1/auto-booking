@@ -5,6 +5,7 @@
     "clean": "turbo run clean",
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "start": "turbo run start --filter=api",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck"
