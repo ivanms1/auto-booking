@@ -5,11 +5,12 @@ import classNames from 'classnames';
 type InputProps = {
   className?: string,
   placeholder?: string
-}
-function Input ({ className, placeholder = '' }: InputProps) {
+} & React.InputHTMLAttributes<HTMLInputElement>
+
+function Input ({ className, ...props }: InputProps) {
   
   return (
-    <input className={classNames(styles.input, className)} placeholder={placeholder}/>
+    <input className={classNames(styles.input, className)} {...props}/>
   )
 }
 
