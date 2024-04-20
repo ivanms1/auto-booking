@@ -5,16 +5,28 @@
   width: 100%;
 }
 
+.title {
+  display: flex;
+  justify-content: flex-start;
+  margin: 30px 30px 0 30px;
+}
+
 .box {
   display: flex;
-  height: 400px;
+  height: 420px;
   width: 369px;
-  background-color: var(--light);
+  background-color: white;
   border-style: solid;
   border-width: 1px;
   border-color: var(--dark);
   border-radius: 10px;
   flex-direction: column;
+}
+
+.inputLogin {
+  height: 42px;
+  width: 300px;
+  border-radius: 6px;
 }
 
 .footer {
@@ -24,13 +36,38 @@
 }
 
 .username{
-  margin: 30px 30px 30px 30px;
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0px 20px 0px;
+  align-items: center;
+}
+
+.inputInfo {
+  display: flex;
+  align-self: self-start;
+  margin-bottom: 10px;
+  margin-left: 25px;
 }
 
 .wordfooter1 {
-  margin-left: 6px;
+  margin-top: 30px;
+  margin-left: 25px;
+  color: var(--primary);
 }
 
 .wordfooter2 {
-  margin-right: 6px;
+  margin-right: 25px;
+  margin-top: 30px;
+}
+
+.outsideButton {
+  display: flex;
+  justify-content: center;
+}
+.loginButton {
+  width: 300px;
+  height: 42px;
+  font-size: 18px;
+  padding: 15px 24px 15px 24px;
+  border-radius: 8px;
 }
