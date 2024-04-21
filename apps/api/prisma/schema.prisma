@@ -30,10 +30,18 @@ model Booking {
   id        String   @id @default(cuid())
   startDate DateTime
   endDate   DateTime
-  startMileage Int
-  endMileage Int
-  car       Car      @relation(fields: [carId], references: [id])
+  startMileage Int?
+  endMileage Int?
+  car       Car?      @relation(fields: [carId], references: [id])
   author    User     @relation(fields: [authorId], references: [id])
+  room      Room?     @relation(fields: [roomId], references: [id])
   authorId  String
-  carId     String
+  carId     String?
+  roomId    String?
+}
+
+model Room {
+  id        String @id @default(cuid())
+  name      String
+  bookings  Booking[]
 }
