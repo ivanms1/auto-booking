@@ -1,38 +1,38 @@
 import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
-import { Car } from '@/models/car';
+import { Room } from '@/models/room';
 import { MutateOptions, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { createCar, deleteCar, updateCar } from './request';
+import { createRoom, deleteRoom, updateRoom } from './request';
 
-export function useCreateCar(
+export function useCreateRoom(
   options: MutateOptions<
-    Car,
+    Room,
     AxiosError<Error>,
-    Car,
+    Room,
     DefaultQueryKeyWithoutData
   > = {}
 ) {
   return useMutation({
-    mutationFn: createCar,
+    mutationFn: createRoom,
     ...options,
   });
 }
 
-export function useUpdateCar(
+export function useUpdateRoom(
   onSuccess?: (
-    data: Car,
-    variables: { id: string; data: Car },
+    data: Room,
+    variables: { id: string; data: Room },
     context?: unknown
   ) => void,
   onError?: (error: AxiosError<Error>) => void
 ) {
-  return useMutation<Car, AxiosError<Error>, { id: string; data: Car }>({
-    mutationFn: ({ id, data }) => updateCar(id, data),
+  return useMutation<Room, AxiosError<Error>, { id: string; data: Room }>({
+    mutationFn: ({ id, data }) => updateRoom(id, data),
     onError,
   });
 }
 
-export const useDeleteCar = (
+export const useDeleteRoom = (
   onSuccess?: (
     data: boolean,
     variables: { id: string },
@@ -41,7 +41,7 @@ export const useDeleteCar = (
   onError?: (error: AxiosError<Error>) => void,
 ) => {
   return useMutation<string, AxiosError<Error>, { id: string }>({
-    mutationFn: ({ id }) => deleteCar(id),
+    mutationFn: ({ id }) => deleteRoom(id),
     onError,
   });
 };

@@ -1,8 +1,8 @@
 import { Booking } from "./booking";
 
-export type Car = {
+export type User = {
   id: string;
-  model: string;
-  mileage: number;
+  email: string;
+  name: string;
   bookings: Booking[];
 };
