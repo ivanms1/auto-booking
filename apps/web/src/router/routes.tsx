@@ -8,6 +8,7 @@ import Home from '@/pages/Home';
 import Profile from '@/pages/Profile';
 import Login from '@/pages/Login';
 import Cars from '@/pages/Cars';
+import Rooms from '@/pages/Rooms';
 
 const routerPath = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const routerPath = createBrowserRouter([
         id: 'login',
         path: '/login',
         element: <Login />,
+      },
+      {
+        id: 'rooms',
+        path: '/rooms',
+        element: <Rooms />,
       },
     ],
   },
