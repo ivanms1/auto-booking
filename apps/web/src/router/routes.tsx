@@ -1,16 +1,18 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+
 import Layout from '@/components/Layout';
 import Users from '@/pages/Users';
 import Bookings from '@/pages/Bookings';
 import Home from '@/pages/Home';
 import Profile from '@/pages/Profile';
 import Login from '@/pages/Login';
+import Cars from '@/pages/Cars';
+import Rooms from '@/pages/Rooms';
 
 const routerPath = createBrowserRouter([
   {
     id: 'root',
-
     element: <Layout />,
     children: [
       {
@@ -19,9 +21,9 @@ const routerPath = createBrowserRouter([
         element: <Home />,
       },
       {
-        id: 'about',
-        path: '/about',
-        element: <p>About</p>,
+        id: 'cars',
+        path: '/cars',
+        element: <Cars />,
       },
       {
         id: 'users',
@@ -42,6 +44,11 @@ const routerPath = createBrowserRouter([
         id: 'login',
         path: '/login',
         element: <Login />,
+      },
+      {
+        id: 'rooms',
+        path: '/rooms',
+        element: <Rooms />,
       },
     ],
   },
