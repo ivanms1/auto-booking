@@ -7,12 +7,11 @@ type InputProps = {
   placeholder?: string
 } & React.InputHTMLAttributes<HTMLInputElement>
 
-function Input ({ className, ...props }: InputProps) {
-  
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
   return (
-    <input className={classNames(styles.input, className)} {...props}/>
-  )
-}
+    <input ref={ref} className={classNames(styles.input, className)} {...props}/>
+  );
+});
 
 
 
