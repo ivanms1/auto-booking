@@ -19,6 +19,13 @@ export type BookingsResponse = {
   total_count: number;
 };
 
+type BookingInput = {
+  title: string,
+  authorId: string,
+  startDate: Date,
+  endDate: Date,
+}
+
 export function getBookings(): Promise<Booking[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.bookings.list),
@@ -33,7 +40,7 @@ export function getBooking(id: string): Promise<Booking> {
   });
 }
 
-export function createBooking(data: Booking): Promise<Booking> {
+export function createBooking(data: BookingInput): Promise<Booking> {
   return serviceFetch({
     url: getRoute(API_ROUTES.bookings.create),
     method: METHODS.POST,

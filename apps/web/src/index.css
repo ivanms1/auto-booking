@@ -24,6 +24,7 @@ html {
 
 body {
   margin: 0;
+  background-color: var(--gray);
 }
 
 :root {
@@ -35,4 +36,17 @@ body {
   --info: #0DCAF0;
   --light: #F8F9FA;
   --dark: #212529;
+  --purewhite: #FFFFFF;
+  --gray: #F5F6F8;
+  --100: #f8f9fa;
+  --200: #e9ecef;
+  --300: #dee2e6;
+  --400: #ced4da;
+  --500: #adb5bd;
+  --600: #6c757d;
+  --700: #495057;
+  --800: #343a40;
+  --900: #212529;
+  --black: #000;
+
 }
