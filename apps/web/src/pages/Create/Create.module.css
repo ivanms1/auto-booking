@@ -68,7 +68,7 @@
 }
 
 .inputForm2 {
-  width: 263px;
+  width: 540px;
   height: 42px;
   border-radius: 8px;
   border-color: var(--300);
@@ -81,4 +81,12 @@
 .form {
   display: flex;
   flex-direction: column;
+}
+
+.errorAlert {
+  align-self: center;
+  color: var(--danger);
+  font-size: xx-small;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
 }
