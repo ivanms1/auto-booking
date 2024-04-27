@@ -2,12 +2,12 @@ import React from 'react';
 import styles from './Create.module.css';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 //import { useQueries, useQuery } from '@tanstack/react-query';
-//import { bookingQueryKeys } from '@/services/Create/request';
+import { createBooking} from '@/services/bookings/request';
 
 const bookingSchema = z
   .object({
@@ -63,17 +63,32 @@ const bookingSchema = z
     }
   );
 
-type BookingSchemaType = z.infer<typeof bookingSchema>;
+export type BookingSchemaType = z.infer<typeof bookingSchema>;
 
 function CreateBookings() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<BookingSchemaType>({
     resolver: zodResolver(bookingSchema),
   });
-  console.log(errors);
+
+
+const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
+  console.log(data);
+  const dataToCreate = {
+    authorId: 'clvf2kgvf0000cjxq1pjq3zui',
+    title: data.title,
+    startDate: new Date(data.startDate),
+    endDate: new Date (data.endDate)
+  }
+    const createdBooking = await createBooking(dataToCreate)
+    console.log(createdBooking);
+    reset()
+}
+
 
   return (
     <div className={styles.main}>
@@ -84,9 +99,7 @@ function CreateBookings() {
         <div className={styles.line2}></div>
         <form
           className={styles.form}
-          onSubmit={handleSubmit((data) => {
-            console.log(data);
-          })}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <div className={styles.input1}>
             <label className={styles.formP}>Reservation Title</label>
