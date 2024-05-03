@@ -5,9 +5,11 @@ import Button from '@/components/Button';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-
-//import { useQueries, useQuery } from '@tanstack/react-query';
-import { createBooking} from '@/services/bookings/request';
+import { useQuery } from '@tanstack/react-query';
+import { carQueryKeys } from '@/services/cars/request';
+import { createBooking } from '@/services/bookings/request';
+import { roomQueryKeys } from '@/services/rooms/request';
+import { useEffect } from 'react';
 
 const bookingSchema = z
   .object({
@@ -47,7 +49,8 @@ const bookingSchema = z
       .refine((value) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value), {
         message: 'The date and time must be in the format YYYY-MM-DDTHH:MM',
       }),
-    roomcar: z.string(),
+    bookingType: z.union([z.literal('roomId'), z.literal('carId')]),
+    bookingValue: z.string(),
     description: z.string(),
   })
   .refine(
@@ -67,28 +70,57 @@ export type BookingSchemaType = z.infer<typeof bookingSchema>;
 
 function CreateBookings() {
   const {
+    watch,
     register,
     handleSubmit,
+    setValue,
     reset,
     formState: { errors },
   } = useForm<BookingSchemaType>({
     resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      bookingType: 'roomId',
+      bookingValue: 'clvigv9l60002j61hfge18w9a',
+    },
   });
 
+  console.log(errors);
 
-const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
-  console.log(data);
-  const dataToCreate = {
-    authorId: 'clvf2kgvf0000cjxq1pjq3zui',
-    title: data.title,
-    startDate: new Date(data.startDate),
-    endDate: new Date (data.endDate)
-  }
-    const createdBooking = await createBooking(dataToCreate)
+  const { data: carData } = useQuery({ ...carQueryKeys.list() });
+  const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
+  
+
+  const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
+    const dataToCreate = {
+      [data.bookingType]: data.bookingValue,
+      authorId: 'clvf2kgvf0000cjxq1pjq3zui',
+      title: data.title,
+      startDate: new Date(data.startDate),
+      endDate: new Date(data.endDate),
+    };
+    const createdBooking = await createBooking(dataToCreate);
     console.log(createdBooking);
-    reset()
-}
+    reset();
+  };
 
+  const currentBookingType = watch('bookingType');
+
+  const options =
+    currentBookingType === 'roomId'
+      ? roomData?.map((room) => {
+          return { value: room.id, label: room.name };
+        })
+      : carData?.map((car) => {
+          return { value: car.id, label: car.model };
+        });
+
+  useEffect(() => {
+    if (currentBookingType === 'roomId') {
+      setValue('bookingValue', 'clvigv9l60002j61hfge18w9a');
+    } else {
+      setValue('bookingValue', 'clvigti8u0000j61hesr6qek9')
+    }
+  }, [currentBookingType]);
 
   return (
     <div className={styles.main}>
@@ -97,10 +129,7 @@ const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
       <div className={styles.mainBox}>
         <p className={styles.formTitle}>Booking Form</p>
         <div className={styles.line2}></div>
-        <form
-          className={styles.form}
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.input1}>
             <label className={styles.formP}>Reservation Title</label>
             <Input
@@ -111,7 +140,9 @@ const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
               {...register('title')}
             />
           </div>
-          {errors.title?.message && <p className={styles.errorAlert}>{errors.title.message}</p>}
+          {errors.title?.message && (
+            <p className={styles.errorAlert}>{errors.title.message}</p>
+          )}
           <div className={styles.input1}>
             <label className={styles.formP}>Start date</label>
             <Input
@@ -121,7 +152,9 @@ const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
               {...register('startDate')}
             />
           </div>
-          {errors.startDate?.message && <p className={styles.errorAlert}>{errors.startDate.message}</p>}
+          {errors.startDate?.message && (
+            <p className={styles.errorAlert}>{errors.startDate.message}</p>
+          )}
           <div className={styles.input1}>
             <label className={styles.formP}>End date</label>
             <Input
@@ -131,18 +164,33 @@ const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
               {...register('endDate')}
             />
           </div>
-          {errors.endDate?.message && <p className={styles.errorAlert}>{errors.endDate.message}</p>}
-          <div className={styles.input1}>
-            <label className={styles.formP}>Add Room or Car</label>
-            <Input
-              className={styles.inputForm}
-              type='text'
-              placeholder='Room or Car'
-              id='roomcar'
-              {...register('roomcar')}
-            />
+          {errors.endDate?.message && (
+            <p className={styles.errorAlert}>{errors.endDate.message}</p>
+          )}
+          <div className={styles.inputForm3}>
+            <p className={styles.pradio}>Services</p>
+            <div className={styles.inputRadio}>
+              <div className={styles.radios}>
+                <Input type='radio' value='roomId' {...register('bookingType')} />
+                <label className={styles.labelRadio}>Room</label>
+              </div>
+              <div>
+                <Input type='radio' value='carId' {...register('bookingType')} />
+                <label className={styles.labelRadio}>Car</label>
+              </div>
+              <select className={styles.select} {...register('bookingValue')}>
+                {options?.map((item) => (
+                  <option value={item.value} key={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          {errors.roomcar?.message && <p className={styles.errorAlert}>{errors.roomcar.message}</p>}
+          {errors.bookingType?.message && (
+            <p className={styles.errorAlert}>{errors.bookingType?.message}</p>
+          )}
+
           <div className={styles.input1}>
             <label className={styles.formP}>Description</label>
             <Input
@@ -153,11 +201,14 @@ const onSubmit: SubmitHandler<BookingSchemaType> = async data => {
               {...register('description')}
             />
           </div>
-          {errors.description?.message && <p className={styles.errorAlert}>{errors.description.message}</p>}
+          {errors.description?.message && (
+            <p className={styles.errorAlert}>{errors.description.message}</p>
+          )}
           <Button className={styles.submitButton} type='submit'>
             Submit
           </Button>
         </form>
+        {JSON.stringify(watch(), null, 2)}
       </div>
     </div>
   );
