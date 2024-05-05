@@ -22,6 +22,62 @@ export class BookingService {
   }
 
   async createBooking(data: Prisma.BookingCreateInput): Promise<Booking> {
+    const field = data.room ? 'roomId' : 'carId';
+    const value = data.room || data.car;
+
+    const existingBookings = await this.prisma.booking.findMany({
+      where: {
+        [field]: value,
+        OR: [
+          {
+            AND: [
+              {
+                startDate: {
+                  lte: new Date(data.startDate).toISOString(),
+                },
+                endDate: {
+                  gte: new Date(data.startDate).toISOString(),
+                },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                startDate: {
+                  lte: new Date(data.endDate).toISOString(),
+                },
+                endDate: {
+                  gte: new Date(data.endDate).toISOString(),
+                },
+              },
+            ],
+          },
+          {
+            AND: [
+              {
+                startDate: {
+                  gte: new Date(data.startDate).toISOString(),
+                },
+                endDate: {
+                  lte: new Date(data.endDate).toISOString(),
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    if (existingBookings.length > 0) {
+      throw new Error('The new booking overlaps with another existing booking');
+    }
+    
+
+    data.startDate = new Date(data.startDate).toISOString();
+    data.endDate = new Date(data.endDate).toISOString();
+
+
     return this.prisma.booking.create({
       data,
     });
