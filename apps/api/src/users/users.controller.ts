@@ -1,34 +1,39 @@
-import { Body, Controller, Get, Param, Post, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Put, UseGuards } from '@nestjs/common';
 import { type User, Prisma } from '@prisma/client';
-import { UserService } from './users.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UsersService } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getUser(@Param('id') id: string): Promise<User | null> {
-    return this.userService.user(id);
+    return this.usersService.user(id);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getUsers(@Param() params: SearchUsersDto): Promise<User[]> {
-    return this.userService.users(params);
+    return this.usersService.users(params);
   }
 
   @Post()
   async createUser(@Body() createUser: Prisma.UserCreateInput): Promise<User> {
-    return this.userService.createUser(createUser);
+    return this.usersService.createUser(createUser);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async deleteUser(@Param('id') id: string): Promise <User | null> {
-    return this.userService.deleteUser({id});
+    return this.usersService.deleteUser({id});
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: string, @Body() updateUser: Prisma.UserUpdateInput): Promise <User | null> {
-    return this.userService.updateUser({ where: { id }, data: updateUser })
+    return this.usersService.updateUser({ where: { id }, data: updateUser })
   }
 }
