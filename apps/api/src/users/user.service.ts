@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma.service';
 export const roundsOfHashing = 10;
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async user(id: string): Promise<User | null> {

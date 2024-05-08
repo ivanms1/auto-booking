@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './users/user.module';
 import { BookingModule } from './bookings/bookings.module';
 import { RoomModule } from './rooms/rooms.module';
 import { CarModule } from './cars/cars.module';
