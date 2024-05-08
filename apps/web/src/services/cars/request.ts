@@ -19,6 +19,11 @@ export type CarsResponse = {
   total_count: number;
 };
 
+export type CarInput = {
+  name: string,
+  mileage: number
+}
+
 export function getCars(): Promise<Car[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.cars.list),
@@ -33,7 +38,7 @@ export function getCar(id: string): Promise<Car> {
   });
 }
 
-export function createCar(data: Car): Promise<Car> {
+export function createCar(data: CarInput): Promise<Car> {
   return serviceFetch({
     url: getRoute(API_ROUTES.cars.create),
     method: METHODS.POST,

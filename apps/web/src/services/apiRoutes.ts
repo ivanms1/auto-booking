@@ -27,4 +27,5 @@ export const API_ROUTES = {
     update: '/users/:id',
     delete: '/users/:id',
   },
+  login: '/auth/login'
 } as const;

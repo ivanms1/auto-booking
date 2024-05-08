@@ -2,13 +2,13 @@ import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
 import { Car } from '@/models/car';
 import { MutateOptions, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { createCar, deleteCar, updateCar } from './request';
+import { CarInput, createCar, deleteCar, updateCar } from './request';
 
 export function useCreateCar(
   options: MutateOptions<
     Car,
     AxiosError<Error>,
-    Car,
+    CarInput,
     DefaultQueryKeyWithoutData
   > = {}
 ) {

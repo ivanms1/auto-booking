@@ -3,12 +3,13 @@ import { Booking } from '@/models/booking';
 import { MutateOptions, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { createBooking, deleteBooking, updateBooking } from './request';
+import { BookingInput } from './request';
 
 export function useCreateBooking(
   options: MutateOptions<
     Booking,
     AxiosError<Error>,
-    Booking,
+    BookingInput,
     DefaultQueryKeyWithoutData
   > = {}
 ) {

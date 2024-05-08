@@ -3,6 +3,7 @@ import { Room } from "./room";
 import { User } from "./user";
 
 export type Booking = {
+  title: string;
   id: string;
   startDate: Date;
   endDate: Date;
