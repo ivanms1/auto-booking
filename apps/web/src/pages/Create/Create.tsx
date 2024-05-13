@@ -84,7 +84,7 @@ function CreateBookings() {
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       bookingType: 'roomId',
-      bookingValue: roomData && roomData.length > 0 ? roomData[0].id : '',
+      bookingValue: roomData?.[0]?.id ?? '',
     },
   });
 
