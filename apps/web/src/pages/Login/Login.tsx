@@ -29,11 +29,18 @@ function Login() {
   });
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
-    console.log('data', data);
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        console.log('Login Success');
+        
+        reset();
+      },
+      onError: () => {
+        console.log('Wrong User/Password');
+        
+      }
+    })
     
-    const { accessToken } = await loginMutation.mutateAsync(data);
-    console.log('Inicio de sesión exitoso. Token:', accessToken);
-    reset();
   };
   return (
     <div className={styles.main}>

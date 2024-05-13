@@ -98,8 +98,17 @@ function CreateBookings() {
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
     };
-    const createdBooking = await bookingMutation.mutateAsync(dataToCreate);
-    console.log(createdBooking);
+    bookingMutation.mutate(dataToCreate, {
+      onSuccess: () => {
+           reset()
+           console.log('Successful booking creation');     
+           // TODO: add notification
+      },
+      onError: () => {
+        console.log('Failure booking creation');
+        // TODO: add notification
+      }
+      });
     reset();
   };
 
