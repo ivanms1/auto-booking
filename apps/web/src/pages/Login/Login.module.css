@@ -9,6 +9,7 @@
   display: flex;
   justify-content: flex-start;
   margin: 30px 30px 0 30px;
+  color: var(--500);
 }
 
 .box {
@@ -47,6 +48,7 @@
   align-self: self-start;
   margin-bottom: 10px;
   margin-left: 25px;
+  color: var(--700);
 }
 
 .wordfooter1 {
@@ -70,4 +72,16 @@
   font-size: 18px;
   padding: 15px 24px 15px 24px;
   border-radius: 8px;
+}
+
+.errorAlert {
+  align-self: center;
+  color: var(--danger);
+  font-size: xx-small;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+.form {
+  display: flex;
+  flex-direction: column;
 }

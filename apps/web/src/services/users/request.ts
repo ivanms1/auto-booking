@@ -19,6 +19,12 @@ export type UsersResponse = {
   total_count: number;
 };
 
+export type UserInput = {
+  name: string;
+  email: string;
+  password: string
+}
+
 export function getUsers(): Promise<User[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.users.list),
@@ -33,7 +39,7 @@ export function getUser(id: string): Promise<User> {
   });
 }
 
-export function createUser(data: User): Promise<User> {
+export function createUser(data: UserInput): Promise<User> {
   return serviceFetch({
     url: getRoute(API_ROUTES.users.create),
     method: METHODS.POST,

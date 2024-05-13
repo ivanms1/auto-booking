@@ -7,9 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery } from '@tanstack/react-query';
 import { carQueryKeys } from '@/services/cars/request';
-import { createBooking } from '@/services/bookings/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { useEffect } from 'react';
+import { useCreateBooking } from '@/services/bookings';
 
 const bookingSchema = z
   .object({
@@ -69,6 +69,10 @@ const bookingSchema = z
 export type BookingSchemaType = z.infer<typeof bookingSchema>;
 
 function CreateBookings() {
+  const { data: carData } = useQuery({ ...carQueryKeys.list() });
+  const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
+
+  const bookingMutation = useCreateBooking()
   const {
     watch,
     register,
@@ -80,15 +84,11 @@ function CreateBookings() {
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       bookingType: 'roomId',
-      bookingValue: 'clvigv9l60002j61hfge18w9a',
+      bookingValue: roomData?.[0]?.id ?? '',
     },
   });
 
   console.log(errors);
-
-  const { data: carData } = useQuery({ ...carQueryKeys.list() });
-  const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
-  
 
   const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
     const dataToCreate = {
@@ -98,8 +98,17 @@ function CreateBookings() {
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
     };
-    const createdBooking = await createBooking(dataToCreate);
-    console.log(createdBooking);
+    bookingMutation.mutate(dataToCreate, {
+      onSuccess: () => {
+           reset()
+           console.log('Successful booking creation');     
+           // TODO: add notification
+      },
+      onError: () => {
+        console.log('Failure booking creation');
+        // TODO: add notification
+      }
+      });
     reset();
   };
 
@@ -116,9 +125,9 @@ function CreateBookings() {
 
   useEffect(() => {
     if (currentBookingType === 'roomId') {
-      setValue('bookingValue', 'clvigv9l60002j61hfge18w9a');
+      setValue('bookingValue', roomData && roomData.length > 0 ? roomData[0].id : '');
     } else {
-      setValue('bookingValue', 'clvigti8u0000j61hesr6qek9')
+      setValue('bookingValue', carData && carData.length > 0 ? carData[0].id : '')
     }
   }, [currentBookingType]);
 

@@ -19,7 +19,7 @@ export type BookingsResponse = {
   total_count: number;
 };
 
-type BookingInput = {
+ export type BookingInput = {
   title: string,
   authorId: string,
   startDate: Date,

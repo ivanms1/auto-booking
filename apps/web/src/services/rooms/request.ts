@@ -19,6 +19,10 @@ export type RoomsResponse = {
   total_count: number;
 };
 
+export type RoomInput = {
+  name: string
+}
+
 export function getRooms(): Promise<Room[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.rooms.list),
@@ -33,7 +37,7 @@ export function getRoom(id: string): Promise<Room> {
   });
 }
 
-export function createRoom(data: Room): Promise<Room> {
+export function createRoom(data: RoomInput): Promise<Room> {
   return serviceFetch({
     url: getRoute(API_ROUTES.rooms.create),
     method: METHODS.POST,
