@@ -5,6 +5,7 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
+import { AxiosHeaders } from 'axios';
 
 const METHODS = {
   GET: 'GET',
@@ -29,6 +30,7 @@ export function getUsers(): Promise<User[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.users.list),
     method: METHODS.GET,
+    withCredentials: true,
   });
 }
 
@@ -36,6 +38,7 @@ export function getUser(id: string): Promise<User> {
   return serviceFetch({
     url: getRoute(API_ROUTES.users.detail, { id }),
     method: METHODS.GET,
+    withCredentials: true,
   });
 }
 
