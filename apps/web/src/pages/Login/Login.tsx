@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLogin } from '@/services/login';
+import { useCookies } from 'react-cookie';
 
 
 const loginSchema = z
@@ -17,7 +18,12 @@ const loginSchema = z
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
+
 function Login() {
+
+  const [, setCookie] = useCookies(['accessToken']);
+
+  
   const loginMutation = useLogin()
   const {
     register,
@@ -30,12 +36,15 @@ function Login() {
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        setCookie('accessToken', data.accessToken)
         console.log('Login Success');
         
         reset();
       },
-      onError: () => {
+      onError: (error) => {
+        console.log(error);
+        
         console.log('Wrong User/Password');
         
       }

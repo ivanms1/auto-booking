@@ -27,7 +27,7 @@ export type CarInput = {
 export function getCars(): Promise<Car[]> {
   return serviceFetch({
     url: getRoute(API_ROUTES.cars.list),
-    method: METHODS.GET,
+    method: METHODS.GET
   });
 }
 
