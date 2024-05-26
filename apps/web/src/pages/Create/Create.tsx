@@ -10,6 +10,20 @@ import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { useEffect } from 'react';
 import { useCreateBooking } from '@/services/bookings';
+import { Bounce, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+  import { useCookies } from 'react-cookie';
+
+
+  function parseJwt (token: string) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
 
 const bookingSchema = z
   .object({
@@ -88,28 +102,59 @@ function CreateBookings() {
     },
   });
 
-  console.log(errors);
+  const [Cookies] = useCookies(['accessToken']);
+  const decodedCookie = parseJwt(Cookies?.accessToken)
+
+  
+
+  
+
+  const notifySubmit = (message: string) =>
+    toast.success(message, {
+      position: 'top-left',
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+      transition: Bounce,
+    });
+
+  const errorSubmit = (message: string) => 
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+      });
 
   const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
     const dataToCreate = {
       [data.bookingType]: data.bookingValue,
-      authorId: 'clvf2kgvf0000cjxq1pjq3zui',
+      authorId: decodedCookie.userId,
       title: data.title,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
     };
+    
     bookingMutation.mutate(dataToCreate, {
       onSuccess: () => {
            reset()
-           console.log('Successful booking creation');     
-           // TODO: add notification
+           notifySubmit('Successful booking creation');
       },
-      onError: () => {
-        console.log('Failure booking creation');
-        // TODO: add notification
+      onError: (error) => {
+        console.log(error);
+        errorSubmit('Error Submit')
+        // TODO: edit notification
       }
       });
-    reset();
   };
 
   const currentBookingType = watch('bookingType');

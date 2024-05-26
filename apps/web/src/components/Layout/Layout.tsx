@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 import styles from './Layout.module.css';
+import { ToastContainer } from 'react-toastify';
 
 function Layout() {
   return (
@@ -13,6 +14,7 @@ function Layout() {
       <main className={styles.content}>
         <Navbar />
         <div className={styles.children}>
+          <ToastContainer />
           <Outlet />
         </div>
       </main>
