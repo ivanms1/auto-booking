@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLogin } from '@/services/login';
 import { useCookies } from 'react-cookie';
-import { Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const loginSchema = z.object({
@@ -31,30 +31,10 @@ function Login() {
   });
 
   const notifyLogin = (message: string) =>
-    toast.success(message, {
-      position: 'top-left',
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-      transition: Bounce,
-    });
+    toast.success(message);
 
   const loginError = (message: string) =>
-    toast.error(message, {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-      transition: Bounce,
-    });
+    toast.error(message);
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
     loginMutation.mutate(data, {
@@ -67,6 +47,7 @@ function Login() {
       onError: (error) => {
         const errorMessage = error.response?.data.message ? error.response?.data.message : ''
         loginError(errorMessage)
+        reset()
       },
     });
   };

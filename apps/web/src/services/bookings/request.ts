@@ -21,7 +21,6 @@ export type BookingsResponse = {
 
  export type BookingInput = {
   title: string,
-  authorId: string,
   startDate: Date,
   endDate: Date,
 }

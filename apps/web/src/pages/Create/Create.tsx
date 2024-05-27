@@ -10,20 +10,8 @@ import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { useEffect } from 'react';
 import { useCreateBooking } from '@/services/bookings';
-import { Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-  import { useCookies } from 'react-cookie';
-
-
-  function parseJwt (token: string) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-}
 
 const bookingSchema = z
   .object({
@@ -102,43 +90,16 @@ function CreateBookings() {
     },
   });
 
-  const [Cookies] = useCookies(['accessToken']);
-  const decodedCookie = parseJwt(Cookies?.accessToken)
-
-  
-
-  
 
   const notifySubmit = (message: string) =>
-    toast.success(message, {
-      position: 'top-left',
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'colored',
-      transition: Bounce,
-    });
+    toast.success(message);
 
   const errorSubmit = (message: string) => 
-    toast.error(message, {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      });
+    toast.error(message);
 
   const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
     const dataToCreate = {
       [data.bookingType]: data.bookingValue,
-      authorId: decodedCookie.userId,
       title: data.title,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
@@ -175,6 +136,13 @@ function CreateBookings() {
       setValue('bookingValue', carData && carData.length > 0 ? carData[0].id : '')
     }
   }, [currentBookingType]);
+
+  useEffect(() => {
+    reset({
+      bookingValue: roomData?.[0]?.id ?? '',
+      })
+  
+  }, [roomData])
 
   return (
     <div className={styles.main}>
