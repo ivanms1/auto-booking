@@ -7,6 +7,8 @@ import Navbar from './Navbar';
 import styles from './Layout.module.css';
 import { Bounce, ToastContainer } from 'react-toastify';
 
+const TOAST_AUTOCLOSE = 5000
+
 function Layout() {
   return (
     <div className={styles.layout}>
@@ -16,7 +18,7 @@ function Layout() {
         <div className={styles.children}>
           <ToastContainer
             position='top-center'
-            autoClose={5000}
+            autoClose={TOAST_AUTOCLOSE}
             hideProgressBar
             newestOnTop={false}
             closeOnClick

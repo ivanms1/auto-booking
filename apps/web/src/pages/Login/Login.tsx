@@ -30,23 +30,18 @@ function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const notifyLogin = (message: string) =>
-    toast.success(message);
-
-  const loginError = (message: string) =>
-    toast.error(message);
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setCookie('accessToken', data.accessToken);
-        notifyLogin('Login Succes!');
+        toast.success('Login Succes!');
 
         reset();
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message ? error.response?.data.message : ''
-        loginError(errorMessage)
+        toast.error(errorMessage)
         reset()
       },
     });

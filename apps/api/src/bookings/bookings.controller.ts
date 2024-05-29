@@ -34,8 +34,7 @@ export class BookingController {
     @UserDecoded() user: User,
     @Body() data: Prisma.BookingCreateInput
   ): Promise<Booking> {
-    const updateData = { authorId: user.id, ...data }
-    return this.bookingService.createBooking(updateData);
+    return this.bookingService.createBooking(data, user);
   }
 
   @Delete(':id')
