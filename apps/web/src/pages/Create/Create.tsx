@@ -10,6 +10,8 @@ import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { useEffect } from 'react';
 import { useCreateBooking } from '@/services/bookings';
+import { toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 const bookingSchema = z
   .object({
@@ -88,28 +90,32 @@ function CreateBookings() {
     },
   });
 
-  console.log(errors);
+
+  const notifySubmit = (message: string) =>
+    toast.success(message);
+
+  const errorSubmit = (message: string) => 
+    toast.error(message);
 
   const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
     const dataToCreate = {
       [data.bookingType]: data.bookingValue,
-      authorId: 'clvf2kgvf0000cjxq1pjq3zui',
       title: data.title,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
     };
+    
     bookingMutation.mutate(dataToCreate, {
       onSuccess: () => {
            reset()
-           console.log('Successful booking creation');     
-           // TODO: add notification
+           notifySubmit('Successful booking creation');
       },
-      onError: () => {
-        console.log('Failure booking creation');
-        // TODO: add notification
+      onError: (error) => {
+        console.log(error);
+        errorSubmit('Error Submit')
+        // TODO: edit notification
       }
       });
-    reset();
   };
 
   const currentBookingType = watch('bookingType');
@@ -130,6 +136,13 @@ function CreateBookings() {
       setValue('bookingValue', carData && carData.length > 0 ? carData[0].id : '')
     }
   }, [currentBookingType]);
+
+  useEffect(() => {
+    reset({
+      bookingValue: roomData?.[0]?.id ?? '',
+      })
+  
+  }, [roomData])
 
   return (
     <div className={styles.main}>

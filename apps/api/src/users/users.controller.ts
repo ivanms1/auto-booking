@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { UserService } from './user.service';
+import { UserService } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 
 @Controller('users')
