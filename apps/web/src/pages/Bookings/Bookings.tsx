@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { bookingQueryKeys } from '@/services/bookings/request';
 function Bookings() {
   const { data } = useQuery({ ...bookingQueryKeys.list() });

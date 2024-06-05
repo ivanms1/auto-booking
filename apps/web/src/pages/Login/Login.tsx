@@ -9,6 +9,7 @@ import { useLogin } from '@/services/login';
 import { useCookies } from 'react-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const loginSchema = z.object({
   email: z.string().email('This is not a valid email'),
@@ -19,7 +20,7 @@ export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 function Login() {
   const [, setCookie] = useCookies(['accessToken']);
-
+  const navigate = useNavigate();
   const loginMutation = useLogin();
   const {
     register,
@@ -35,9 +36,9 @@ function Login() {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setCookie('accessToken', data.accessToken);
+        navigate('/');
         toast.success('Login Succes!');
-
-        reset();
+        
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message ? error.response?.data.message : ''

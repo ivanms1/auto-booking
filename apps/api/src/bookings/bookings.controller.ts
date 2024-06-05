@@ -19,11 +19,13 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   async getBooking(@Param('id') id: string): Promise<Booking | null> {
     return this.bookingService.booking(id);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async getBookings(@Param() params: SearchBookingsDto): Promise<Booking[]> {
     return this.bookingService.bookings(params);
   }
@@ -38,11 +40,13 @@ export class BookingController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async deleteBooking(@Param('id') id: string): Promise<Booking | null> {
     return this.bookingService.deleteBooking({ id });
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   async updateBooking(
     @Param('id') id: string,
     @Body() updateBooking: Prisma.BookingUpdateInput

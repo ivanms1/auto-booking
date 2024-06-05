@@ -30,6 +30,7 @@ export class UserController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   async createUser(@Body() createUser: Prisma.UserCreateInput): Promise<User> {
     return this.userService.createUser(createUser);
   }
