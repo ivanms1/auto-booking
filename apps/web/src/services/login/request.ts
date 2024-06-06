@@ -15,9 +15,9 @@ export type LoginResponse = {
 };
 
 export type LoginInput = {
-  email: string,
-  password: string,
-}
+  email: string;
+  password: string;
+};
 
 export function login(data: LoginInput): Promise<LoginResponse> {
   return serviceFetch({
@@ -30,13 +30,13 @@ export function login(data: LoginInput): Promise<LoginResponse> {
 export function authUser(): Promise<User> {
   return serviceFetch({
     url: getRoute(API_ROUTES.authuser),
-    method: METHODS.GET
-  })
+    method: METHODS.GET,
+  });
 }
 
 export const authQueryKey = createQueryKeys(QUERY_KEYS.AUTHUSER, {
   detail: () => ({
     queryKey: ['authuser'],
-    queryFn: () => authUser(),
+    queryFn: authUser,
   }),
 });

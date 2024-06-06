@@ -7,11 +7,12 @@ import { useFloating, offset } from '@floating-ui/react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/components/Button';
-import { QueryCache } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { setToken } from '@/utils/request';
 
 function Navbar() {
   const navigate = useNavigate();
-  const queryCache = new QueryCache()
+  const querClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [_cookies, _setCookie, removeCookie] = useCookies(['accessToken']);
 
@@ -25,10 +26,11 @@ function Navbar() {
     navigate(route);
   }
 
-  function logout(route: string) {
-    removeCookie('accessToken', { path: route });
-    queryCache.clear();
-    navigate('/');
+  function logout() {
+    removeCookie('accessToken');
+    querClient.clear();
+    setToken('');
+    navigate('/login');
   }
   return (
     <nav ref={refs.setReference} className={styles.navbar}>
@@ -53,7 +55,7 @@ function Navbar() {
               <Button onClick={() => handleClick('/profile')} variant='primary'>
                 Profile
               </Button>
-              <Button onClick={() => logout('/')} variant='danger'>
+              <Button onClick={() => logout()} variant='danger'>
                 Logout
               </Button>
             </div>
