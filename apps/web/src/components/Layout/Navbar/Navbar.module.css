@@ -23,3 +23,22 @@
   height: 42px;
   width: 282px;
 }
+
+.floatingModule {
+  display: flex;
+  width: 250px;
+  height: 200px;
+  border-radius: 8px;
+  background-color: var(--purewhite);
+  flex-direction: column;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.imageInside {
+  margin: 40px 10px 50px 10px;
+}

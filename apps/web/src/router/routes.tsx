@@ -10,53 +10,60 @@ import Login from '@/pages/Login';
 import Cars from '@/pages/Cars';
 import Rooms from '@/pages/Rooms';
 import CreateBookings from '@/pages/Create';
+import ProtectedRoutes from '@/components/ProtectedRoutes';
 
 const routerPath = createBrowserRouter([
-  {
-    id: 'root',
-    element: <Layout />,
+  {id: 'protectedroutes',
+    element: <ProtectedRoutes />,
     children: [
       {
-        id: 'home',
-        path: '/',
-        element: <Home />,
+        id: 'layout',
+        element: <Layout />,
+        children: [
+          {
+            id: 'home',
+            path: '/',
+            element: <Home />,
+          },
+          {
+            id: 'cars',
+            path: '/cars',
+            element: <Cars />,
+          },
+          {
+            id: 'users',
+            path: '/users',
+            element: <Users />,
+          },
+          {
+            id: 'bookings',
+            path: '/bookings',
+            element: <Bookings />,
+          },
+          {
+            id: 'profile',
+            path: '/profile',
+            element: <Profile />,
+          },
+          {
+            id: 'rooms',
+            path: '/rooms',
+            element: <Rooms />,
+          },
+          {
+            id: 'bookings/create',
+            path: '/bookings/create',
+            element: <CreateBookings />
+          },
+        ],
       },
-      {
-        id: 'cars',
-        path: '/cars',
-        element: <Cars />,
-      },
-      {
-        id: 'users',
-        path: '/users',
-        element: <Users />,
-      },
-      {
-        id: 'bookings',
-        path: '/bookings',
-        element: <Bookings />,
-      },
-      {
-        id: 'profile',
-        path: '/profile',
-        element: <Profile />,
-      },
-      {
-        id: 'login',
-        path: '/login',
-        element: <Login />,
-      },
-      {
-        id: 'rooms',
-        path: '/rooms',
-        element: <Rooms />,
-      },
-      {
-        id: 'bookings/create',
-        path: '/bookings/create',
-        element: <CreateBookings />
-      },
-    ],
+
+    ]
+  },
+  {
+    id: 'login',
+    path: '/login',
+    element: <Login />,
   },
 ]);
 

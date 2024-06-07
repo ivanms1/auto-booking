@@ -12,14 +12,14 @@ const queryClient = new QueryClient({
   },
 });
 
-function App(): JSX.Element {
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CookiesProvider defaultSetOptions={{ path: '/' }}>
-      <RouterProvider
-        router={routerPath}
-        fallbackElement={<p>Initial Load...</p>}
-      />
+        <RouterProvider
+          router={routerPath}
+          fallbackElement={<p>Initial Load...</p>}
+        />
       </CookiesProvider>
     </QueryClientProvider>
   );

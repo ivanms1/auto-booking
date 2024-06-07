@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Login.module.css';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -9,6 +9,9 @@ import { useLogin } from '@/services/login';
 import { useCookies } from 'react-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import useGetCurrentUser from '@/hooks/useGetCurrentUser';
+import { setToken } from '@/utils/request';
 
 const loginSchema = z.object({
   email: z.string().email('This is not a valid email'),
@@ -19,8 +22,11 @@ export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 function Login() {
   const [, setCookie] = useCookies(['accessToken']);
-
+  const navigate = useNavigate();
   const loginMutation = useLogin();
+
+  const { user } = useGetCurrentUser();
+
   const {
     register,
     handleSubmit,
@@ -30,22 +36,30 @@ function Login() {
     resolver: zodResolver(loginSchema),
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setCookie('accessToken', data.accessToken);
+        navigate('/');
         toast.success('Login Succes!');
-
-        reset();
+        setToken(data.accessToken);
       },
       onError: (error) => {
-        const errorMessage = error.response?.data.message ? error.response?.data.message : ''
-        toast.error(errorMessage)
-        reset()
+        const errorMessage = error.response?.data.message
+          ? error.response?.data.message
+          : '';
+        toast.error(errorMessage);
+        reset();
       },
     });
   };
+
   return (
     <div className={styles.main}>
       <div className={styles.box}>

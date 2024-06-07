@@ -22,6 +22,7 @@
   border-color: var(--dark);
   border-radius: 10px;
   flex-direction: column;
+  margin-top: 30px;
 }
 
 .inputLogin {
