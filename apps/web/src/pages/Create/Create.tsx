@@ -10,8 +10,11 @@ import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { useEffect } from 'react';
 import { useCreateBooking } from '@/services/bookings';
+// import { bookingQueryKeys } from '@/services/bookings/request';
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+
+// const { data: bookings} = useQuery({ ...bookingQueryKeys.list() });
 
 const bookingSchema = z
   .object({
@@ -66,7 +69,27 @@ const bookingSchema = z
       message: 'The end date cannot be earlier than the start date',
       path: ['endDate'],
     }
-  );
+  )
+  // .refine(
+  //   (data) => {
+  //     const startDate = new Date(data.startDate);
+  //     const endDate = new Date(data.endDate);
+  
+  //     return !bookings?.some((booking) => {
+  //       if (booking.roomId !== data.bookingValue || booking.carId !== data.bookingValue) {
+  //         return false;
+  //       }
+  //       const bookingStartDate = new Date(booking.startDate);
+  //       const bookingEndDate = new Date(booking.endDate);
+  //       return (startDate < bookingEndDate && endDate > bookingStartDate);
+  //     });
+  //   },
+  //   {
+  //     message: 'The booking times overlap with an existing booking',
+  //     path: ['startDate', 'endDate'],
+  //   }
+  // )
+  ;
 
 export type BookingSchemaType = z.infer<typeof bookingSchema>;
 

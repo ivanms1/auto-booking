@@ -33,10 +33,38 @@ export class BookingService {
   }
 
   async createBooking(data: CreateInput, user: User): Promise<Booking> {
-    const { roomId, carId, ...rest } = data;
+    const { roomId, carId, startDate, endDate, ...rest } = data;
+    
+    const overlappingBookings = await this.prisma.booking.findMany({
+      where: {
+        OR: [
+          { roomId: roomId ? roomId : undefined },
+          { carId: carId ? carId : undefined }
+        ],
+        AND: [
+          {
+            startDate: {
+              lt: endDate,
+            },
+          },
+          {
+            endDate: {
+              gt: startDate,
+            },
+          },
+        ],
+      },
+    });
+  
+    if (overlappingBookings.length > 0) {
+      throw new Error('There is another reservation in the schedule.');
+    }
+
 
     const createData: Prisma.BookingCreateInput = {
       ...rest,
+      startDate,
+      endDate,
       author: {
         connect: {
           id: user.id,
