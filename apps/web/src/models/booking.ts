@@ -15,4 +15,5 @@ export type Booking = {
   car: Car | undefined;
   room: Room | undefined;
   author: User;
+  description: string | undefined
 };
