@@ -5,11 +5,10 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import styles from './Bookings.module.css';
-import { useDisclosure } from '@mantine/hooks';
-import { Drawer } from '@mantine/core';
 import { Booking } from '@/models/booking';
+import DrawerComponent from './DrawerComponent';
 
-interface event {
+interface Event {
   timeText: string;
   event: {
     title: string;
@@ -21,7 +20,6 @@ interface event {
 
 function Bookings() {
   const { data: bookings } = useQuery({ ...bookingQueryKeys.list() });
-  const [opened, { open, close }] = useDisclosure(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   const mappedBookings = bookings?.map((booking) => ({
@@ -32,33 +30,15 @@ function Bookings() {
     extendedProps: { booking },
   }));
 
-  const handleEventClick = (booking: Booking) => {
-    setSelectedBooking(booking);
-    open();
-  };
 
-  const renderEventWithOpen = (eventInfo: event) => {
+  const renderEventWithOpen = (eventInfo: Event) => {
     const booking = eventInfo.event.extendedProps.booking;
-    return renderEventContent(eventInfo, () => handleEventClick(booking));
+    return renderEventContent(eventInfo, () => setSelectedBooking(booking));
   };
 
   return (
     <div className={styles.main}>
-      <Drawer opened={opened} onClose={close} title='Detalles de la Reserva'>
-        {selectedBooking && (
-          <div>
-            <h1>{selectedBooking.title}</h1>
-            <p>Start: {selectedBooking.startDate.toString()}</p>
-            <p>End: {selectedBooking.endDate.toString()}</p>
-            {selectedBooking.description && (
-              <>
-                <p>Description:</p>
-                <p>{selectedBooking.description}</p>
-              </>
-            )}
-          </div>
-        )}
-      </Drawer>
+      <DrawerComponent  selectedBooking={selectedBooking} onClose={() => setSelectedBooking(null)}/>
       <h1>Bookings</h1>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -71,7 +51,7 @@ function Bookings() {
 }
 
 function renderEventContent(
-  eventInfo: event,
+  eventInfo: Event,
   openProp: React.MouseEventHandler<HTMLDivElement> | undefined
 ) {
   return (
