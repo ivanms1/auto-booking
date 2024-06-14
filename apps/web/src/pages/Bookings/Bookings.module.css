@@ -7,3 +7,8 @@
   flex-direction: column;
   margin-top: 200px;
 }
+
+.title {
+  display: flex;
+  justify-content: space-between;
+}

@@ -169,7 +169,7 @@ function CreateBookings() {
 
   return (
     <div className={styles.main}>
-      <h1 className={styles.title}>Create a Booking</h1>
+      <h1 className={styles.title}>Create Booking</h1>
       <div className={styles.line}></div>
       <div className={styles.mainBox}>
         <p className={styles.formTitle}>Booking Form</p>

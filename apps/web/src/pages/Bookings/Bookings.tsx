@@ -7,6 +7,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import styles from './Bookings.module.css';
 import { Booking } from '@/models/booking';
 import DrawerComponent from './DrawerComponent';
+import Button from '@/components/Button';
+import { useDisclosure } from '@mantine/hooks';
+import DrawerCreate from './DrawerCreate';
 
 interface Event {
   timeText: string;
@@ -21,6 +24,7 @@ interface Event {
 function Bookings() {
   const { data: bookings } = useQuery({ ...bookingQueryKeys.list() });
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [opened, { open, close }] = useDisclosure(false);
 
   const mappedBookings = bookings?.map((booking) => ({
     id: booking.id,
@@ -39,7 +43,11 @@ function Bookings() {
   return (
     <div className={styles.main}>
       <DrawerComponent  selectedBooking={selectedBooking} onClose={() => setSelectedBooking(null)}/>
+        <DrawerCreate opened={opened} onClose={close}/>
+      <div className={styles.title}>
       <h1>Bookings</h1>
+      <Button size='lg' variant='success' onClick={open}>CREATE BOOKING</Button>
+      </div>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView='dayGridMonth'
