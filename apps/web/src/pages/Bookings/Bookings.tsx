@@ -10,6 +10,8 @@ import DrawerComponent from './DrawerComponent';
 import Button from '@/components/Button';
 import { useDisclosure } from '@mantine/hooks';
 import DrawerCreate from './DrawerCreate';
+import { carQueryKeys } from '@/services/cars/request';
+import { roomQueryKeys } from '@/services/rooms/request';
 
 interface Event {
   timeText: string;
@@ -25,6 +27,8 @@ function Bookings() {
   const { data: bookings } = useQuery({ ...bookingQueryKeys.list() });
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
+  const { data: carData } = useQuery({ ...carQueryKeys.list() });
+  const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
 
   const mappedBookings = bookings?.map((booking) => ({
     id: booking.id,
@@ -34,7 +38,6 @@ function Bookings() {
     extendedProps: { booking },
   }));
 
-
   const renderEventWithOpen = (eventInfo: Event) => {
     const booking = eventInfo.event.extendedProps.booking;
     return renderEventContent(eventInfo, () => setSelectedBooking(booking));
@@ -42,11 +45,21 @@ function Bookings() {
 
   return (
     <div className={styles.main}>
-      <DrawerComponent  selectedBooking={selectedBooking} onClose={() => setSelectedBooking(null)}/>
-        <DrawerCreate opened={opened} onClose={close}/>
+      <DrawerComponent
+        selectedBooking={selectedBooking}
+        onClose={() => setSelectedBooking(null)}
+      />
+      <DrawerCreate
+        opened={opened}
+        onClose={close}
+        carData={carData}
+        roomData={roomData}
+      />
       <div className={styles.title}>
-      <h1>Bookings</h1>
-      <Button size='lg' variant='success' onClick={open}>CREATE BOOKING</Button>
+        <h1>Bookings</h1>
+        <Button size='lg' variant='success' onClick={open}>
+          CREATE BOOKING
+        </Button>
       </div>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}

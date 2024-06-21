@@ -11,7 +11,7 @@ import {
 import { Prisma, User, type Booking } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
-import { BookingService } from './bookings.service';
+import { BookingService, BookingUpdate } from './bookings.service';
 import { SearchBookingsDto } from './dto/search-bookings.dto';
 
 @Controller('bookings')
@@ -49,7 +49,7 @@ export class BookingController {
   @UseGuards(JwtAuthGuard)
   async updateBooking(
     @Param('id') id: string,
-    @Body() updateBooking: Prisma.BookingUpdateInput
+    @Body() updateBooking: BookingUpdate
   ): Promise<Booking | null> {
     return this.bookingService.updateBooking({ where: { id }, data: updateBooking });
   }
