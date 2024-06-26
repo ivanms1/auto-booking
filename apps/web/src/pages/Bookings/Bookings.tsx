@@ -6,7 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import styles from './Bookings.module.css';
 import { Booking } from '@/models/booking';
-import DrawerComponent from './DrawerComponent';
+import BookingDrawer from './BookingDrawer';
 import Button from '@/components/Button';
 import { useDisclosure } from '@mantine/hooks';
 import DrawerCreate from './DrawerCreate';
@@ -45,7 +45,7 @@ function Bookings() {
 
   return (
     <div className={styles.main}>
-      <DrawerComponent
+      <BookingDrawer
         selectedBooking={selectedBooking}
         onClose={() => setSelectedBooking(null)}
       />
