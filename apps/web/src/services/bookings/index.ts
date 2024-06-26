@@ -2,7 +2,7 @@ import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
 import { Booking } from '@/models/booking';
 import { MutateOptions, useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { createBooking, deleteBooking, updateBooking } from './request';
+import { BookingUpdate, createBooking, deleteBooking, updateBooking } from './request';
 import { BookingInput } from './request';
 
 export function useCreateBooking(
@@ -22,12 +22,12 @@ export function useCreateBooking(
 export function useUpdateBooking(
   onSuccess?: (
     data: Booking,
-    variables: { id: string; data: Booking },
+    variables: { id: string; data: BookingUpdate },
     context?: unknown
   ) => void,
   onError?: (error: AxiosError<Error>) => void
 ) {
-  return useMutation<Booking, AxiosError<Error>, { id: string; data: Booking }>({
+  return useMutation<Booking, AxiosError<Error>, { id: string; data: BookingUpdate }>({
     mutationFn: ({ id, data }) => updateBooking(id, data),
     onError,
   });

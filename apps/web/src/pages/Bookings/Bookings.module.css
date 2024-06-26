@@ -1,4 +1,4 @@
-.main{
+.main {
   display: flex;
   justify-content: center;
   min-height: calc(100vh - 50px);
@@ -6,4 +6,9 @@
   width: 100%;
   flex-direction: column;
   margin-top: 200px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
 }

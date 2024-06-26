@@ -13,6 +13,12 @@ const METHODS = {
   DELETE: 'DELETE',
 } as const;
 
+export type BookingUpdate = {
+  startDate: Date,
+  endDate: Date,
+  description: String | undefined
+}
+
 export type BookingsResponse = {
   bookings: Booking[];
   total_page: number;
@@ -47,7 +53,7 @@ export function createBooking(data: BookingInput): Promise<Booking> {
   });
 }
 
-export function updateBooking(id: string, data: Booking): Promise<Booking> {
+export function updateBooking(id: string, data: BookingUpdate): Promise<Booking> {
   return serviceFetch({
     url: getRoute(API_ROUTES.bookings.update, { id }),
     method: METHODS.PUT,

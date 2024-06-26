@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Sidebar.module.css';
 import { Link } from 'react-router-dom';
 
-const ITEMS = [{label: 'HOME', path: '/'}, {label: 'USERS', path: '/users'}, {label: 'BOOKINGS', path: '/bookings'}, {label: 'CARS', path: '/cars'}, {label: 'ROOMS', path: '/rooms'}, {label: 'CREATE', path: '/bookings/create'}]
+const ITEMS = [{label: 'HOME', path: '/'}, {label: 'USERS', path: '/users'}, {label: 'BOOKINGS', path: '/bookings'}, {label: 'CARS', path: '/cars'}, {label: 'ROOMS', path: '/rooms'}]
 
 function Sidebar() {
 

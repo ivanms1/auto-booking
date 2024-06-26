@@ -12,7 +12,7 @@ import { setToken } from '@/utils/request';
 
 function Navbar() {
   const navigate = useNavigate();
-  const querClient = useQueryClient();
+  const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
   const [_cookies, _setCookie, removeCookie] = useCookies(['accessToken']);
 
@@ -28,7 +28,7 @@ function Navbar() {
 
   function logout() {
     removeCookie('accessToken');
-    querClient.clear();
+    queryClient.clear();
     setToken('');
     navigate('/login');
   }

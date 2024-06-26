@@ -9,7 +9,6 @@ import Profile from '@/pages/Profile';
 import Login from '@/pages/Login';
 import Cars from '@/pages/Cars';
 import Rooms from '@/pages/Rooms';
-import CreateBookings from '@/pages/Create';
 import ProtectedRoutes from '@/components/ProtectedRoutes';
 
 const routerPath = createBrowserRouter([
@@ -49,11 +48,6 @@ const routerPath = createBrowserRouter([
             id: 'rooms',
             path: '/rooms',
             element: <Rooms />,
-          },
-          {
-            id: 'bookings/create',
-            path: '/bookings/create',
-            element: <CreateBookings />
           },
         ],
       },

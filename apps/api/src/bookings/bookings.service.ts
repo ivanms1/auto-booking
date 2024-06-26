@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import type { Booking, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import type { SearchBookingsDto } from './dto/search-bookings.dto';
@@ -12,6 +12,12 @@ interface CreateInput {
   description?: string | null;
   roomId?: string | undefined;
   carId?: string | undefined;
+}
+
+export interface BookingUpdate {
+  startDate: Date | string;
+  endDate: Date | string;
+  description?: string | null;
 }
 
 @Injectable()
@@ -57,7 +63,7 @@ export class BookingService {
     });
   
     if (overlappingBookings.length > 0) {
-      throw new Error('There is another reservation in the schedule.');
+      throw new BadRequestException('Overlap Booking', { cause: new Error(), description: 'There is another reservation in the schedule.' })
     }
 
 
@@ -87,11 +93,56 @@ export class BookingService {
 
   async updateBooking(params: {
     where: Prisma.BookingWhereUniqueInput;
-    data: Prisma.BookingUpdateInput;
+    data: BookingUpdate;
   }): Promise<Booking> {
     const { data, where } = params;
+    const dataToUpdate = await this.prisma.booking.findUnique({where})
+
+    const { startDate, endDate, ...rest } = data;
+
+    const roomId = dataToUpdate?.roomId
+    const carId = dataToUpdate?.carId
+
+    const overlappingBookings = await this.prisma.booking.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              { roomId: roomId ? roomId : undefined },
+              { carId: carId ? carId : undefined }
+            ],
+          },
+          {
+            startDate: {
+              lt: endDate,
+            },
+          },
+          {
+            endDate: {
+              gt: startDate,
+            },
+          },
+          {
+            id: {
+              not: where.id,
+            },
+          },
+        ],
+      },
+    });
+
+    if (overlappingBookings.length > 0) {
+      throw new BadRequestException('Overlap Booking', { cause: new Error(), description: 'There is another reservation in the schedule.' })
+    }
+
+    const createData: BookingUpdate = {
+      ...rest,
+      startDate,
+      endDate
+    };
+    
     return this.prisma.booking.update({
-      data,
+      data: createData,
       where,
     });
   }
