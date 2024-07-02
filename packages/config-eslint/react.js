@@ -35,5 +35,15 @@ module.exports = {
   // add rules configurations here
   rules: {
     "import/no-default-export": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": {
+          "camelCase": true,
+          "pascalCase": true
+        }
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
   },
 };

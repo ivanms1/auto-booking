@@ -1,10 +1,9 @@
-import { Room } from '@/models/room';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { Room } from '@/models/room';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
+import { API_ROUTES } from '../apiRoutes';
 
 const METHODS = {
   GET: 'GET',
@@ -13,14 +12,14 @@ const METHODS = {
   DELETE: 'DELETE',
 } as const;
 
-export type RoomsResponse = {
+export interface RoomsResponse {
   rooms: Room[];
   total_page: number;
   total_count: number;
-};
+}
 
-export type RoomInput = {
-  name: string
+export interface RoomInput {
+  name: string;
 }
 
 export function getRooms(): Promise<Room[]> {

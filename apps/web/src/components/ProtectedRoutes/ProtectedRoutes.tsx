@@ -1,9 +1,8 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-
 import useGetCurrentUser from '@/hooks/useGetCurrentUser';
 
-const ProtectedRoutes = () => {
+function ProtectedRoutes() {
   const { user, isLoading } = useGetCurrentUser();
 
   if (isLoading) {
@@ -11,10 +10,10 @@ const ProtectedRoutes = () => {
   }
 
   if (!user) {
-    return <Navigate to='/login' replace />;
+    return <Navigate replace to='/login' />;
   }
 
   return <Outlet />;
-};
+}
 
 export default ProtectedRoutes;

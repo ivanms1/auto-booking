@@ -1,16 +1,16 @@
-import Button from '@/components/Button';
-import { Booking } from '@/models/booking';
-import { useDeleteBooking } from '@/services/bookings';
 import { Drawer } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import styles from './BookingDrawer.module.css';
-import Input from '@/components/Input';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useUpdateBooking } from '@/services/bookings';
 import { z } from 'zod';
+import styles from './BookingDrawer.module.css';
+import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
+import Input from '@/components/Input';
+import type { Booking } from '@/models/booking';
+import Button from '@/components/Button';
 
 const editBookingSchema = z
   .object({
@@ -82,31 +82,30 @@ function BookingDrawer({
   const bookingMutationDelete = useDeleteBooking();
   const bookingMutationUpdate = useUpdateBooking();
   const queryClient = useQueryClient();
-  const [editOpen, useEditOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   function onDelete(id: string) {
     bookingMutationDelete.mutate(
       { id },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['bookings'] });
+          void queryClient.invalidateQueries({ queryKey: ['bookings'] });
           toast.success('Successful delete');
         },
-        onError: (error) => {
-          console.log(error);
+        onError: () => {
           toast.error('You cant Delete this booking');
         },
       }
     );
   }
 
-  const onSubmit: SubmitHandler<BookingUpdateSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<BookingUpdateSchemaType> = (data) => {
     const id = selectedBooking?.id ? selectedBooking.id : '';
 
     const newObject = {
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
-      description: data?.description,
+      description: data.description,
     };
 
     bookingMutationUpdate.mutate(
@@ -114,12 +113,12 @@ function BookingDrawer({
       {
         onSuccess: () => {
           reset();
-          queryClient.invalidateQueries({ queryKey: ['bookings'] });
+          void queryClient.invalidateQueries({ queryKey: ['bookings'] });
           toast.success('Successful booking update');
         },
         onError: (error) => {
           const errorMessage = error.response?.data.message
-            ? error.response?.data.message
+            ? error.response.data.message
             : 'Unnown Error';
           toast.error(errorMessage);
         },
@@ -129,105 +128,117 @@ function BookingDrawer({
 
   return (
     <Drawer
-      opened={!!selectedBooking}
       onClose={onClose}
-      title='Detalles de la Reserva'
+      opened={Boolean(selectedBooking)}
       position='right'
       size='50%'
+      title='Detalles de la Reserva'
     >
-      {selectedBooking && (
+      {selectedBooking ? (
         <div>
           <h1>{selectedBooking.title}</h1>
           <br />
           <p>Start: {startDate.toString()}</p>
           <br />
           <p>End: {endDate.toString()}</p>
-          {selectedBooking.description && (
+          {selectedBooking.description ? (
             <>
               <p>Description:</p>
               <p>{selectedBooking.description}</p>
             </>
-          )}
+          ) : null}
           <br />
           {!editOpen && (
             <div className={styles.buttons}>
               <Button
-                variant='danger'
+                onClick={() => {
+                  onDelete(selectedBooking.id);
+                }}
                 size='lg'
-                onClick={() => onDelete(selectedBooking.id)}
+                variant='danger'
               >
                 DELETE BOOKING
               </Button>
               <Button
+                onClick={() => {
+                  setEditOpen(!editOpen);
+                }}
                 size='lg'
                 variant='info'
-                onClick={() => useEditOpen(!editOpen)}
               >
                 OPEN EDIT BOOKING
               </Button>
             </div>
           )}
-          {editOpen && (
+          {editOpen ? (
             <div className={styles.mainBox}>
               <div className={styles.headerForm}>
                 <Button
+                  onClick={() => {
+                    setEditOpen(!editOpen);
+                  }}
                   variant='warning'
-                  onClick={() => useEditOpen(!editOpen)}
                 >
                   CLOSE
                 </Button>
                 <p className={styles.formTitle}>Booking Edit Form</p>
               </div>
               <div className={styles.mainBox}>
-                <div className={styles.line2}></div>
+                <div className={styles.line2} />
                 <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                   <div className={styles.input1}>
-                    <label className={styles.formP}>Start date</label>
+                    <label className={styles.formP} htmlFor='startDate'>
+                      Start date
+                    </label>
                     <Input
                       className={styles.inputForm2}
-                      type='datetime-local'
                       id='startDate'
+                      type='datetime-local'
                       {...register('startDate')}
                     />
                   </div>
-                  {errors.startDate?.message && (
+                  {errors.startDate?.message ? (
                     <p className={styles.errorAlert}>
                       {errors.startDate.message}
                     </p>
-                  )}
+                  ) : null}
                   <div className={styles.input1}>
-                    <label className={styles.formP}>End date</label>
+                    <label className={styles.formP} htmlFor='endDate'>
+                      End date
+                    </label>
                     <Input
                       className={styles.inputForm2}
-                      type='datetime-local'
                       id='endDate'
+                      type='datetime-local'
                       {...register('endDate')}
                     />
                   </div>
-                  {errors.endDate?.message && (
+                  {errors.endDate?.message ? (
                     <p className={styles.errorAlert}>
                       {errors.endDate.message}
                     </p>
-                  )}
+                  ) : null}
                   <div className={styles.input1}>
-                    <label className={styles.formP}>Description</label>
+                    <label className={styles.formP} htmlFor='description'>
+                      Description
+                    </label>
                     <Input
                       className={styles.inputForm}
-                      type='text'
-                      placeholder='Some description about reservation'
                       id='description'
+                      placeholder='Some description about reservation'
+                      type='text'
                       {...register('description')}
                     />
                   </div>
-                  {errors.description?.message && (
+                  {errors.description?.message ? (
                     <p className={styles.errorAlert}>
                       {errors.description.message}
                     </p>
-                  )}
+                  ) : null}
                   <Button
                     className={styles.submitButton}
-                    type='submit'
                     size='lg'
+                    type='submit'
                   >
                     Edit Booking
                   </Button>
@@ -235,9 +246,9 @@ function BookingDrawer({
                 {JSON.stringify(watch(), null, 2)}
               </div>
             </div>
-          )}
+          ) : null}
         </div>
-      )}
+      ) : null}
     </Drawer>
   );
 }

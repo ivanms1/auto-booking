@@ -1,18 +1,24 @@
-import React from 'react';
-import styles from './Input.module.css'
+import React, { forwardRef } from 'react';
 import classNames from 'classnames';
+import styles from './Input.module.css';
 
 type InputProps = {
-  className?: string,
-  placeholder?: string
-} & React.InputHTMLAttributes<HTMLInputElement>
+  className?: string;
+  placeholder?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>;
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
-  return (
-    <input ref={ref} className={classNames(styles.input, className)} {...props}/>
-  );
-});
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <input
+        className={classNames(styles.input, className)}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
 
+Input.displayName = 'Input';
 
-
-export default Input
+export default Input;

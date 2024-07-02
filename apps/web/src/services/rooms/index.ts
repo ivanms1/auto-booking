@@ -1,8 +1,10 @@
-import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
-import { Room } from '@/models/room';
-import { MutateOptions, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { RoomInput, createRoom, deleteRoom, updateRoom } from './request';
+import type { MutateOptions} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
+import type { Room } from '@/models/room';
+import type { RoomInput} from './request';
+import { createRoom, deleteRoom, updateRoom } from './request';
 
 export function useCreateRoom(
   options: MutateOptions<

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { bookingQueryKeys } from '@/services/bookings/request';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import styles from './Bookings.module.css';
-import { Booking } from '@/models/booking';
-import BookingDrawer from './BookingDrawer';
-import Button from '@/components/Button';
 import { useDisclosure } from '@mantine/hooks';
-import DrawerCreate from './DrawerCreate';
+import Button from '@/components/Button';
+import type { Booking } from '@/models/booking';
+import { bookingQueryKeys } from '@/services/bookings/request';
 import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
+import styles from './Bookings.module.css';
+import DrawerCreate from './DrawerCreate';
+import BookingDrawer from './BookingDrawer';
 
 interface Event {
   timeText: string;
@@ -40,32 +40,36 @@ function Bookings() {
 
   const renderEventWithOpen = (eventInfo: Event) => {
     const booking = eventInfo.event.extendedProps.booking;
-    return renderEventContent(eventInfo, () => setSelectedBooking(booking));
+    return renderEventContent(eventInfo, () => {
+      setSelectedBooking(booking);
+    });
   };
 
   return (
     <div className={styles.main}>
       <BookingDrawer
+        onClose={() => {
+          setSelectedBooking(null);
+        }}
         selectedBooking={selectedBooking}
-        onClose={() => setSelectedBooking(null)}
       />
       <DrawerCreate
-        opened={opened}
-        onClose={close}
         carData={carData}
+        onClose={close}
+        opened={opened}
         roomData={roomData}
       />
       <div className={styles.title}>
         <h1>Bookings</h1>
-        <Button size='lg' variant='success' onClick={open}>
+        <Button onClick={open} size='lg' variant='success'>
           CREATE BOOKING
         </Button>
       </div>
       <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView='dayGridMonth'
-        events={mappedBookings}
         eventContent={renderEventWithOpen}
+        events={mappedBookings}
+        initialView='dayGridMonth'
+        plugins={[dayGridPlugin, interactionPlugin]}
       />
     </div>
   );
@@ -73,12 +77,16 @@ function Bookings() {
 
 function renderEventContent(
   eventInfo: Event,
-  openProp: React.MouseEventHandler<HTMLDivElement> | undefined
+  openProp: React.MouseEventHandler<HTMLButtonElement> | undefined
 ) {
   return (
-    <div onClick={openProp} className={styles.bookingDescription}>
+    <button
+      className={styles.bookingDescription}
+      onClick={openProp}
+      type='button'
+    >
       <b>{eventInfo.timeText}</b> <i>{eventInfo.event.title}</i>
-    </div>
+    </button>
   );
 }
 

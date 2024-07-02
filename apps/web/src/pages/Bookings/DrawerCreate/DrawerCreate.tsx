@@ -1,18 +1,18 @@
-import React from 'react';
-import styles from './DrawerCreate.module.css';
-import Input from '@/components/Input';
-import Button from '@/components/Button';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect } from 'react';
-import { useCreateBooking } from '@/services/bookings';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Drawer } from '@mantine/core';
-import { Car } from '@/models/car';
-import { Room } from '@/models/room';
 import { useQueryClient } from '@tanstack/react-query';
+import styles from './DrawerCreate.module.css';
+import type { Room } from '@/models/room';
+import { useCreateBooking } from '@/services/bookings';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
+import type { Car } from '@/models/car';
 
 const bookingSchema = z
   .object({
@@ -95,7 +95,7 @@ function DrawerCreate({
   });
   const queryClient = useQueryClient();
 
-  const onSubmit: SubmitHandler<BookingSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<BookingSchemaType> = (data) => {
     const dataToCreate = {
       [data.bookingType]: data.bookingValue,
       title: data.title,
@@ -106,12 +106,12 @@ function DrawerCreate({
     bookingMutation.mutate(dataToCreate, {
       onSuccess: () => {
         reset();
-        queryClient.invalidateQueries({ queryKey: ['bookings'] });
+        void queryClient.invalidateQueries({ queryKey: ['bookings'] });
         toast.success('Successful booking creation');
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message
-          ? error.response?.data.message
+          ? error.response.data.message
           : 'Unnown Error';
         toast.error(errorMessage);
       },
@@ -151,96 +151,110 @@ function DrawerCreate({
   }, [roomData]);
 
   return (
-    <Drawer opened={opened} onClose={onClose} position='right' size='60%'>
+    <Drawer onClose={onClose} opened={opened} position='right' size='60%'>
       <div className={styles.main}>
         <h1 className={styles.title}>Create Booking</h1>
-        <div className={styles.line}></div>
+        <div className={styles.line} />
         <div className={styles.mainBox}>
           <p className={styles.formTitle}>Booking Form</p>
-          <div className={styles.line2}></div>
+          <div className={styles.line2} />
           <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.input1}>
-              <label className={styles.formP}>Reservation Title</label>
+              <label className={styles.formP} htmlFor='title'>
+                Reservation Title
+              </label>
               <Input
                 className={styles.inputForm}
-                type='text'
-                placeholder='Reservation Title (Person, Ministry, Activity)'
                 id='title'
+                placeholder='Reservation Title (Person, Ministry, Activity)'
+                type='text'
                 {...register('title')}
               />
             </div>
-            {errors.title?.message && (
+            {errors.title?.message ? (
               <p className={styles.errorAlert}>{errors.title.message}</p>
-            )}
+            ) : null}
             <div className={styles.input1}>
-              <label className={styles.formP}>Start date</label>
+              <label className={styles.formP} htmlFor='startDate'>
+                Start date
+              </label>
               <Input
                 className={styles.inputForm2}
-                type='datetime-local'
                 id='startDate'
+                type='datetime-local'
                 {...register('startDate')}
               />
             </div>
-            {errors.startDate?.message && (
+            {errors.startDate?.message ? (
               <p className={styles.errorAlert}>{errors.startDate.message}</p>
-            )}
+            ) : null}
             <div className={styles.input1}>
-              <label className={styles.formP}>End date</label>
+              <label className={styles.formP} htmlFor='endDate'>
+                End date
+              </label>
               <Input
                 className={styles.inputForm2}
-                type='datetime-local'
                 id='endDate'
+                type='datetime-local'
                 {...register('endDate')}
               />
             </div>
-            {errors.endDate?.message && (
+            {errors.endDate?.message ? (
               <p className={styles.errorAlert}>{errors.endDate.message}</p>
-            )}
+            ) : null}
             <div className={styles.inputForm3}>
               <p className={styles.pradio}>Services</p>
               <div className={styles.inputRadio}>
                 <div className={styles.radios}>
                   <Input
+                    id='roomId'
                     type='radio'
                     value='roomId'
                     {...register('bookingType')}
                   />
-                  <label className={styles.labelRadio}>Room</label>
+                  <label className={styles.labelRadio} htmlFor='roomId'>
+                    Room
+                  </label>
                 </div>
                 <div>
                   <Input
+                    id='carId'
                     type='radio'
                     value='carId'
                     {...register('bookingType')}
                   />
-                  <label className={styles.labelRadio}>Car</label>
+                  <label className={styles.labelRadio} htmlFor='carId'>
+                    Car
+                  </label>
                 </div>
                 <select className={styles.select} {...register('bookingValue')}>
                   {options?.map((item) => (
-                    <option value={item.value} key={item.value}>
+                    <option key={item.value} value={item.value}>
                       {item.label}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-            {errors.bookingType?.message && (
-              <p className={styles.errorAlert}>{errors.bookingType?.message}</p>
-            )}
+            {errors.bookingType?.message ? (
+              <p className={styles.errorAlert}>{errors.bookingType.message}</p>
+            ) : null}
 
             <div className={styles.input1}>
-              <label className={styles.formP}>Description</label>
+              <label className={styles.formP} htmlFor='description'>
+                Description
+              </label>
               <Input
                 className={styles.inputForm}
-                type='text'
-                placeholder='Some description about reservation'
                 id='description'
+                placeholder='Some description about reservation'
+                type='text'
                 {...register('description')}
               />
             </div>
-            {errors.description?.message && (
+            {errors.description?.message ? (
               <p className={styles.errorAlert}>{errors.description.message}</p>
-            )}
+            ) : null}
             <Button className={styles.submitButton} type='submit'>
               Submit
             </Button>

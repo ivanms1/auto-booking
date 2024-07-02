@@ -1,9 +1,9 @@
-import { Booking } from "./booking";
+import type { Booking } from "./booking";
 
-export type User = {
+export interface User {
   id: string;
   email: string;
   name: string;
   password: string;
   bookings: Booking[];
-};
+}

@@ -1,8 +1,7 @@
-import { Booking } from '@/models/booking';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { Booking } from '@/models/booking';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
 import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
 
@@ -13,19 +12,19 @@ const METHODS = {
   DELETE: 'DELETE',
 } as const;
 
-export type BookingUpdate = {
+export interface BookingUpdate {
   startDate: Date,
   endDate: Date,
-  description: String | undefined
+  description: string | undefined
 }
 
-export type BookingsResponse = {
+export interface BookingsResponse {
   bookings: Booking[];
   total_page: number;
   total_count: number;
-};
+}
 
- export type BookingInput = {
+ export interface BookingInput {
   title: string,
   startDate: Date,
   endDate: Date,

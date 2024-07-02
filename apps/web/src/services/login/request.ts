@@ -1,8 +1,8 @@
-import { User } from '@/models/user';
-import { API_ROUTES } from '../apiRoutes';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { User } from '@/models/user';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
 
 const METHODS = {
@@ -10,14 +10,14 @@ const METHODS = {
   GET: 'GET',
 } as const;
 
-export type LoginResponse = {
+export interface LoginResponse {
   accessToken: string;
-};
+}
 
-export type LoginInput = {
+export interface LoginInput {
   email: string;
   password: string;
-};
+}
 
 export function login(data: LoginInput): Promise<LoginResponse> {
   return serviceFetch({

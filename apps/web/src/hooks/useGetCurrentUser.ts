@@ -1,8 +1,8 @@
-import { authQueryKey } from '@/services/login/request';
 import { useQuery } from '@tanstack/react-query';
+import { authQueryKey } from '@/services/login/request';
 
 function useGetCurrentUser() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading } = useQuery({
     ...authQueryKey.detail(),
     retry: 0,
   });

@@ -1,10 +1,9 @@
-import { User } from '@/models/user';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { User } from '@/models/user';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
+import { API_ROUTES } from '../apiRoutes';
 
 const METHODS = {
   GET: 'GET',
@@ -13,16 +12,16 @@ const METHODS = {
   DELETE: 'DELETE',
 } as const;
 
-export type UsersResponse = {
+export interface UsersResponse {
   users: User[];
   total_page: number;
   total_count: number;
-};
+}
 
-export type UserInput = {
+export interface UserInput {
   name: string;
   email: string;
-  password: string
+  password: string;
 }
 
 export function getUsers(): Promise<User[]> {

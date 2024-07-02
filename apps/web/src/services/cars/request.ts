@@ -1,8 +1,7 @@
-import { Car } from '@/models/car';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { Car } from '@/models/car';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
 import { API_ROUTES } from '../apiRoutes';
 import { QUERY_KEYS } from '../queryKeys';
 
@@ -13,13 +12,13 @@ const METHODS = {
   DELETE: 'DELETE',
 } as const;
 
-export type CarsResponse = {
+export interface CarsResponse {
   cars: Car[];
   total_page: number;
   total_count: number;
-};
+}
 
-export type CarInput = {
+export interface CarInput {
   name: string,
   mileage: number
 }

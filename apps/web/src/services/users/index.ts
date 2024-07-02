@@ -1,8 +1,10 @@
-import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
-import { User } from '@/models/user';
-import { MutateOptions, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { UserInput, createUser, deleteUser, updateUser } from './request';
+import type { MutateOptions} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
+import type { User } from '@/models/user';
+import type { UserInput} from './request';
+import { createUser, deleteUser, updateUser } from './request';
 
 export function useCreateUser(
   options: MutateOptions<

@@ -1,7 +1,9 @@
-import { MutateOptions, useMutation } from '@tanstack/react-query';
-import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
-import { LoginInput, LoginResponse, login } from './request';
-import { AxiosError } from 'axios';
+import type { MutateOptions} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
+import type { LoginInput, LoginResponse} from './request';
+import { login } from './request';
 
 export function useLogin(
   options: MutateOptions<

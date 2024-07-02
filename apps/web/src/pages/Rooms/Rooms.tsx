@@ -1,6 +1,6 @@
-import { roomQueryKeys } from '@/services/rooms/request';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { roomQueryKeys } from '@/services/rooms/request';
 
 function Rooms() {
   const { data } = useQuery({ ...roomQueryKeys.list() });

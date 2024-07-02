@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-import styles from './Login.module.css';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useLogin } from '@/services/login';
+import type { SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useCookies } from 'react-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import styles from './Login.module.css';
+import { useLogin } from '@/services/login';
+import Input from '@/components/Input';
+import Button from '@/components/Button';
 import useGetCurrentUser from '@/hooks/useGetCurrentUser';
 import { setToken } from '@/utils/request';
 
@@ -42,17 +43,17 @@ function Login() {
     }
   }, [user, navigate]);
 
-  const onSubmit: SubmitHandler<LoginSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<LoginSchemaType> = (data: LoginSchemaType) => {
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
-        setCookie('accessToken', data.accessToken);
+      onSuccess: (successData) => {
+        setCookie('accessToken', successData.accessToken);
         navigate('/');
         toast.success('Login Succes!');
-        setToken(data.accessToken);
+        setToken(successData.accessToken);
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message
-          ? error.response?.data.message
+          ? error.response.data.message
           : '';
         toast.error(errorMessage);
         reset();
@@ -64,29 +65,39 @@ function Login() {
     <div className={styles.main}>
       <div className={styles.box}>
         <p className={styles.title}>Please enter you user information.</p>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.username}>
-            <label className={styles.inputInfo}>Email</label>
-            <Input className={styles.inputLogin} {...register('email')}></Input>
-          </div>
-          {errors.email?.message && (
-            <p className={styles.errorAlert}>{errors.email.message}</p>
-          )}
-          <div className={styles.username}>
-            <label className={styles.inputInfo}>Password</label>
+            <label className={styles.inputInfo} htmlFor='email'>
+              Email
+            </label>
             <Input
               className={styles.inputLogin}
-              {...register('password')}
-            ></Input>
+              id='email'
+              {...register('email')}
+            />
           </div>
-          {errors.password?.message && (
+          {errors.email?.message ? (
+            <p className={styles.errorAlert}>{errors.email.message}</p>
+          ) : null}
+          <div className={styles.username}>
+            <label className={styles.inputInfo} htmlFor='password'>
+              Password
+            </label>
+            <Input
+              className={styles.inputLogin}
+              id='password'
+              type='password'
+              {...register('password')}
+            />
+          </div>
+          {errors.password?.message ? (
             <p className={styles.errorAlert}>{errors.password.message}</p>
-          )}
+          ) : null}
           <div className={styles.outsideButton}>
             <Button
-              variant='primary'
               className={styles.loginButton}
               type='submit'
+              variant='primary'
             >
               Signin
             </Button>

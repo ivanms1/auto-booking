@@ -1,6 +1,6 @@
-import { carQueryKeys } from '@/services/cars/request';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { carQueryKeys } from '@/services/cars/request';
 
 function Cars() {
   const { data } = useQuery({ ...carQueryKeys.list() });

@@ -1,9 +1,10 @@
-import { DefaultQueryKeyWithoutData } from '@/interfaces/query';
-import { Booking } from '@/models/booking';
-import { MutateOptions, useMutation } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { BookingUpdate, createBooking, deleteBooking, updateBooking } from './request';
-import { BookingInput } from './request';
+import type { MutateOptions} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
+import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
+import type { Booking } from '@/models/booking';
+import type { BookingUpdate, BookingInput } from './request';
+import { createBooking, deleteBooking, updateBooking  } from './request';
 
 export function useCreateBooking(
   options: MutateOptions<

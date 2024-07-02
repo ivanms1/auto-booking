@@ -1,13 +1,11 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
+import { Bounce, ToastContainer } from 'react-toastify';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-
 import styles from './Layout.module.css';
-import { Bounce, ToastContainer } from 'react-toastify';
 
-const TOAST_AUTOCLOSE = 5000
+const TOAST_AUTOCLOSE = 5000;
 
 function Layout() {
   return (
@@ -17,15 +15,15 @@ function Layout() {
         <Navbar />
         <div className={styles.children}>
           <ToastContainer
-            position='top-center'
             autoClose={TOAST_AUTOCLOSE}
+            closeOnClick
+            draggable
             hideProgressBar
             newestOnTop={false}
-            closeOnClick
-            rtl={false}
             pauseOnFocusLoss
-            draggable
             pauseOnHover
+            position='top-center'
+            rtl={false}
             theme='colored'
             transition={Bounce}
           />
