@@ -3,5 +3,6 @@ import type { Booking } from "./booking";
 export interface Room {
   id: string;
   name: string;
-  bookings: Booking[]
+  bookings: Booking[];
+  createdAt: string;
 }

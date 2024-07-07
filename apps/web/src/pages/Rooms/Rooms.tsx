@@ -1,23 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Table } from '@mantine/core';
 import { roomQueryKeys } from '@/services/rooms/request';
 import CustomTable from '@/components/CustomTable';
 
+const COLUMNS = ['Name', 'Created At']
+
 function Rooms() {
   const { data } = useQuery({ ...roomQueryKeys.list() });
-  const rows: JSX.Element[] | undefined  = data?.map((element) => (
-    <Table.Tr key={element.id}>
-      <Table.Td>{element.name}</Table.Td>
-      <Table.Td>{element.id}</Table.Td>
-    </Table.Tr>
-  ))
 
-  const components = ['Name', 'Room ID']
+  const rows = data?.map((room) => {
+    return {id: room.id, values: [room.name, room.createdAt]}
+  }) || []
+
+  
   return (
     <div>
       <h1>Rooms</h1>
-      <CustomTable components={components} rows={rows} />
+      <CustomTable columns={COLUMNS} rows={rows} />
     </div>
   );
 }
