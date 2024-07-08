@@ -4,14 +4,14 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useDisclosure } from '@mantine/hooks';
+import styles from './Bookings.module.css';
+import DrawerCreate from './DrawerCreate';
+import BookingDrawer from './BookingDrawer';
 import Button from '@/components/Button';
 import type { Booking } from '@/models/booking';
 import { bookingQueryKeys } from '@/services/bookings/request';
 import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
-import styles from './Bookings.module.css';
-import DrawerCreate from './DrawerCreate';
-import BookingDrawer from './BookingDrawer';
 
 interface Event {
   timeText: string;

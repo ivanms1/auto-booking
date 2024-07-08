@@ -5,4 +5,5 @@ export interface Car {
   model: string;
   mileage: number;
   bookings: Booking[];
+  createdAt: string
 }

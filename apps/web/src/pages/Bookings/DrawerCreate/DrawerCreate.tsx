@@ -141,14 +141,14 @@ function DrawerCreate({
         carData && carData.length > 0 ? carData[0].id : ''
       );
     }
-  }, [currentBookingType]);
+  }, [carData, currentBookingType, roomData, setValue]);
 
   useEffect(() => {
     reset({
       bookingValue: roomData?.[0]?.id ?? '',
       bookingType: 'roomId',
     });
-  }, [roomData]);
+  }, [reset, roomData]); 
 
   return (
     <Drawer onClose={onClose} opened={opened} position='right' size='60%'>

@@ -6,4 +6,5 @@ export interface User {
   name: string;
   password: string;
   bookings: Booking[];
+  createdAt: string;
 }

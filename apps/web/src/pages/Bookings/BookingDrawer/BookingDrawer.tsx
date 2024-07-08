@@ -126,9 +126,14 @@ function BookingDrawer({
     );
   };
 
+  function onCloseDrawer () {
+    onClose();
+    setEditOpen(false)
+  }
+
   return (
     <Drawer
-      onClose={onClose}
+      onClose={onCloseDrawer}
       opened={Boolean(selectedBooking)}
       position='right'
       size='50%'

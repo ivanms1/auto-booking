@@ -1,9 +1,9 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { QUERY_KEYS } from '../queryKeys';
+import { API_ROUTES } from '../apiRoutes';
 import type { User } from '@/models/user';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
-import { QUERY_KEYS } from '../queryKeys';
-import { API_ROUTES } from '../apiRoutes';
 
 const METHODS = {
   GET: 'GET',
