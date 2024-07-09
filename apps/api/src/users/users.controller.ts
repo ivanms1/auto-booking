@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import type { UserReturn} from './users.service';
 import { UserService } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 
@@ -19,13 +20,13 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getUser(@Param('id') id: string): Promise<User | null> {
+  async getUser(@Param('id') id: string): Promise<UserReturn | null> {
     return this.userService.user(id);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getUsers(@Param() params: SearchUsersDto): Promise<User[]> {
+  async getUsers(@Param() params: SearchUsersDto): Promise<UserReturn[]> {
     return this.userService.users(params);
   }
 
