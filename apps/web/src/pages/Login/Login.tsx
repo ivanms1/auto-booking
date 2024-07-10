@@ -4,10 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useCookies } from 'react-cookie';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { notifications } from '@mantine/notifications';
 import styles from './Login.module.css';
+import classes from '@/components/Notifications.module.css';
 import { useLogin } from '@/services/login';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
@@ -48,13 +48,24 @@ function Login() {
         setCookie('accessToken', successData.accessToken);
         navigate('/');
         setToken(successData.accessToken);
-        toast.success('Login Succes!');
+        notifications.show({
+          title: 'Success',
+          message: 'Login Success',
+          color: 'green',
+          classNames: classes,
+        });
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message
           ? error.response.data.message
           : '';
-        toast.error(errorMessage);
+
+        notifications.show({
+          title: 'Error',
+          message: errorMessage ? errorMessage : 'Error',
+          color: 'red',
+          classNames: classes,
+        });
       },
     });
   };

@@ -3,9 +3,11 @@ import { RouterProvider } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CookiesProvider } from 'react-cookie';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { Notifications } from '@mantine/notifications';
 import routerPath from '@/router/routes';
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+
 
 
 const queryClient = new QueryClient({
@@ -17,25 +19,14 @@ const queryClient = new QueryClient({
 });
 
 const TOAST_AUTOCLOSE = 5000;
+//const ZINDEX = 1000
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CookiesProvider defaultSetOptions={{ path: '/' }}>
         <MantineProvider>
-        <ToastContainer
-            autoClose={TOAST_AUTOCLOSE}
-            closeOnClick
-            draggable
-            hideProgressBar
-            newestOnTop={false}
-            pauseOnFocusLoss
-            pauseOnHover
-            position='top-center'
-            rtl={false}
-            theme='colored'
-            transition={Bounce}
-          />
+        <Notifications autoClose={TOAST_AUTOCLOSE} position="top-center"/>
           <RouterProvider
             fallbackElement={<p>Initial Load...</p>}
             router={routerPath}
