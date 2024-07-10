@@ -259,7 +259,6 @@ function DrawerCreate({
               Submit
             </Button>
           </form>
-          {JSON.stringify(watch(), null, 2)}
         </div>
       </div>
     </Drawer>

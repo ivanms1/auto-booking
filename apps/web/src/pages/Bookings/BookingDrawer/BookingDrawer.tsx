@@ -66,7 +66,6 @@ function BookingDrawer({
     selectedBooking?.endDate ? selectedBooking.endDate : ''
   );
   const {
-    watch,
     register,
     handleSubmit,
     reset,
@@ -248,7 +247,6 @@ function BookingDrawer({
                     Edit Booking
                   </Button>
                 </form>
-                {JSON.stringify(watch(), null, 2)}
               </div>
             </div>
           ) : null}

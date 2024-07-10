@@ -31,7 +31,6 @@ function Login() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -48,15 +47,14 @@ function Login() {
       onSuccess: (successData) => {
         setCookie('accessToken', successData.accessToken);
         navigate('/');
-        toast.success('Login Succes!');
         setToken(successData.accessToken);
+        toast.success('Login Succes!');
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message
           ? error.response.data.message
           : '';
         toast.error(errorMessage);
-        reset();
       },
     });
   };
