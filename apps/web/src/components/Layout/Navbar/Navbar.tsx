@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useFloating, offset } from '@floating-ui/react';
+import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import { Popover } from '@mantine/core';
 import styles from './Navbar.module.css';
 import Input from '@/components/Input';
 import Bell from '@/assets/svg/bell.svg?react';
@@ -13,14 +13,7 @@ import { setToken } from '@/utils/request';
 function Navbar() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState(false);
   const [_cookies, _setCookie, removeCookie] = useCookies(['accessToken']);
-
-  const { refs, floatingStyles } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    middleware: [offset({ mainAxis: 10, crossAxis: 525 })],
-  });
 
   function handleClick(route: string) {
     navigate(route);
@@ -33,7 +26,7 @@ function Navbar() {
     navigate('/login');
   }
   return (
-    <nav className={styles.navbar} ref={refs.setReference}>
+    <nav className={styles.navbar}>
       <div className={styles.search}>
         <Input className={styles.inputSearch} placeholder='Search' />
       </div>
@@ -41,22 +34,16 @@ function Navbar() {
         <div className={styles.icon}>
           <Bell />
         </div>
-        <button
-          className={styles.icon}
-          onClick={() => {
-            setIsOpen((prev) => !prev);
-          }}
-          type='button'
-        >
-          <ProfilePicture />
-        </button>
-        {isOpen ? (
-          <div
-            className={styles.floatingModule}
-            ref={refs.setFloating}
-            style={floatingStyles}
-          >
-            <ProfilePicture className={styles.imageInside} />
+        <Popover position='bottom' shadow='md' width={200} withArrow>
+          <Popover.Target>
+            <div>
+              <ProfilePicture className={styles.imageInside} />
+            </div>
+          </Popover.Target>
+          <Popover.Dropdown>
+            <div className={styles.picturePosition}>
+              <ProfilePicture className={styles.imageInside} />
+            </div>
             <div className={styles.buttons}>
               <Button
                 onClick={() => {
@@ -75,8 +62,8 @@ function Navbar() {
                 Logout
               </Button>
             </div>
-          </div>
-        ) : null}
+          </Popover.Dropdown>
+        </Popover>
       </div>
     </nav>
   );

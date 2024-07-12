@@ -11,7 +11,6 @@ import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
 import Input from '@/components/Input';
 import type { Booking } from '@/models/booking';
 import Button from '@/components/Button';
-import classes from '@/components/Notifications.module.css';
 
 const editBookingSchema = z
   .object({
@@ -94,7 +93,6 @@ function BookingDrawer({
             title: 'Success',
             message: 'Successful delete',
             color: 'green',
-            classNames: classes
           });
         },
         onError: () => {
@@ -102,7 +100,6 @@ function BookingDrawer({
             title: 'Error',
             message: 'You cant Delete this booking',
             color: 'red',
-            classNames: classes,
           });
         },
       }
@@ -128,7 +125,6 @@ function BookingDrawer({
             title: 'Success',
             message: 'Successful booking update',
             color: 'green',
-            classNames: classes
           });
         },
         onError: (error) => {
@@ -139,7 +135,6 @@ function BookingDrawer({
             title: 'Error',
             message: errorMessage,
             color: 'red',
-            classNames: classes,
           });
         },
       }

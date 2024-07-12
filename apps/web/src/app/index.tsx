@@ -19,17 +19,17 @@ const queryClient = new QueryClient({
 });
 
 const TOAST_AUTOCLOSE = 5000;
-//const ZINDEX = 1000
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <CookiesProvider defaultSetOptions={{ path: '/' }}>
         <MantineProvider>
-        <Notifications autoClose={TOAST_AUTOCLOSE} position="top-center"/>
+        <Notifications autoClose={TOAST_AUTOCLOSE} position="top-center" />
           <RouterProvider
             fallbackElement={<p>Initial Load...</p>}
             router={routerPath}
+
           />
         </MantineProvider>
       </CookiesProvider>

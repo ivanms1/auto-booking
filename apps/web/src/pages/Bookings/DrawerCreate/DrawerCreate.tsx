@@ -12,7 +12,6 @@ import { useCreateBooking } from '@/services/bookings';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import type { Car } from '@/models/car';
-import classes from '@/components/Notifications.module.css';
 
 const bookingSchema = z
   .object({
@@ -111,7 +110,6 @@ function DrawerCreate({
           title: 'Success',
           message: 'Successful booking creation',
           color: 'green',
-          classNames: classes
         });
       },
       onError: (error) => {
@@ -122,7 +120,6 @@ function DrawerCreate({
           title: 'Error',
           message: errorMessage ? errorMessage : 'Error',
           color: 'red',
-          classNames: classes,
         });
       },
     });

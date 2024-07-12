@@ -7,7 +7,6 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { notifications } from '@mantine/notifications';
 import styles from './Login.module.css';
-import classes from '@/components/Notifications.module.css';
 import { useLogin } from '@/services/login';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
@@ -52,7 +51,6 @@ function Login() {
           title: 'Success',
           message: 'Login Success',
           color: 'green',
-          classNames: classes,
         });
       },
       onError: (error) => {
@@ -64,7 +62,6 @@ function Login() {
           title: 'Error',
           message: errorMessage ? errorMessage : 'Error',
           color: 'red',
-          classNames: classes,
         });
       },
     });
