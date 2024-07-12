@@ -1,11 +1,11 @@
 import { Drawer } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { notifications } from '@mantine/notifications';
 import styles from './BookingDrawer.module.css';
 import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
 import Input from '@/components/Input';
@@ -89,10 +89,18 @@ function BookingDrawer({
       {
         onSuccess: () => {
           void queryClient.invalidateQueries({ queryKey: ['bookings'] });
-          toast.success('Successful delete');
+          notifications.show({
+            title: 'Success',
+            message: 'Successful delete',
+            color: 'green',
+          });
         },
         onError: () => {
-          toast.error('You cant Delete this booking');
+          notifications.show({
+            title: 'Error',
+            message: 'You cant Delete this booking',
+            color: 'red',
+          });
         },
       }
     );
@@ -113,13 +121,21 @@ function BookingDrawer({
         onSuccess: () => {
           reset();
           void queryClient.invalidateQueries({ queryKey: ['bookings'] });
-          toast.success('Successful booking update');
+          notifications.show({
+            title: 'Success',
+            message: 'Successful booking update',
+            color: 'green',
+          });
         },
         onError: (error) => {
           const errorMessage = error.response?.data.message
             ? error.response.data.message
             : 'Unnown Error';
-          toast.error(errorMessage);
+          notifications.show({
+            title: 'Error',
+            message: errorMessage,
+            color: 'red',
+          });
         },
       }
     );

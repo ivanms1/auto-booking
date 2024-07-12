@@ -3,10 +3,9 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { Drawer } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
 import styles from './DrawerCreate.module.css';
 import type { Room } from '@/models/room';
 import { useCreateBooking } from '@/services/bookings';
@@ -107,13 +106,21 @@ function DrawerCreate({
       onSuccess: () => {
         reset();
         void queryClient.invalidateQueries({ queryKey: ['bookings'] });
-        toast.success('Successful booking creation');
+        notifications.show({
+          title: 'Success',
+          message: 'Successful booking creation',
+          color: 'green',
+        });
       },
       onError: (error) => {
         const errorMessage = error.response?.data.message
           ? error.response.data.message
           : 'Unnown Error';
-        toast.error(errorMessage);
+        notifications.show({
+          title: 'Error',
+          message: errorMessage ? errorMessage : 'Error',
+          color: 'red',
+        });
       },
     });
   };
