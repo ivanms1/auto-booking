@@ -71,7 +71,10 @@ function Login() {
     <div className={styles.main}>
       <div className={styles.box}>
         <p className={styles.title}>Please enter you user information.</p>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className={styles.form}
+          onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+        >
           <div className={styles.username}>
             <label className={styles.inputInfo} htmlFor='email'>
               Email
