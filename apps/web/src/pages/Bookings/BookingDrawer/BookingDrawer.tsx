@@ -11,6 +11,7 @@ import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
 import Input from '@/components/Input';
 import type { Booking } from '@/models/booking';
 import Button from '@/components/Button';
+import { dateFormatter } from '@/utils/dateFormatter';
 
 const editBookingSchema = z
   .object({
@@ -59,12 +60,6 @@ function BookingDrawer({
   selectedBooking: Booking | null;
   onClose: () => void;
 }) {
-  const startDate = new Date(
-    selectedBooking?.startDate ? selectedBooking.startDate : ''
-  );
-  const endDate = new Date(
-    selectedBooking?.endDate ? selectedBooking.endDate : ''
-  );
   const {
     register,
     handleSubmit,
@@ -141,9 +136,13 @@ function BookingDrawer({
     );
   };
 
-  function onCloseDrawer () {
+  function onCloseDrawer() {
     onClose();
-    setEditOpen(false)
+    setEditOpen(false);
+  }
+
+  if (!selectedBooking) {
+    return null;
   }
 
   return (
@@ -154,120 +153,116 @@ function BookingDrawer({
       size='50%'
       title='Detalles de la Reserva'
     >
-      {selectedBooking ? (
-        <div>
-          <h1>{selectedBooking.title}</h1>
-          <br />
-          <p>Start: {startDate.toString()}</p>
-          <br />
-          <p>End: {endDate.toString()}</p>
-          {selectedBooking.description ? (
-            <>
-              <p>Description:</p>
-              <p>{selectedBooking.description}</p>
-            </>
-          ) : null}
-          <br />
-          {!editOpen && (
-            <div className={styles.buttons}>
-              <Button
-                onClick={() => {
-                  onDelete(selectedBooking.id);
-                }}
-                size='lg'
-                variant='danger'
-              >
-                DELETE BOOKING
-              </Button>
+      <div>
+        <h1>{selectedBooking.title}</h1>
+        <p>
+          Start:{' '}
+          {dateFormatter({
+            date: selectedBooking.startDate,
+          })}
+        </p>
+        <p>
+          End:{' '}
+          {dateFormatter({
+            date: selectedBooking.endDate,
+          })}
+        </p>
+        <p>Description: {selectedBooking.description}</p>
+        {editOpen ? (
+          <div className={styles.mainBox}>
+            <div className={styles.headerForm}>
               <Button
                 onClick={() => {
                   setEditOpen(!editOpen);
                 }}
-                size='lg'
-                variant='info'
+                variant='warning'
               >
-                OPEN EDIT BOOKING
+                CLOSE
               </Button>
+              <p className={styles.formTitle}>Booking Edit Form</p>
             </div>
-          )}
-          {editOpen ? (
             <div className={styles.mainBox}>
-              <div className={styles.headerForm}>
-                <Button
-                  onClick={() => {
-                    setEditOpen(!editOpen);
-                  }}
-                  variant='warning'
-                >
-                  CLOSE
+              <div className={styles.line2} />
+              <form
+                className={styles.form}
+                onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+              >
+                <div className={styles.input1}>
+                  <label className={styles.formP} htmlFor='startDate'>
+                    Start date
+                  </label>
+                  <Input
+                    className={styles.inputForm2}
+                    id='startDate'
+                    type='datetime-local'
+                    {...register('startDate')}
+                  />
+                </div>
+                {errors.startDate?.message ? (
+                  <p className={styles.errorAlert}>
+                    {errors.startDate.message}
+                  </p>
+                ) : null}
+                <div className={styles.input1}>
+                  <label className={styles.formP} htmlFor='endDate'>
+                    End date
+                  </label>
+                  <Input
+                    className={styles.inputForm2}
+                    id='endDate'
+                    type='datetime-local'
+                    {...register('endDate')}
+                  />
+                </div>
+                {Boolean(errors.endDate?.message) && (
+                  <p className={styles.errorAlert}>{errors.endDate?.message}</p>
+                )}
+                <div className={styles.input1}>
+                  <label className={styles.formP} htmlFor='description'>
+                    Description
+                  </label>
+                  <Input
+                    className={styles.inputForm}
+                    id='description'
+                    placeholder='Some description about reservation'
+                    type='text'
+                    {...register('description')}
+                  />
+                </div>
+                {Boolean(errors.description?.message) && (
+                  <p className={styles.errorAlert}>
+                    {errors.description?.message}
+                  </p>
+                )}
+                <Button className={styles.submitButton} size='lg' type='submit'>
+                  Edit Booking
                 </Button>
-                <p className={styles.formTitle}>Booking Edit Form</p>
-              </div>
-              <div className={styles.mainBox}>
-                <div className={styles.line2} />
-                <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-                  <div className={styles.input1}>
-                    <label className={styles.formP} htmlFor='startDate'>
-                      Start date
-                    </label>
-                    <Input
-                      className={styles.inputForm2}
-                      id='startDate'
-                      type='datetime-local'
-                      {...register('startDate')}
-                    />
-                  </div>
-                  {errors.startDate?.message ? (
-                    <p className={styles.errorAlert}>
-                      {errors.startDate.message}
-                    </p>
-                  ) : null}
-                  <div className={styles.input1}>
-                    <label className={styles.formP} htmlFor='endDate'>
-                      End date
-                    </label>
-                    <Input
-                      className={styles.inputForm2}
-                      id='endDate'
-                      type='datetime-local'
-                      {...register('endDate')}
-                    />
-                  </div>
-                  {errors.endDate?.message ? (
-                    <p className={styles.errorAlert}>
-                      {errors.endDate.message}
-                    </p>
-                  ) : null}
-                  <div className={styles.input1}>
-                    <label className={styles.formP} htmlFor='description'>
-                      Description
-                    </label>
-                    <Input
-                      className={styles.inputForm}
-                      id='description'
-                      placeholder='Some description about reservation'
-                      type='text'
-                      {...register('description')}
-                    />
-                  </div>
-                  {errors.description?.message ? (
-                    <p className={styles.errorAlert}>
-                      {errors.description.message}
-                    </p>
-                  ) : null}
-                  <Button
-                    className={styles.submitButton}
-                    size='lg'
-                    type='submit'
-                  >
-                    Edit Booking
-                  </Button>
-                </form>
-              </div>
+              </form>
             </div>
-          ) : null}
-        </div>
-      ) : null}
+          </div>
+        ) : (
+          <div className={styles.buttons}>
+            <Button
+              onClick={() => {
+                onDelete(selectedBooking.id);
+              }}
+              size='lg'
+              variant='danger'
+            >
+              Delete Booking
+            </Button>
+            <Button
+              onClick={() => {
+                setEditOpen(!editOpen);
+              }}
+              size='lg'
+              variant='info'
+            >
+              Edit Booking
+            </Button>
+          </div>
+        )}
+      </div>
     </Drawer>
   );
 }

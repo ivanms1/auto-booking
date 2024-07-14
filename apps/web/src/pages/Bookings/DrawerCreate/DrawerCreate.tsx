@@ -155,7 +155,7 @@ function DrawerCreate({
       bookingValue: roomData?.[0]?.id ?? '',
       bookingType: 'roomId',
     });
-  }, [reset, roomData]); 
+  }, [reset, roomData]);
 
   return (
     <Drawer onClose={onClose} opened={opened} position='right' size='60%'>
@@ -165,7 +165,10 @@ function DrawerCreate({
         <div className={styles.mainBox}>
           <p className={styles.formTitle}>Booking Form</p>
           <div className={styles.line2} />
-          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className={styles.form}
+            onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+          >
             <div className={styles.input1}>
               <label className={styles.formP} htmlFor='title'>
                 Reservation Title

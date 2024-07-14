@@ -1,12 +1,12 @@
-import type { Car } from "./car";
-import type { Room } from "./room";
-import type { User } from "./user";
+import type { Car } from './car';
+import type { Room } from './room';
+import type { User } from './user';
 
 export interface Booking {
   title: string;
   id: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   startMileage: number | undefined;
   endMileage: number | undefined;
   authorId: string;
@@ -15,5 +15,5 @@ export interface Booking {
   car: Car | undefined;
   room: Room | undefined;
   author: User;
-  description: string | undefined
+  description: string | undefined;
 }
