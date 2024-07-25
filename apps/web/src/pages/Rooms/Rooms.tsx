@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import styles from './Rooms.module.css';
 import { roomQueryKeys } from '@/services/rooms/request';
 import CustomTable from '@/components/CustomTable';
 
@@ -14,7 +15,7 @@ function Rooms() {
 
   
   return (
-    <div>
+    <div className={styles.main}>
       <h1>Rooms</h1>
       <CustomTable columns={COLUMNS} rows={rows} />
     </div>
