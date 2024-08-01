@@ -1,17 +1,19 @@
 import { Drawer } from '@mantine/core';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { notifications } from '@mantine/notifications';
+import dayjs from 'dayjs'
 import styles from './BookingDrawer.module.css';
 import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
 import Input from '@/components/Input';
 import type { Booking } from '@/models/booking';
 import Button from '@/components/Button';
 import { dateFormatter } from '@/utils/dateFormatter';
+
 
 const editBookingSchema = z
   .object({
@@ -68,8 +70,8 @@ function BookingDrawer({
   } = useForm<BookingUpdateSchemaType>({
     resolver: zodResolver(editBookingSchema),
     defaultValues: {
-      startDate: selectedBooking?.startDate.toString(),
-      endDate: selectedBooking?.endDate.toString(),
+      startDate: selectedBooking?.startDate,
+      endDate: selectedBooking?.endDate,
       description: selectedBooking?.description,
     },
   });
@@ -100,6 +102,14 @@ function BookingDrawer({
       }
     );
   }
+
+  useEffect(() => {
+    if (selectedBooking !== null) {
+      const startEdit = dayjs(selectedBooking.startDate).format().slice(0,19)
+      const endEdit = dayjs(selectedBooking.endDate).format().slice(0,19)
+      reset({startDate: startEdit, endDate: endEdit, description: selectedBooking.description})
+    }
+  }, [reset, selectedBooking]);
 
   const onSubmit: SubmitHandler<BookingUpdateSchemaType> = (data) => {
     const id = selectedBooking?.id ? selectedBooking.id : '';
@@ -151,35 +161,58 @@ function BookingDrawer({
       opened={Boolean(selectedBooking)}
       position='right'
       size='50%'
-      title='Detalles de la Reserva'
     >
       <div>
-        <h1>{selectedBooking.title}</h1>
-        <p>
-          Start:{' '}
-          {dateFormatter({
-            date: selectedBooking.startDate,
-          })}
-        </p>
-        <p>
-          End:{' '}
-          {dateFormatter({
-            date: selectedBooking.endDate,
-          })}
-        </p>
-        <p>Description: {selectedBooking.description}</p>
-        {editOpen ? (
+        {!editOpen ? (
+          <div>
+            <h1>Detalles de la Reserva</h1>
+            <h3>{selectedBooking.title}</h3>
+            <p>
+              Start:{' '}
+              {dateFormatter({
+                date: selectedBooking.startDate,
+              })}
+            </p>
+            <p>
+              End:{' '}
+              {dateFormatter({
+                date: selectedBooking.endDate,
+              })}
+            </p>
+            <p>Description: {selectedBooking.description}</p>{' '}
+            <div className={styles.buttons}>
+              <Button
+                onClick={() => {
+                  onDelete(selectedBooking.id);
+                }}
+                size='lg'
+                variant='danger'
+              >
+                Delete Booking
+              </Button>
+              <Button
+                onClick={() => {
+                  setEditOpen(!editOpen);
+                }}
+                size='lg'
+                variant='info'
+              >
+                Edit Booking
+              </Button>
+            </div>
+          </div>
+        ) : (
           <div className={styles.mainBox}>
             <div className={styles.headerForm}>
+              <p className={styles.formTitle}>Booking Edit Form</p>
               <Button
                 onClick={() => {
                   setEditOpen(!editOpen);
                 }}
                 variant='warning'
               >
-                CLOSE
+                Return
               </Button>
-              <p className={styles.formTitle}>Booking Edit Form</p>
             </div>
             <div className={styles.mainBox}>
               <div className={styles.line2} />
@@ -239,27 +272,6 @@ function BookingDrawer({
                 </Button>
               </form>
             </div>
-          </div>
-        ) : (
-          <div className={styles.buttons}>
-            <Button
-              onClick={() => {
-                onDelete(selectedBooking.id);
-              }}
-              size='lg'
-              variant='danger'
-            >
-              Delete Booking
-            </Button>
-            <Button
-              onClick={() => {
-                setEditOpen(!editOpen);
-              }}
-              size='lg'
-              variant='info'
-            >
-              Edit Booking
-            </Button>
           </div>
         )}
       </div>
