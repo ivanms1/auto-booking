@@ -6,7 +6,7 @@
   flex-direction: row;
 }
 .search {
-  flex: 1; /* Para que el elemento de búsqueda ocupe el espacio restante */
+  flex: 1;
 }
 
 .icons {
@@ -29,10 +29,29 @@
   flex-direction: row;
 }
 
+.hover {
+  width: 115px;
+  border-radius: 4px;
+}
+.hover:hover {
+  background-color: var(--200);
+}
+
 .imageInside {
   margin: 0 5px 0 5px;
 }
 
 .picturePosition {
   margin-left: 55px;
+}
+
+.button {
+  display: flex;
+  background-color: transparent;
+  border: none
+}
+
+.ul {
+  list-style-type: none;
+  padding-left: 0;
 }
