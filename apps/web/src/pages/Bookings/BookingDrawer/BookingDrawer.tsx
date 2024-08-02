@@ -69,11 +69,6 @@ function BookingDrawer({
     formState: { errors },
   } = useForm<BookingUpdateSchemaType>({
     resolver: zodResolver(editBookingSchema),
-    defaultValues: {
-      startDate: selectedBooking?.startDate,
-      endDate: selectedBooking?.endDate,
-      description: selectedBooking?.description,
-    },
   });
   const bookingMutationDelete = useDeleteBooking();
   const bookingMutationUpdate = useUpdateBooking();
