@@ -14,6 +14,7 @@ function Sidebar() {
   return (
     <div className={styles.sidebar}>
       <div className={styles.links}>
+        <p className={styles.title}>AUTO<br/>BOOKING</p>
         {ITEMS.map((item) => (
           <Link className={styles.link} key={item.label} to={item.path}>
             {item.label}
