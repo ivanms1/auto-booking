@@ -6,14 +6,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { notifications } from '@mantine/notifications';
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 import styles from './BookingDrawer.module.css';
 import { useUpdateBooking, useDeleteBooking } from '@/services/bookings';
 import Input from '@/components/Input';
 import type { Booking } from '@/models/booking';
 import Button from '@/components/Button';
 import { dateFormatter } from '@/utils/dateFormatter';
-
 
 const editBookingSchema = z
   .object({
@@ -99,10 +98,12 @@ function BookingDrawer({
   }
 
   useEffect(() => {
-    if (selectedBooking !== null) {
-      const startEdit = dayjs(selectedBooking.startDate).format().slice(0,19)
-      const endEdit = dayjs(selectedBooking.endDate).format().slice(0,19)
-      reset({startDate: startEdit, endDate: endEdit, description: selectedBooking.description})
+    if (selectedBooking) {
+      reset({
+        startDate: dayjs(selectedBooking.startDate).format('YYYY-MM-DDTHH:mm'),
+        endDate: dayjs(selectedBooking.endDate).format('YYYY-MM-DDTHH:mm'),
+        description: selectedBooking.description,
+      });
     }
   }, [reset, selectedBooking]);
 
