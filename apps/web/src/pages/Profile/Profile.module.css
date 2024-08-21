@@ -1,0 +1,168 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100vh - 50px);
+  width: 100%;
+  background-color: var(--purewhite);
+  margin-top: 15px;
+}
+
+.title {
+  color: var(--900);
+  font-size: 24px;
+  margin: 0 20px 0 20px;
+  align-self: flex-start;
+}
+
+.line {
+  border-top: 1px solid var(--400);
+  height: 1px;
+  width: 1245px;
+  padding: 0;
+  margin: 20px 20px 0 20px;
+}
+
+.mainBox {
+  display: flex;
+  flex-direction: column;
+  width: 804px;
+  height: 1000px;
+  background-color: var(--purewhite);
+  border-radius: 8px;
+  margin: 20px;
+  align-self: flex-end;
+  box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.2);
+}
+
+.formTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 20px;
+}
+
+.line2 {
+  border-top: 1px solid var(--200);
+  height: 1px;
+  width: 756px;
+  padding: 0;
+  margin: 0 20px 0 20px;
+}
+
+.input1 {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputAvatarSection {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.formP {
+  font-size: 15px;
+  color: var(--900);
+  margin-right: 3rem;
+}
+
+.inputForm {
+  width: 540px;
+  height: 42px;
+  border-radius: 8px;
+  border-color: var(--300);
+}
+
+.inputForm2 {
+  width: 540px;
+  height: 42px;
+  border-radius: 8px;
+  border-color: var(--300);
+}
+
+.inputForm4 {
+  width: 540px;
+  height: 42px;
+  border-radius: 8px;
+  border-color: var(--300);
+  margin-bottom: 1rem;
+}
+
+.submitButton {
+  align-self: center;
+  margin-bottom: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.errorAlert {
+  align-self: center;
+  color: var(--danger);
+  font-size: xx-small;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.inputForm3 {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+  align-items: center;
+}
+
+.labelRadio {
+  margin: 5px;
+}
+
+.inputRadio {
+  display: flex;
+  flex-direction: row;
+}
+
+.pradio {
+  margin-right: 10rem;
+  align-self: flex-start;
+}
+
+.radios {
+  margin-right: 150px;
+}
+
+.select {
+  margin-left: 90px;
+  border-radius: 6px;
+  height: 42px;
+  width: 200px;
+  padding: 5px;
+  border-color: var(--300);
+}
+
+.subtitle {
+  font-size: 12px;
+  margin-left: 1rem;
+  color: var(--700);
+}
+
+.avatarOptions {
+  display: flex;
+  flex-direction: row;
+  margin-left: 3rem;
+  align-items: center;
+}
+
+.file {
+  margin-left: 2rem;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+}

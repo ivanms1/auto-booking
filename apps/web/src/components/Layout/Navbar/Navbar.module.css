@@ -4,6 +4,7 @@
   background-color: var(--purewhite);
   justify-content: space-between;
   flex-direction: row;
+  box-shadow: 2px 2px 4px 1px rgba(0, 0, 0, 0.2);
 }
 .search {
   flex: 1;

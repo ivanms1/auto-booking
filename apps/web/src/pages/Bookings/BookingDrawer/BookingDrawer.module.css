@@ -1,6 +1,7 @@
 .buttons {
   display: flex;
   justify-content: space-around;
+  margin-top: 1rem;
 }
 
 .mainBox {
@@ -69,4 +70,14 @@
 .headerForm {
   display: flex;
   justify-content: space-between;
+}
+
+.p {
+  display: flex;
+  justify-content: space-between;
+}
+
+.titledetails {
+  display: flex;
+  justify-content: end;
 }

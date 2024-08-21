@@ -2,7 +2,7 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Popover } from '@mantine/core';
+import { Popover} from '@mantine/core';
 import styles from './Navbar.module.css';
 import Bell from '@/assets/svg/bell.svg?react';
 import ProfilePicture from '@/assets/svg/profile.svg?react';
