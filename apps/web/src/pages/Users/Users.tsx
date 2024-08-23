@@ -11,6 +11,8 @@ const COLUMNS = ['User Name', 'User Email', 'Created At']
 function Users() {
   
   const { data } = useQuery({ ...userQueryKeys.list()});
+  console.log(data);
+  
   
 
   const rows = data?.map((user) => {

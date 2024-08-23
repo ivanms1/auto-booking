@@ -26,6 +26,7 @@ export class UserService {
         email: true,
         createdAt: true,
         updatedAt: true,
+        role: true
       },
     });
   }
@@ -41,6 +42,7 @@ export class UserService {
         email: true,
         createdAt: true,
         updatedAt: true,
+        role: true
       },
     });
   }
