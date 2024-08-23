@@ -1,9 +1,8 @@
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-//import { notifications } from '@mantine/notifications';
 import { FileInput } from '@mantine/core';
 import styles from './Profile.module.css';
 import Button from '@/components/Button';
@@ -29,6 +28,7 @@ function Profile() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<BookingSchemaType>({
     resolver: zodResolver(generalSettingsSchema),
   });
@@ -55,12 +55,18 @@ function Profile() {
             </label>
             <div className={styles.avatarOptions}>
               <ProfilePicture className={styles.imageInside} />
-              <FileInput
-                accept='image/png,image/jpeg'
-                placeholder='Change'
-                {...register('avatar')}
-                className={styles.file}
+              <Controller
+                control={control}
+                name='avatar'
+                render={() => (
+                  <FileInput
+                    accept='image/png,image/jpeg'
+                    className={styles.file}
+                    placeholder='Change'
+                  />
+                )}
               />
+
               <Button className={styles.file} outline variant='danger'>
                 Remove
               </Button>
