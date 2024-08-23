@@ -162,25 +162,26 @@ function BookingDrawer({
         {!editOpen ? (
           <div>
             <h1>Detalles de la Reserva</h1>
-            <h3>{selectedBooking.title}</h3>
-            <p>
-              Start:{' '}
+            <h3 className={styles.titledetails}>{selectedBooking.title}</h3>
+            <p className={styles.p}>
+              <strong>Start:</strong>
               {dateFormatter({
                 date: selectedBooking.startDate,
               })}
             </p>
-            <p>
-              End:{' '}
+            <p className={styles.p}>
+              <strong>End:</strong>
               {dateFormatter({
                 date: selectedBooking.endDate,
               })}
             </p>
-            <p>Description: {selectedBooking.description}</p>{' '}
+            <p className={styles.p}><strong>Description:</strong> {selectedBooking.description}</p>
             <div className={styles.buttons}>
               <Button
                 onClick={() => {
                   onDelete(selectedBooking.id);
                 }}
+                outline
                 size='lg'
                 variant='danger'
               >
@@ -190,6 +191,7 @@ function BookingDrawer({
                 onClick={() => {
                   setEditOpen(!editOpen);
                 }}
+                outline
                 size='lg'
                 variant='info'
               >
@@ -205,6 +207,7 @@ function BookingDrawer({
                 onClick={() => {
                   setEditOpen(!editOpen);
                 }}
+                outline
                 variant='warning'
               >
                 Return

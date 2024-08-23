@@ -1,3 +1,3 @@
-import Profile from "./Profile";
+import DrawerCreate from "./Profile";
 
-export default Profile
+export default DrawerCreate
