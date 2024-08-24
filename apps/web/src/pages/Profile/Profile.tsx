@@ -58,10 +58,11 @@ function Profile() {
               <Controller
                 control={control}
                 name='avatar'
-                render={() => (
+                render={({ field: { onChange } }) => (
                   <FileInput
                     accept='image/png,image/jpeg'
                     className={styles.file}
+                    onChange={onChange}
                     placeholder='Change'
                   />
                 )}
