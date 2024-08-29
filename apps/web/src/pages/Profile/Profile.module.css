@@ -6,6 +6,7 @@
   width: 100%;
   background-color: var(--purewhite);
   margin-top: 15px;
+  overflow: auto;
 }
 
 .title {
