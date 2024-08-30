@@ -11,7 +11,7 @@ import {
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import type { UserReturn} from './users.service';
-import { UserService } from './users.service';
+import { UserService, InputPassword } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 
 @Controller('users')
@@ -49,5 +49,14 @@ export class UserController {
     @Body() updateUser: Prisma.UserUpdateInput
   ): Promise<User | null> {
     return this.userService.updateUser({ where: { id }, data: updateUser });
+  }
+
+  @Put('password/:id')
+  @UseGuards(JwtAuthGuard)
+  async updatePassword(
+    @Param('id') id: string,
+    @Body() updatePassword:InputPassword
+  ): Promise<User | null> {
+    return this.userService.updatePassword({ where: { id }, data1: updatePassword });
   }
 }

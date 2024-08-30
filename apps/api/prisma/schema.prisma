@@ -21,6 +21,10 @@ model User {
   updatedAt DateTime  @updatedAt
   bookings Booking[]
   role Role @default(USER)
+  location String?
+  address1 String?
+  address2 String?
+  zipCode  Int?
 }
 
 model Car {
