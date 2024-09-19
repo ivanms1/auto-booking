@@ -14,8 +14,6 @@ const generalSettingsSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   country: z.string(),
-  city: z.string(),
-  state: z.string(),
   address1: z.string(),
   address2: z.string(),
   zip: z.number(),
@@ -121,20 +119,6 @@ function Profile() {
                 type='country'
                 {...register('country')}
                 placeholder='Select Country'
-              />
-              <Input
-                className={styles.inputForm4}
-                id='city'
-                type='city'
-                {...register('city')}
-                placeholder='City'
-              />
-              <Input
-                className={styles.inputForm2}
-                id='state'
-                type='state'
-                {...register('state')}
-                placeholder='State'
               />
             </div>
           </div>

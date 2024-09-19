@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import type { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma.service';
@@ -11,6 +11,12 @@ export interface UserReturn {
   email: string;
   createdAt: Date | string;
   updatedAt: Date | string;
+}
+
+export interface InputPassword {
+  password: string;
+  password2: string;
+  newPassword: string;
 }
 
 @Injectable()
@@ -26,7 +32,7 @@ export class UserService {
         email: true,
         createdAt: true,
         updatedAt: true,
-        role: true
+        role: true,
       },
     });
   }
@@ -42,7 +48,7 @@ export class UserService {
         email: true,
         createdAt: true,
         updatedAt: true,
-        role: true
+        role: true,
       },
     });
   }
@@ -65,6 +71,41 @@ export class UserService {
     if (typeof data.password === 'string') {
       data.password = await bcrypt.hash(data.password, roundsOfHashing);
     }
+
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async updatePassword(params: {
+    where: Prisma.UserWhereUniqueInput;
+    inputData: InputPassword;
+  }): Promise<User> {
+    const { where, inputData } = params;
+    const user = await this.prisma.user.findUnique({ where });
+
+    if (!user) {
+      throw new NotFoundException(`No user found`);
+    }
+
+    if (inputData.password !== inputData.password2) {
+      throw new Error('Passwords are not equal');
+    }
+
+    const isPasswordValid = await bcrypt.compare(inputData.password, user.password);
+    
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    if (typeof inputData.newPassword === 'string') {
+      inputData.newPassword = await bcrypt.hash(inputData.newPassword, roundsOfHashing);
+    }
+
+   const data: Prisma.UserUpdateInput = { password: inputData.newPassword};
+
 
     return this.prisma.user.update({
       data,
