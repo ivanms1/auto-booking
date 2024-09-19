@@ -57,6 +57,6 @@ export class UserController {
     @Param('id') id: string,
     @Body() updatePassword:InputPassword
   ): Promise<User | null> {
-    return this.userService.updatePassword({ where: { id }, data1: updatePassword });
+    return this.userService.updatePassword({ where: { id }, inputData: updatePassword });
   }
 }

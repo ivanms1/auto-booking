@@ -80,31 +80,31 @@ export class UserService {
 
   async updatePassword(params: {
     where: Prisma.UserWhereUniqueInput;
-    data1: InputPassword;
+    inputData: InputPassword;
   }): Promise<User> {
-    const { where, data1 } = params;
+    const { where, inputData } = params;
     const user = await this.prisma.user.findUnique({ where });
 
     if (!user) {
       throw new NotFoundException(`No user found`);
     }
 
-    if (data1.password !== data1.password2) {
+    if (inputData.password !== inputData.password2) {
       throw new Error('Passwords are not equal');
     }
 
-    const isPasswordValid = await bcrypt.compare(data1.password, user.password);
+    const isPasswordValid = await bcrypt.compare(inputData.password, user.password);
     
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
 
-    if (typeof data1.newPassword === 'string') {
-      data1.newPassword = await bcrypt.hash(data1.newPassword, roundsOfHashing);
+    if (typeof inputData.newPassword === 'string') {
+      inputData.newPassword = await bcrypt.hash(inputData.newPassword, roundsOfHashing);
     }
 
-   const data: Prisma.UserUpdateInput = { password: data1.newPassword};
+   const data: Prisma.UserUpdateInput = { password: inputData.newPassword};
 
 
     return this.prisma.user.update({
