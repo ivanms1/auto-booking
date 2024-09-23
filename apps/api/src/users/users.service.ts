@@ -15,7 +15,7 @@ export interface UserReturn {
 
 export interface InputPassword {
   password: string;
-  password2: string;
+  duplicatePassword: string;
   newPassword: string;
 }
 
@@ -89,7 +89,7 @@ export class UserService {
       throw new NotFoundException(`No user found`);
     }
 
-    if (inputData.password !== inputData.password2) {
+    if (inputData.password !== inputData.duplicatePassword) {
       throw new Error('Passwords are not equal');
     }
 
@@ -113,8 +113,48 @@ export class UserService {
     });
   }
 
+  async addUpdateUser(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }): Promise<User> {
+    const { where, data } = params;
+
+    if (!data.address1 || !data.location || !data.name || !data.zipCode) {
+      throw new Error('Missing Argumengts');
+    }
+
+    if (data.email || data.password || data.createdAt || data.updatedAt || data.id) {
+      throw new Error('Wrong Arguments');
+    }
+
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
     return this.prisma.user.delete({
+      where,
+    });
+  }
+
+  async updateEmail(params: {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.UserUpdateInput;
+  }): Promise<User> {
+    const { where, data } = params;
+    
+    if (!data.email) {
+      throw new Error('Missing Email');
+    }
+
+    if (data.name || data.password || data.createdAt || data.updatedAt || data.id || data.address1 || data.address2 || data.location || data.zipCode ) {
+      throw new Error('Wrong Arguments');
+    }
+
+    return this.prisma.user.update({
+      data,
       where,
     });
   }

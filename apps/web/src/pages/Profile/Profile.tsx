@@ -12,7 +12,6 @@ import ProfilePicture from '@/assets/svg/profile.svg?react';
 const generalSettingsSchema = z.object({
   avatar: z.instanceof(FileList),
   name: z.string(),
-  email: z.string().email(),
   country: z.string(),
   address1: z.string(),
   address2: z.string(),
@@ -94,21 +93,6 @@ function Profile() {
           </div>
           {errors.name?.message ? (
             <p className={styles.errorAlert}>{errors.name.message}</p>
-          ) : null}
-          <div className={styles.input1}>
-            <label className={styles.formP} htmlFor='email'>
-              Email
-            </label>
-            <Input
-              className={styles.inputForm2}
-              id='email'
-              type='email'
-              {...register('email')}
-              placeholder='E-mail'
-            />
-          </div>
-          {errors.email?.message ? (
-            <p className={styles.errorAlert}>{errors.email.message}</p>
           ) : null}
           <div className={styles.inputForm3}>
             <p className={styles.pradio}>Location</p>
@@ -227,7 +211,7 @@ function Profile() {
           </label>
           <Input
             className={styles.inputForm}
-            id='newpassword2'
+            id='duplicatePassword'
             placeholder='Confirm new password'
             type='string'
           />

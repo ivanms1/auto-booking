@@ -51,7 +51,25 @@ export class UserController {
     return this.userService.updateUser({ where: { id }, data: updateUser });
   }
 
-  @Put('password/:id')
+  @Put(':id/addNewInfo')
+  @UseGuards(JwtAuthGuard)
+  async addUpdateUser(
+    @Param('id') id: string,
+    @Body() updateUser: Prisma.UserUpdateInput
+  ): Promise<User | null> {
+    return this.userService.addUpdateUser({ where: { id }, data: updateUser });
+  }
+
+  @Put(':id/addNewInfo')
+  @UseGuards(JwtAuthGuard)
+  async updateEmail(
+    @Param('id') id: string,
+    @Body() updateUser: Prisma.UserUpdateInput
+  ): Promise<User | null> {
+    return this.userService.updateEmail({ where: { id }, data: updateUser });
+  }
+
+  @Put(':id/password')
   @UseGuards(JwtAuthGuard)
   async updatePassword(
     @Param('id') id: string,
