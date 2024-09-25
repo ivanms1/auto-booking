@@ -51,7 +51,7 @@ export class UserController {
     return this.userService.updateUser({ where: { id }, data: updateUser });
   }
 
-  @Put(':id/addNewInfo')
+  @Put(':id/update')
   @UseGuards(JwtAuthGuard)
   async addUpdateUser(
     @Param('id') id: string,
@@ -60,7 +60,7 @@ export class UserController {
     return this.userService.addUpdateUser({ where: { id }, data: updateUser });
   }
 
-  @Put(':id/addNewInfo')
+  @Put(':id/update-email')
   @UseGuards(JwtAuthGuard)
   async updateEmail(
     @Param('id') id: string,
