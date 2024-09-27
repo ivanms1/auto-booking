@@ -25,6 +25,7 @@ model User {
   address1 String?
   address2 String?
   zipCode  Int?
+  avatar String?
 }
 
 model Car {
