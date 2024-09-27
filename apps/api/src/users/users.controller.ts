@@ -6,8 +6,11 @@ import {
   Post,
   Delete,
   Put,
-  UseGuards,
+  UseGuards, 
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import type { UserReturn} from './users.service';
@@ -76,5 +79,13 @@ export class UserController {
     @Body() updatePassword:InputPassword
   ): Promise<User | null> {
     return this.userService.updatePassword({ where: { id }, inputData: updatePassword });
+  }
+
+
+  @Post(':id/upload')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    return this.userService.uploadImageToCloudinary(file, { where: { id } });
   }
 }

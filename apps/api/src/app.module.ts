@@ -6,7 +6,6 @@ import { BookingModule } from './bookings/bookings.module';
 import { RoomModule } from './rooms/rooms.module';
 import { CarModule } from './cars/cars.module';
 import { AuthModule } from './auth/auth.module';
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     BookingModule,
     RoomModule,
     CarModule,
-    CloudinaryModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../../web', 'dist'),
     }),

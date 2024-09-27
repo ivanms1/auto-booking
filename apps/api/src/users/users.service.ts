@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import type { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma.service';
 
 export const roundsOfHashing = 10;
@@ -21,7 +27,10 @@ export interface InputPassword {
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cloudinary: CloudinaryService
+  ) {}
 
   async user(id: string): Promise<UserReturn | null> {
     return this.prisma.user.findUnique({
@@ -93,19 +102,23 @@ export class UserService {
       throw new Error('Passwords are not equal');
     }
 
-    const isPasswordValid = await bcrypt.compare(inputData.password, user.password);
-    
+    const isPasswordValid = await bcrypt.compare(
+      inputData.password,
+      user.password
+    );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
 
     if (typeof inputData.newPassword === 'string') {
-      inputData.newPassword = await bcrypt.hash(inputData.newPassword, roundsOfHashing);
+      inputData.newPassword = await bcrypt.hash(
+        inputData.newPassword,
+        roundsOfHashing
+      );
     }
 
-   const data: Prisma.UserUpdateInput = { password: inputData.newPassword};
-
+    const data: Prisma.UserUpdateInput = { password: inputData.newPassword };
 
     return this.prisma.user.update({
       data,
@@ -123,7 +136,13 @@ export class UserService {
       throw new Error('Missing Argumengts');
     }
 
-    if (data.email || data.password || data.createdAt || data.updatedAt || data.id) {
+    if (
+      data.email ||
+      data.password ||
+      data.createdAt ||
+      data.updatedAt ||
+      data.id
+    ) {
       throw new Error('Wrong Arguments');
     }
 
@@ -144,18 +163,49 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    
+
     if (!data.email) {
       throw new Error('Missing Email');
     }
 
-    if (data.name || data.password || data.createdAt || data.updatedAt || data.id || data.address1 || data.address2 || data.location || data.zipCode ) {
+    if (
+      data.name ||
+      data.password ||
+      data.createdAt ||
+      data.updatedAt ||
+      data.id ||
+      data.address1 ||
+      data.address2 ||
+      data.location ||
+      data.zipCode
+    ) {
       throw new Error('Wrong Arguments');
     }
 
     return this.prisma.user.update({
       data,
       where,
+    });
+  }
+
+  async uploadImageToCloudinary(
+    file: Express.Multer.File,
+    params: {
+      where: Prisma.UserWhereUniqueInput;
+    }
+  ) {
+    const { where } = params;
+
+    return this.cloudinary.uploadImage(file).catch(() => {
+      throw new BadRequestException('Invalid file type.');
+    }).then((response) => {
+      console.log(response);
+      const data: Prisma.UserUpdateInput = {avatar: response.secure_url}
+      return this.prisma.user.update({
+        data,
+        where,
+      });
+      
     });
   }
 }
