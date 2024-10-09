@@ -26,6 +26,7 @@ export const API_ROUTES = {
     create: '/users',
     update: '/users/:id',
     delete: '/users/:id',
+    upload: 'users/upload-image'
   },
   login: '/auth/login',
   authuser: '/auth/user'

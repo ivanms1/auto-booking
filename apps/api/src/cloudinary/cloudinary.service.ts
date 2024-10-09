@@ -5,7 +5,7 @@ import toStream = require('buffer-to-stream');
 
 @Injectable()
 export class CloudinaryService {
-  static uploadImage(file: Express.Multer.File) {
+  static uploadImage(_file: Express.Multer.File) {
     throw new Error('Method not implemented.');
   }
   async uploadImage(

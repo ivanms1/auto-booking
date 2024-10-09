@@ -17,6 +17,7 @@ export interface UserReturn {
   email: string;
   createdAt: Date | string;
   updatedAt: Date | string;
+  avatar?: string | null;
 }
 
 export interface InputPassword {
@@ -42,6 +43,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
         role: true,
+        avatar: true
       },
     });
   }
@@ -58,6 +60,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
         role: true,
+        avatar: true
       },
     });
   }
@@ -190,16 +193,14 @@ export class UserService {
 
   async uploadImageToCloudinary(
     file: Express.Multer.File,
-    params: {
-      where: Prisma.UserWhereUniqueInput;
-    }
+    user: User
   ) {
-    const { where } = params;
+    const where: Prisma.UserWhereUniqueInput = {id: user.id};
+    
 
     return this.cloudinary.uploadImage(file).catch(() => {
       throw new BadRequestException('Invalid file type.');
     }).then((response) => {
-      console.log(response);
       const data: Prisma.UserUpdateInput = {avatar: response.secure_url}
       return this.prisma.user.update({
         data,

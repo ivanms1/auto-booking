@@ -40,6 +40,15 @@
 
 .imageInside {
   margin: 0 5px 0 5px;
+  max-width: 30px;
+  max-height: 30px;
+}
+
+.profilePicture {
+  margin: 0 5px 0 5px;
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 50%;
 }
 
 .picturePosition {

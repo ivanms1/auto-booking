@@ -13,6 +13,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UserDecoded } from 'src/auth/user.decorator';
 import type { UserReturn} from './users.service';
 import { UserService, InputPassword } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
@@ -54,13 +55,13 @@ export class UserController {
     return this.userService.updateUser({ where: { id }, data: updateUser });
   }
 
-  @Put(':id/update')
+  @Put('update')
   @UseGuards(JwtAuthGuard)
   async addUpdateUser(
-    @Param('id') id: string,
+    @UserDecoded() user: User,
     @Body() updateUser: Prisma.UserUpdateInput
   ): Promise<User | null> {
-    return this.userService.addUpdateUser({ where: { id }, data: updateUser });
+    return this.userService.addUpdateUser({ where: { id: user.id }, data: updateUser });
   }
 
   @Put(':id/update-email')
@@ -82,10 +83,10 @@ export class UserController {
   }
 
 
-  @Post(':id/upload')
+  @Post('upload-image')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    return this.userService.uploadImageToCloudinary(file, { where: { id } });
+  async uploadImage(@UserDecoded() user: User, @UploadedFile() file: Express.Multer.File) {
+    return this.userService.uploadImageToCloudinary(file, user);
   }
 }

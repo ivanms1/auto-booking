@@ -98,6 +98,9 @@
   align-self: center;
   margin-bottom: 1rem;
 }
+.submitButtonImage {
+  margin-left: 2rem;
+}
 
 .form {
   display: flex;
@@ -109,6 +112,14 @@
   color: var(--danger);
   font-size: xx-small;
   margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.errorAlertImage {
+  align-self: center;
+  color: var(--danger);
+  font-size: xx-small;
+  margin: 0 0 0 1rem;
   padding: 0 0 0 0;
 }
 

@@ -4,13 +4,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { FileInput } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import styles from './Profile.module.css';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import ProfilePicture from '@/assets/svg/profile.svg?react';
+import { useUploadImage } from '@/services/users';
 
 const generalSettingsSchema = z.object({
-  avatar: z.instanceof(FileList),
   name: z.string(),
   country: z.string(),
   address1: z.string(),
@@ -18,61 +19,138 @@ const generalSettingsSchema = z.object({
   zip: z.number(),
 });
 
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
+];
+
+const inputImageSchema = z.object({
+  image: z
+    .instanceof(File)
+    .refine((file) => file.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      'Only .jpg, .jpeg, .png and .webp formats are supported.'
+    ),
+});
+
 export type BookingSchemaType = z.infer<typeof generalSettingsSchema>;
+export type InputImageSchemaType = z.infer<typeof inputImageSchema>;
+
+interface ImageFormProps {
+  onUploadImage: (file: File) => void;
+}
+
+function ImageForm({ onUploadImage }: ImageFormProps) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<InputImageSchemaType>({
+    resolver: zodResolver(inputImageSchema),
+  });
+
+  const imageValue = watch('image') as File | undefined;
+
+  const onSubmit: SubmitHandler<InputImageSchemaType> = (data) => {
+    const file = data.image
+    onUploadImage(file)
+  };
+
+  return (
+    <form onSubmit={(event) => void handleSubmit(onSubmit)(event)}>
+      <p className={styles.formTitle}>General Settings</p>
+      <p className={styles.subtitle}>Your current primary email adress is </p>
+      <div className={styles.line2} />
+      <div className={styles.inputAvatarSection}>
+        <label className={styles.formP} htmlFor='title'>
+          Avatar
+        </label>
+        <div className={styles.avatarOptions}>
+          <ProfilePicture className={styles.imageInside} />
+          <Controller
+            control={control}
+            name='image'
+            render={({ field: { onChange } }) => (
+              <FileInput
+                accept='image/png,image/jpeg'
+                className={styles.file}
+                onChange={(file) => {
+                  onChange(file);
+                }}
+                placeholder='Change'
+              />
+            )}
+          />
+          {imageValue ? (
+            <Button className={styles.submitButtonImage} type='submit'>
+              Submit
+            </Button>
+          ) : null}
+          <Button className={styles.file} outline variant='danger'>
+            Remove
+          </Button>
+        </div>
+        {errors.image?.message && typeof errors.image.message === 'string' ? (
+          <p className={styles.errorAlertImage}>{errors.image.message}</p>
+        ) : null}
+      </div>
+    </form>
+  );
+}
 
 function Profile() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<BookingSchemaType>({
     resolver: zodResolver(generalSettingsSchema),
   });
 
+  const userMutationUpload = useUploadImage();
+
   const onSubmit: SubmitHandler<BookingSchemaType> = (data) => {
     console.log(data);
   };
+
+  function onUploadImage(file: File) {
+
+    userMutationUpload.mutate(
+      { file },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: 'Success',
+            message: 'Successful Upload Image',
+            color: 'green',
+          });
+        },
+        onError: () => {
+          notifications.show({
+            title: 'Error',
+            message: 'Fail Uploading Image',
+            color: 'red',
+          });
+        },
+      }
+    );
+  }
 
   return (
     <div className={styles.main}>
       <h1 className={styles.title}>Account</h1>
       <div className={styles.line} />
       <div className={styles.mainBox}>
-        <p className={styles.formTitle}>General Settings</p>
-        <p className={styles.subtitle}>Your current primary email adress is </p>
-        <div className={styles.line2} />
+        <ImageForm onUploadImage={onUploadImage} />
         <form
           className={styles.form}
           onSubmit={(event) => void handleSubmit(onSubmit)(event)}
         >
-          <div className={styles.inputAvatarSection}>
-            <label className={styles.formP} htmlFor='title'>
-              Avatar
-            </label>
-            <div className={styles.avatarOptions}>
-              <ProfilePicture className={styles.imageInside} />
-              <Controller
-                control={control}
-                name='avatar'
-                render={({ field: { onChange } }) => (
-                  <FileInput
-                    accept='image/png,image/jpeg'
-                    className={styles.file}
-                    onChange={onChange}
-                    placeholder='Change'
-                  />
-                )}
-              />
-
-              <Button className={styles.file} outline variant='danger'>
-                Remove
-              </Button>
-            </div>
-          </div>
-          {errors.avatar?.message ? (
-            <p className={styles.errorAlert}>{errors.avatar.message}</p>
-          ) : null}
           <p className={styles.formTitle}>Basic Information</p>
           <p className={styles.subtitle}>
             Update some personal information. Your adress will never be publicly

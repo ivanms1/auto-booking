@@ -46,9 +46,20 @@ export function createUser(data: UserInput): Promise<User> {
   });
 }
 
-export function updateUser(id: string, data: User): Promise<User> {
+export function uploadImage(file: File): Promise<User> {
+  const formData = new FormData();
+  formData.append('file', file);
+  
   return serviceFetch({
-    url: getRoute(API_ROUTES.users.update, { id }),
+    url: getRoute(API_ROUTES.users.upload),
+    method: METHODS.POST,
+    data: formData,
+  })
+}
+
+export function updateUser(data: User): Promise<User> {
+  return serviceFetch({
+    url: getRoute(API_ROUTES.users.update),
     method: METHODS.PUT,
     data,
   });
