@@ -2,16 +2,19 @@ import React from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Popover} from '@mantine/core';
+import { Popover } from '@mantine/core';
 import styles from './Navbar.module.css';
 import Bell from '@/assets/svg/bell.svg?react';
-import ProfilePicture from '@/assets/svg/profile.svg?react';
+import ProfilePicture from '@/assets/svg/27716.svg?react';
 import { setToken } from '@/utils/request';
+import useGetCurrentUser from '@/hooks/useGetCurrentUser';
 
 function Navbar() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [_cookies, _setCookie, removeCookie] = useCookies(['accessToken']);
+
+  const { user } = useGetCurrentUser();
 
   function handleClick(route: string) {
     navigate(route);
@@ -25,7 +28,7 @@ function Navbar() {
   }
   return (
     <nav className={styles.navbar}>
-      <div className={styles.search}/>
+      <div className={styles.search} />
       <div className={styles.icons}>
         <div className={styles.icon}>
           <Bell />
@@ -33,7 +36,15 @@ function Navbar() {
         <Popover position='bottom' shadow='md' width={150} withArrow>
           <Popover.Target>
             <div>
-              <ProfilePicture className={styles.imageInside} />
+              {user?.avatar ? (
+                <img
+                  alt='ProfilePicture'
+                  className={styles.profilePicture}
+                  src={user.avatar}
+                />
+              ) : (
+                <ProfilePicture className={styles.imageInside} />
+              )}
             </div>
           </Popover.Target>
           <Popover.Dropdown>

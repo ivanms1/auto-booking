@@ -20,7 +20,7 @@ function CustomTable({ columns, rows }: TableProps) {
         {rows.map((row) => (
           <Table.Tr key={row.id}>
             {row.values.map((value) => (
-              <Table.Td key={value}>{value}</Table.Td>
+              <Table.Td key={`${row.id}-${value}`}>{value}</Table.Td>
             ))}
           </Table.Tr>
         ))}

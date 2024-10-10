@@ -1,10 +1,10 @@
 import type { MutateOptions} from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
+import type { UserInput} from './request';
+import { createUser, deleteUser, updateUser, uploadImage } from './request';
 import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
 import type { User } from '@/models/user';
-import type { UserInput} from './request';
-import { createUser, deleteUser, updateUser } from './request';
 
 export function useCreateUser(
   options: MutateOptions<
@@ -23,13 +23,27 @@ export function useCreateUser(
 export function useUpdateUser(
   onSuccess?: (
     data: User,
-    variables: { id: string; data: User },
+    variables: { data: User },
     context?: unknown
   ) => void,
   onError?: (error: AxiosError<Error>) => void
 ) {
-  return useMutation<User, AxiosError<Error>, { id: string; data: User }>({
-    mutationFn: ({ id, data }) => updateUser(id, data),
+  return useMutation<User, AxiosError<Error>, { data: User }>({
+    mutationFn: ({ data }) => updateUser(data),
+    onError,
+  });
+}
+
+export function useUploadImage(
+  onSuccess?: (
+    data: User,
+    variables: { file: File },
+    context?: unknown
+  ) => void,
+  onError?: (error: AxiosError<Error>) => void
+) {
+  return useMutation<User, AxiosError<Error>, { file: File }>({
+    mutationFn: ({ file }) => uploadImage(file),
     onError,
   });
 }
