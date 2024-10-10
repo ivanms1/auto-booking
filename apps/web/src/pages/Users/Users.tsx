@@ -12,9 +12,6 @@ function Users() {
   
   const { data } = useQuery({ ...userQueryKeys.list()});
 
-  console.log(data);
-  
-
   const rows = data?.map((user) => {
     return {id: user.id, values: [user.name, user.email, user.createdAt, user.avatar]}
   }) || []

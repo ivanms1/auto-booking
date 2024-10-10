@@ -57,8 +57,7 @@ function ImageForm({ onUploadImage }: ImageFormProps) {
   const imageValue = watch('image') as File | undefined;
 
   const onSubmit: SubmitHandler<InputImageSchemaType> = (data) => {
-    const file = data.image
-    onUploadImage(file)
+    onUploadImage(data.image)
   };
 
   return (

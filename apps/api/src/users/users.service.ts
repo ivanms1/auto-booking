@@ -43,7 +43,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
         role: true,
-        avatar: true
+        avatar: true,
       },
     });
   }
@@ -60,7 +60,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
         role: true,
-        avatar: true
+        avatar: true,
       },
     });
   }
@@ -191,22 +191,19 @@ export class UserService {
     });
   }
 
-  async uploadImageToCloudinary(
-    file: Express.Multer.File,
-    user: User
-  ) {
-    const where: Prisma.UserWhereUniqueInput = {id: user.id};
-    
+  async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
+    const where: Prisma.UserWhereUniqueInput = { id: user.id };
 
-    return this.cloudinary.uploadImage(file).catch(() => {
-      throw new BadRequestException('Invalid file type.');
-    }).then((response) => {
-      const data: Prisma.UserUpdateInput = {avatar: response.secure_url}
-      return this.prisma.user.update({
+    try {
+      const response = await this.cloudinary.uploadImage(file);
+      const data: Prisma.UserUpdateInput = { avatar: String(response.secure_url) };
+      
+      return await this.prisma.user.update({
         data,
         where,
       });
-      
-    });
+    } catch (error) {
+      throw new BadRequestException('Invalid file type.');
+    }
   }
 }
