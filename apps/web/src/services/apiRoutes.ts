@@ -24,9 +24,11 @@ export const API_ROUTES = {
     list: '/users',
     detail: '/users/:id',
     create: '/users',
-    update: '/users/:id',
+    update: '/users/update',
     delete: '/users/:id',
-    upload: 'users/upload-image'
+    upload: 'users/upload-image',
+    email: 'users/update-email',
+    password: 'users/password'
   },
   login: '/auth/login',
   authuser: '/auth/user'

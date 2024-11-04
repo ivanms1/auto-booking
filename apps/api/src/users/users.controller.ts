@@ -46,14 +46,14 @@ export class UserController {
     return this.userService.deleteUser({ id });
   }
 
-  @Put(':id')
-  @UseGuards(JwtAuthGuard)
-  async updateUser(
-    @Param('id') id: string,
-    @Body() updateUser: Prisma.UserUpdateInput
-  ): Promise<User | null> {
-    return this.userService.updateUser({ where: { id }, data: updateUser });
-  }
+  // @Put(':id')
+  // @UseGuards(JwtAuthGuard)
+  // async updateUser(
+  //   @Param('id') id: string,
+  //   @Body() updateUser: Prisma.UserUpdateInput
+  // ): Promise<User | null> {
+  //   return this.userService.updateUser({ where: { id }, data: updateUser });
+  // }
 
   @Put('update')
   @UseGuards(JwtAuthGuard)
@@ -64,22 +64,22 @@ export class UserController {
     return this.userService.addUpdateUser({ where: { id: user.id }, data: updateUser });
   }
 
-  @Put(':id/update-email')
+  @Put('update-email')
   @UseGuards(JwtAuthGuard)
   async updateEmail(
-    @Param('id') id: string,
+    @UserDecoded() user: User,
     @Body() updateUser: Prisma.UserUpdateInput
   ): Promise<User | null> {
-    return this.userService.updateEmail({ where: { id }, data: updateUser });
+    return this.userService.updateEmail({ where: { id: user.id }, data: updateUser });
   }
 
-  @Put(':id/password')
+  @Put('password')
   @UseGuards(JwtAuthGuard)
   async updatePassword(
-    @Param('id') id: string,
+    @UserDecoded() user: User,
     @Body() updatePassword:InputPassword
   ): Promise<User | null> {
-    return this.userService.updatePassword({ where: { id }, inputData: updatePassword });
+    return this.userService.updatePassword({ where: { id: user.id }, inputData: updatePassword });
   }
 
 

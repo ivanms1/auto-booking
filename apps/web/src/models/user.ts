@@ -7,5 +7,10 @@ export interface User {
   password: string;
   bookings: Booking[];
   createdAt: string;
-  avatar: string
+  location?: string;
+  address1?: string;
+  address2?: string;
+  zipCode:  number;
+  avatar: string;
+  role: 'USER' | 'ADMIN'
 }
