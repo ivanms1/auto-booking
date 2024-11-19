@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { notifications } from '@mantine/notifications';
 import { useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
+import { QUERY_KEYS } from '@/services/queryKeys';
 import styles from './Profile.module.css';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
@@ -41,7 +42,7 @@ const onSubmit: SubmitHandler<PasswordSchemaType> = (data) => {
     {
       onSuccess: () => {
         reset();
-        void queryClient.invalidateQueries({ queryKey: ['users'] });
+        void queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
         notifications.show({
           title: 'Success',
           message: 'Successful update Password',
