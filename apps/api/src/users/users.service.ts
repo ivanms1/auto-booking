@@ -77,22 +77,6 @@ export class UserService {
     });
   }
 
-  // async updateUser(params: {
-  //   where: Prisma.UserWhereUniqueInput;
-  //   data: Prisma.UserUpdateInput;
-  // }): Promise<User> {
-  //   const { where, data } = params;
-
-  //   if (typeof data.password === 'string') {
-  //     data.password = await bcrypt.hash(data.password, roundsOfHashing);
-  //   }
-
-  //   return this.prisma.user.update({
-  //     data,
-  //     where,
-  //   });
-  // }
-
   async updatePassword(params: {
     where: Prisma.UserWhereUniqueInput;
     inputData: InputPassword;

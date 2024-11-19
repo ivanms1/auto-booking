@@ -46,15 +46,6 @@ export class UserController {
     return this.userService.deleteUser({ id });
   }
 
-  // @Put(':id')
-  // @UseGuards(JwtAuthGuard)
-  // async updateUser(
-  //   @Param('id') id: string,
-  //   @Body() updateUser: Prisma.UserUpdateInput
-  // ): Promise<User | null> {
-  //   return this.userService.updateUser({ where: { id }, data: updateUser });
-  // }
-
   @Put('update')
   @UseGuards(JwtAuthGuard)
   async addUpdateUser(
