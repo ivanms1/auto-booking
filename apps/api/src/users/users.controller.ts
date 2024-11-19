@@ -6,15 +6,15 @@ import {
   Post,
   Delete,
   Put,
-  UseGuards, 
+  UseGuards,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { type User, Prisma } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
-import type { UserReturn} from './users.service';
+import type { UserReturn } from './users.service';
 import { UserService, InputPassword } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 
@@ -46,47 +46,49 @@ export class UserController {
     return this.userService.deleteUser({ id });
   }
 
-  @Put(':id')
-  @UseGuards(JwtAuthGuard)
-  async updateUser(
-    @Param('id') id: string,
-    @Body() updateUser: Prisma.UserUpdateInput
-  ): Promise<User | null> {
-    return this.userService.updateUser({ where: { id }, data: updateUser });
-  }
-
   @Put('update')
   @UseGuards(JwtAuthGuard)
   async addUpdateUser(
     @UserDecoded() user: User,
     @Body() updateUser: Prisma.UserUpdateInput
   ): Promise<User | null> {
-    return this.userService.addUpdateUser({ where: { id: user.id }, data: updateUser });
+    return this.userService.addUpdateUser({
+      where: { id: user.id },
+      data: updateUser,
+    });
   }
 
-  @Put(':id/update-email')
+  @Put('update-email')
   @UseGuards(JwtAuthGuard)
   async updateEmail(
-    @Param('id') id: string,
+    @UserDecoded() user: User,
     @Body() updateUser: Prisma.UserUpdateInput
   ): Promise<User | null> {
-    return this.userService.updateEmail({ where: { id }, data: updateUser });
+    return this.userService.updateEmail({
+      where: { id: user.id },
+      data: updateUser,
+    });
   }
 
-  @Put(':id/password')
+  @Put('password')
   @UseGuards(JwtAuthGuard)
   async updatePassword(
-    @Param('id') id: string,
-    @Body() updatePassword:InputPassword
+    @UserDecoded() user: User,
+    @Body() updatePassword: InputPassword
   ): Promise<User | null> {
-    return this.userService.updatePassword({ where: { id }, inputData: updatePassword });
+    return this.userService.updatePassword({
+      where: { id: user.id },
+      inputData: updatePassword,
+    });
   }
-
 
   @Post('upload-image')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImage(@UserDecoded() user: User, @UploadedFile() file: Express.Multer.File) {
+  async uploadImage(
+    @UserDecoded() user: User,
+    @UploadedFile() file: Express.Multer.File
+  ) {
     return this.userService.uploadImageToCloudinary(file, user);
   }
 }

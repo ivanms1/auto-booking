@@ -61,6 +61,9 @@ export class UserService {
         updatedAt: true,
         role: true,
         avatar: true,
+        zipCode: true,
+        location: true,
+        address1: true,
       },
     });
   }
@@ -71,22 +74,6 @@ export class UserService {
     data.password = hashedPassword;
     return this.prisma.user.create({
       data,
-    });
-  }
-
-  async updateUser(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
-  }): Promise<User> {
-    const { where, data } = params;
-
-    if (typeof data.password === 'string') {
-      data.password = await bcrypt.hash(data.password, roundsOfHashing);
-    }
-
-    return this.prisma.user.update({
-      data,
-      where,
     });
   }
 
@@ -101,7 +88,7 @@ export class UserService {
       throw new NotFoundException(`No user found`);
     }
 
-    if (inputData.password !== inputData.duplicatePassword) {
+    if (inputData.newPassword !== inputData.duplicatePassword) {
       throw new Error('Passwords are not equal');
     }
 
@@ -134,8 +121,10 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    
+    
 
-    if (!data.address1 || !data.location || !data.name || !data.zipCode) {
+    if (!data.address1 || !data.location|| !data.name || !data.zipCode) {
       throw new Error('Missing Argumengts');
     }
 
@@ -144,7 +133,8 @@ export class UserService {
       data.password ||
       data.createdAt ||
       data.updatedAt ||
-      data.id
+      data.id ||
+      data.avatar
     ) {
       throw new Error('Wrong Arguments');
     }

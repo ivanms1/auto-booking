@@ -4,6 +4,9 @@ import { QUERY_KEYS } from '@/services/queryKeys';
 import type { User } from '@/models/user';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
+import type { UpdateSchemaType } from '@/pages/Profile/BasicInformationForm';
+import type { EmailSchemaType } from '@/pages/Profile/ChangeEmail';
+import type { PasswordSchemaType } from '@/pages/Profile/ChangePassword';
 
 const METHODS = {
   GET: 'GET',
@@ -57,9 +60,25 @@ export function uploadImage(file: File): Promise<User> {
   })
 }
 
-export function updateUser(data: User): Promise<User> {
+export function updateUser(data: UpdateSchemaType): Promise<User> {
   return serviceFetch({
     url: getRoute(API_ROUTES.users.update),
+    method: METHODS.PUT,
+    data,
+  });
+}
+
+export function updateUserEmail(data: EmailSchemaType): Promise<User> {
+  return serviceFetch({
+    url: getRoute(API_ROUTES.users.email),
+    method: METHODS.PUT,
+    data,
+  });
+}
+
+export function updateUserPassword(data: PasswordSchemaType): Promise<User> {
+  return serviceFetch({
+    url: getRoute(API_ROUTES.users.password),
     method: METHODS.PUT,
     data,
   });

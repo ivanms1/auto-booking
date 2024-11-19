@@ -178,3 +178,15 @@
   display: flex;
   flex-direction: column;
 }
+
+.imageInside {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.profilePicture {
+  margin: 0 5px 0 5px;
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 50%;
+}
