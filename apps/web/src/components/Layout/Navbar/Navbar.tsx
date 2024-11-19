@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -15,6 +15,8 @@ function Navbar() {
   const [_cookies, _setCookie, removeCookie] = useCookies(['accessToken']);
 
   const { user } = useGetCurrentUser();
+
+  const [opened, setOpened] = useState(false);
 
   function handleClick(route: string) {
     navigate(route);
@@ -33,15 +35,18 @@ function Navbar() {
         <div className={styles.icon}>
           <Bell />
         </div>
-        <Popover position='bottom' shadow='md' width={150} withArrow>
+        <Popover onChange={setOpened} opened={opened}  // Pasamos el estado 'opened' al Popover
+      position='bottom' shadow='md' width={150} withArrow>
           <Popover.Target>
             <div>
               {user?.avatar ? (
+                <button className={styles.avatarButton} onClick={() => { setOpened((o) => !o); }} type="button">
                 <img
                   alt='ProfilePicture'
                   className={styles.profilePicture}
                   src={user.avatar}
                 />
+                </button>
               ) : (
                 <ProfilePicture className={styles.imageInside} />
               )}
@@ -55,6 +60,7 @@ function Navbar() {
                     className={styles.button}
                     onClick={() => {
                       handleClick('/profile');
+                      setOpened((o) => !o)
                     }}
                     type='button'
                   >
