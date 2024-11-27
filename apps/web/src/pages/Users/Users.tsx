@@ -5,7 +5,7 @@ import { userQueryKeys } from '@/services/users/request';
 import CustomTable from '@/components/CustomTable';
 
 
-const COLUMNS = ['User Name', 'User Email', 'Created At']
+const COLUMNS = ['User Name', 'Created At', 'User Email']
 
 
 function Users() {
@@ -15,7 +15,7 @@ function Users() {
   
 
   const rows = data?.map((user) => {
-    return {id: user.id, values: [user.name, user.email, user.createdAt, user.avatar]}
+    return {id: user.id, values: [user.name, user.createdAt, user.email, user.avatar]}
   }) || []
 
   return (
