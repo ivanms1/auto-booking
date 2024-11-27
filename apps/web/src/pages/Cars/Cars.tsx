@@ -5,13 +5,13 @@ import { carQueryKeys } from '@/services/cars/request';
 import CustomTable from '@/components/CustomTable';
 
 
-const COLUMNS = ['Model', 'Mileage', 'Created At']
+const COLUMNS = ['Model', 'Created At', 'Mileage']
 
 function Cars() {
   const { data } = useQuery({ ...carQueryKeys.list() });
 
   const rows = data?.map((car) => {
-    return {id: car.id, values: [car.model, car.mileage, car.createdAt]}
+    return {id: car.id, values: [car.model, car.createdAt, car.mileage]}
   }) || []
 
   
