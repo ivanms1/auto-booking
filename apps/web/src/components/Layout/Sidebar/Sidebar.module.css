@@ -24,8 +24,17 @@
   color: var(--light);
   cursor: pointer;
   transition: color 0.3s;
+  padding: 0.1rem;
+  border-radius: 5px;
 }
 
 .link:hover {
   color: var(--primary);
+}
+
+.active {
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background-color: var(--dark-hover); /* Ejemplo: un color más oscuro */
+  box-shadow: 0 0 10px var(--primary); /* Borde brillante */
 }
