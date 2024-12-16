@@ -185,8 +185,17 @@
 }
 
 .profilePicture {
-  margin: 0 5px 0 5px;
-  max-width: 40px;
-  max-height: 40px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen sin deformarla */
+}
+
+.avatarContent {
+  width: 40px; /* Tamaño fijo del contenedor */
+  height: 40px;
+  border-radius: 50%; /* Forma circular */
+  overflow: hidden; /* Corta cualquier contenido desbordado */
+  display: flex;
+  align-items:flex-start;
+  justify-content: center; /* Centrar contenido */
 }
