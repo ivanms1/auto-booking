@@ -40,7 +40,7 @@ function Rooms() {
   return (
     <div className={styles.main}>
       <h1>Rooms</h1>
-      <CustomTable table={table} />
+      <CustomTable<Room> table={table} />
     </div>
   );
 }
