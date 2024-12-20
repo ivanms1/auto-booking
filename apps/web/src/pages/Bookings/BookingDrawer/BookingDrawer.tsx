@@ -13,6 +13,8 @@ import Input from '@/components/Input';
 import type { Booking } from '@/models/booking';
 import Button from '@/components/Button';
 import { dateFormatter } from '@/utils/dateFormatter';
+import type { Car } from '@/models/car';
+import type { Room } from '@/models/room';
 
 const editBookingSchema = z
   .object({
@@ -57,9 +59,13 @@ type BookingUpdateSchemaType = z.infer<typeof editBookingSchema>;
 function BookingDrawer({
   selectedBooking,
   onClose,
+  carData,
+  roomData
 }: {
   selectedBooking: Booking | null;
   onClose: () => void;
+  carData: Car[] | undefined;
+    roomData: Room[] | undefined;
 }) {
   const {
     register,
@@ -147,9 +153,16 @@ function BookingDrawer({
     setEditOpen(false);
   }
 
+  const option = selectedBooking?.roomId
+  ? roomData?.find((room) => room.id === selectedBooking.roomId)?.name
+  : carData?.find((car) => car.id === selectedBooking?.carId)?.model;
+
+        
+
   if (!selectedBooking) {
     return null;
   }
+  
 
   return (
     <Drawer
@@ -163,6 +176,7 @@ function BookingDrawer({
           <div>
             <h1>Detalles de la Reserva</h1>
             <h3 className={styles.titledetails}>{selectedBooking.title}</h3>
+            <p className={styles.p}><strong>Sala/Coche:</strong>{option}</p>
             <p className={styles.p}>
               <strong>Start:</strong>
               {dateFormatter({

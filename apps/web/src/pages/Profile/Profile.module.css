@@ -187,15 +187,15 @@
 .profilePicture {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  object-fit: cover;
 }
 
 .avatarContent {
-  width: 40px; /* Tamaño fijo del contenedor */
+  width: 40px;
   height: 40px;
-  border-radius: 50%; /* Forma circular */
-  overflow: hidden; /* Corta cualquier contenido desbordado */
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items:flex-start;
-  justify-content: center; /* Centrar contenido */
+  justify-content: center; 
 }

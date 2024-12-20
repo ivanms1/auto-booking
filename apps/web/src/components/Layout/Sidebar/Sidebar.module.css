@@ -35,6 +35,6 @@
 .active {
   border: 2px solid var(--primary);
   color: var(--primary);
-  background-color: var(--dark-hover); /* Ejemplo: un color más oscuro */
-  box-shadow: 0 0 10px var(--primary); /* Borde brillante */
+  background-color: var(--dark-hover);
+  box-shadow: 0 0 10px var(--primary);
 }
