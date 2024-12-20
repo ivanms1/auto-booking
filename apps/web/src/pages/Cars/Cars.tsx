@@ -22,7 +22,9 @@ const columns = [
   }),
   columnHelper.accessor('createdAt', {
     header: () => 'Created At',
-    cell: (info) => <span>{dateFormatter({date: info.renderValue() ?? ''})}</span>,
+    cell: (info) => (
+      <span>{dateFormatter({ date: info.renderValue() ?? '' })}</span>
+    ),
   }),
   columnHelper.accessor('mileage', {
     header: () => <span>Mileage</span>,
@@ -38,11 +40,11 @@ function Cars() {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  
+
   return (
     <div className={styles.main}>
       <h1>Cars</h1>
-      <CustomTable table={table} />
+      <CustomTable<Car> table={table} />
     </div>
   );
 }

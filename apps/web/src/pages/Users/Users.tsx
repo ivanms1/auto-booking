@@ -15,11 +15,14 @@ const columnHelper = createColumnHelper<User>();
 
 const columns = [
   columnHelper.accessor('name', {
-    cell: info => {
+    cell: (info) => {
       const { avatar } = info.row.original;
       return (
         <span className={styles.span}>
-          <div className={styles.avatarContent}><img alt='profile' className={styles.profilePicture} src={avatar}/></div>{info.getValue()}
+          <div className={styles.avatarContent}>
+            <img alt='profile' className={styles.profilePicture} src={avatar} />
+          </div>
+          {info.getValue()}
         </span>
       );
     },
@@ -27,7 +30,9 @@ const columns = [
   }),
   columnHelper.accessor('createdAt', {
     header: () => 'Created At',
-    cell: (info) => <span>{dateFormatter({date: info.renderValue() ?? ''})}</span>,
+    cell: (info) => (
+      <span>{dateFormatter({ date: info.renderValue() ?? '' })}</span>
+    ),
   }),
   columnHelper.accessor('email', {
     header: () => <span>Email</span>,
@@ -47,7 +52,7 @@ function Users() {
   return (
     <div className={styles.main}>
       <h1>Users</h1>
-        <CustomTable table={table} />
+      <CustomTable<User> table={table} />
     </div>
   );
 }
