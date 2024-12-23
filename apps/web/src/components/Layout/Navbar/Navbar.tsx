@@ -38,7 +38,7 @@ function Navbar() {
         <Popover onChange={setOpened} opened={opened}  // Pasamos el estado 'opened' al Popover
       position='bottom' shadow='md' width={150} withArrow>
           <Popover.Target>
-            <div>
+            <div className={styles.avatarContent}>
               {user?.avatar ? (
                 <button className={styles.avatarButton} onClick={() => { setOpened((o) => !o); }} type="button">
                 <img

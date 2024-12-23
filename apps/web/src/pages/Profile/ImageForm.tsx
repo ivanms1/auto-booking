@@ -62,11 +62,13 @@ function ImageForm({ onUploadImage }: ImageFormProps) {
         </label>
         <div className={styles.avatarOptions}>
           {user?.avatar ? (
+            <div className={styles.avatarContent}>
             <img
               alt='ProfilePicture'
               className={styles.profilePicture}
               src={user.avatar}
             />
+            </div>
           ) : (
             <ProfilePicture className={styles.imageInside} />
           )}

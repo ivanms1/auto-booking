@@ -1,31 +1,42 @@
 import React from 'react';
-import { Table } from '@mantine/core';
+import { type Table, flexRender } from '@tanstack/react-table';
+import styles from './Table.module.css';
 
-type TableProps = {
-  rows: { id: string; values: (string|number)[] }[];
-  columns: string[];
-} & React.TableHTMLAttributes<HTMLTableElement>;
+interface CustomTableProps<T> {
+  table: Table<T>;
+}
 
-function CustomTable({ columns, rows }: TableProps) {
+function CustomTable<T>({ table }: CustomTableProps<T>) {
   return (
-    <Table highlightOnHover horizontalSpacing='xl'>
-      <Table.Thead>
-        <Table.Tr>
-          {columns.map((column) => (
-            <Table.Th key={column}>{column}</Table.Th>
-          ))}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {rows.map((row) => (
-          <Table.Tr key={row.id}>
-            {row.values.map((value) => (
-              <Table.Td key={`${row.id}-${value}`}>{value}</Table.Td>
+    <table className={styles.table}>
+      <thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <th key={header.id}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </th>
             ))}
-          </Table.Tr>
+          </tr>
         ))}
-      </Table.Tbody>
-    </Table>
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            {row.getVisibleCells().map((cell) => (
+              <td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 

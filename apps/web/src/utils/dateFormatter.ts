@@ -11,5 +11,5 @@ export function dateFormatter({
   date: string;
   options?: Intl.DateTimeFormatOptions;
 }) {
-  return new Date(date).toLocaleDateString('en-US', options);
+  return new Date(date).toLocaleDateString('es-ES', options);
 }

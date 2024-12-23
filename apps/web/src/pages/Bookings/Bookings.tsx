@@ -45,12 +45,17 @@ function Bookings() {
     });
   };
 
+  
+
   return (
     <div className={styles.main}>
       <BookingDrawer
+        carData={carData}
         onClose={() => {
           setSelectedBooking(null);
         }}
+
+        roomData={roomData}
         selectedBooking={selectedBooking}
       />
       <DrawerCreate
