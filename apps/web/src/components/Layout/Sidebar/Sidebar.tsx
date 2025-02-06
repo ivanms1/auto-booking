@@ -20,11 +20,6 @@ const iconProps = {
 const ITEMS = [
   { label: 'Home', path: '/', icon: <IconHome {...iconProps} /> },
   { label: 'Users', path: '/users', icon: <IconUser {...iconProps} /> },
-  {
-    label: 'Bookings',
-    path: '/bookings',
-    icon: <IconBrandBooking {...iconProps} />,
-  },
   { label: 'Cars', path: '/cars', icon: <IconCar {...iconProps} /> },
   { label: 'Rooms', path: '/rooms', icon: <IconDoor {...iconProps} /> },
 ];

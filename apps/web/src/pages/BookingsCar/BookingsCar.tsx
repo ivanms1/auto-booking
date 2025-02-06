@@ -23,20 +23,25 @@ interface Event {
   };
 }
 
-function Bookings() {
+function BookingsCar() {
   const { data: bookings } = useQuery({ ...bookingQueryKeys.list() });
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const { data: carData } = useQuery({ ...carQueryKeys.list() });
   const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
 
-  const mappedBookings = bookings?.map((booking) => ({
+  const filteredBookings = bookings?.filter((booking) => booking.carId);
+
+  const mappedBookings = filteredBookings?.map((booking) => ({
     id: booking.id,
     title: booking.title,
     start: booking.startDate,
     end: booking.endDate,
     extendedProps: { booking },
+    description: booking.description,
   }));
+  
+
 
   const renderEventWithOpen = (eventInfo: Event) => {
     const booking = eventInfo.event.extendedProps.booking;
@@ -65,7 +70,7 @@ function Bookings() {
         roomData={roomData}
       />
       <div className={styles.title}>
-        <h1>Bookings</h1>
+        <h1>Car Bookings</h1>
         <Button onClick={open} size='lg' variant='success'>
           CREATE BOOKING
         </Button>
@@ -96,4 +101,4 @@ function renderEventContent(
   );
 }
 
-export default Bookings;
+export default BookingsCar;

@@ -17,23 +17,6 @@ function Home() {
         </div>
         <div className={styles.buttons}>
           <div className={styles.box}>
-            <div className={styles.up}>
-              <p className={styles.p2}>Bookings</p>
-              <span className={styles.outIconBooking}>
-                <Link className={styles.link} to='/bookings'>
-                  <IconBrandBooking
-                    color='var(--purewhite)'
-                    stroke={1.5}
-                    style={{ width: rem(25), height: rem(25) }}
-                  />
-                </Link>
-              </span>
-            </div>
-            <p className={styles.p2}>
-              Check de available <b>bookings</b>
-            </p>
-          </div>
-          <div className={styles.box}>
           <div className={styles.up}>
               <p className={styles.p2}>Cars</p>
               <span className={styles.outIconCar}>

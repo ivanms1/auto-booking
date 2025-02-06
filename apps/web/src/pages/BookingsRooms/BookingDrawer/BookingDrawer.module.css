@@ -1,36 +1,12 @@
-.main {
+.buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: calc(100vh - 50px);
-  width: 100%;
-}
-
-.title {
-  color: var(--900);
-  font-size: 24px;
-  margin: 0 20px 0 20px;
-  align-self: flex-start;
-}
-
-.line {
-  border-top: 1px solid var(--400);
-  height: 1px;
-  width: 1245px;
-  padding: 0;
-  margin: 20px 20px 0 20px;
-
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
 .mainBox {
   display: flex;
   flex-direction: column;
-  width: 804px;
-  height: 600px;
-  background-color: var(--purewhite);
-  border-radius: 8px;
-  margin: 20px;
-  align-self: flex-end;
 }
 
 .formTitle {
@@ -42,7 +18,7 @@
 .line2 {
   border-top: 1px solid var(--200);
   height: 1px;
-  width: 756px;
+  width: 556px;
   padding: 0;
   margin: 0 20px 0 20px;
 }
@@ -57,7 +33,7 @@
 
 .formP {
   font-size: 15px;
-  color: var(--900)
+  color: var(--900);
 }
 
 .inputForm {
@@ -91,35 +67,17 @@
   padding: 0 0 0 0;
 }
 
-.inputForm3 {
+.headerForm {
   display: flex;
-  flex-direction: row;
-  margin: 20px;
-  align-items: center;
+  justify-content: space-between;
 }
 
-.labelRadio {
-  margin: 5px;
-}
-
-.inputRadio {
+.p {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
 }
 
-.pradio {
-  margin-right: 140px;
-}
-
-.radios {
-  margin-right: 150px;
-}
-
-.select {
-  margin-left: 90px;
-  border-radius: 6px;
-  height: 42px;
-  width: 200px;
-  padding: 5px;
-  border-color: var(--300);
+.titledetails {
+  display: flex;
+  justify-content: end;
 }
