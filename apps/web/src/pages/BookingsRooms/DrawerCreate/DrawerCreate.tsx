@@ -92,7 +92,7 @@ function DrawerCreate({
 
   const onSubmit: SubmitHandler<BookingSchemaType> = (data) => {
     const dataToCreate = {
-      carId: data.bookingValue,
+      roomId: data.bookingValue,
       title: data.title,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
@@ -129,7 +129,7 @@ function DrawerCreate({
         <h1 className={styles.title}>Create Booking</h1>
         <div className={styles.line} />
         <div className={styles.mainBox}>
-          <p className={styles.formTitle}>Car Booking Form</p>
+          <p className={styles.formTitle}>Room Booking Form</p>
           <div className={styles.line2} />
           <form
             className={styles.form}

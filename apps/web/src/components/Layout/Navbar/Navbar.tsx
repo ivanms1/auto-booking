@@ -28,6 +28,8 @@ function Navbar() {
     setToken('');
     navigate('/login');
   }
+
+  
   return (
     <nav className={styles.navbar}>
       <div className={styles.search}  />

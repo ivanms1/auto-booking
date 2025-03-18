@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { rem } from '@mantine/core';
 import {
-  IconBrandBooking,
   IconCar,
   IconDoor,
 } from '@tabler/icons-react';

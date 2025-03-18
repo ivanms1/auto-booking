@@ -68,7 +68,19 @@ export class UserService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  async createUser(data: Prisma.UserCreateInput, user: User): Promise<User> {
+    if (user.role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized');
+    }
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: data.email },
+    });
+  
+    if (existingUser) {
+      throw new BadRequestException('Email already in use');
+    }
+
     const hashedPassword = await bcrypt.hash(data.password, roundsOfHashing);
 
     data.password = hashedPassword;
