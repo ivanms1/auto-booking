@@ -112,7 +112,7 @@ function DrawerCreate({
       onError: (error) => {
         const errorMessage = error.response?.data.message
           ? error.response.data.message
-          : 'Unnown Error';
+          : 'Unknown Error';
         notifications.show({
           title: 'Error',
           message: errorMessage ? errorMessage : 'Error',

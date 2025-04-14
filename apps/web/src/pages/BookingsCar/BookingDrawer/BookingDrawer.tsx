@@ -140,7 +140,7 @@ function BookingDrawer({
         onError: (error) => {
           const errorMessage = error.response?.data.message
             ? error.response.data.message
-            : 'Unnown Error';
+            : 'Unknown Error';
           notifications.show({
             title: 'Error',
             message: errorMessage,
@@ -184,7 +184,10 @@ function BookingDrawer({
               <strong>Car:</strong>
               {option}
             </p>
-            <p className={styles.p}><strong>Author:</strong>{currentUser?.name}</p>
+            <p className={styles.p}>
+              <strong>Author:</strong>
+              {currentUser?.name}
+            </p>
             <p className={styles.p}>
               <strong>Start:</strong>
               {dateFormatter({
