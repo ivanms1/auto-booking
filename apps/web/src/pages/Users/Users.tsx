@@ -57,8 +57,21 @@ function Users() {
   return (
     <div className={styles.main}>
       <div>
-        <h1>Users{user?.role === 'ADMIN'?<Button onClick={()=> { navigate('/bookingscar'); }} outline>Add User</Button> : ''}</h1>
-
+        <h1>
+          Users
+          {user?.role === 'ADMIN' ? (
+            <Button
+              onClick={() => {
+                navigate('/bookingscar');
+              }}
+              outline
+            >
+              Add User
+            </Button>
+          ) : (
+            ''
+          )}
+        </h1>
       </div>
       <CustomTable<User> table={table} />
     </div>

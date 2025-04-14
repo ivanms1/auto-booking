@@ -14,6 +14,7 @@ import { bookingQueryKeys } from '@/services/bookings/request';
 import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
 import { userQueryKeys } from '@/services/users/request';
+import { getColorForCarId } from '@/utils/getColorForCarId';
 
 interface Event {
   timeText: string;
@@ -34,34 +35,6 @@ function BookingsCar() {
   const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
 
   const filteredBookings = bookings?.filter((booking) => booking.carId);
-
-  const getColorForCarId = (carId: string | undefined): string => {
-    const colors = [
-      'rgba(255, 87, 51, 0.5)',
-      'rgba(51, 255, 87, 0.5)',
-      'rgba(51, 87, 255, 0.5)',
-      'rgba(255, 51, 161, 0.5)',
-      'rgba(51, 255, 245, 0.5)',
-      'rgba(255, 255, 51, 0.5)',
-      'rgba(255, 153, 51, 0.5)',
-      'rgba(153, 51, 255, 0.5)',
-      'rgba(51, 255, 153, 0.5)',
-      'rgba(255, 51, 51, 0.5)',
-      'rgba(51, 153, 255, 0.5)',
-      'rgba(255, 51, 255, 0.5)',
-      'rgba(153, 255, 51, 0.5)',
-      'rgba(51, 255, 51, 0.5)',
-      'rgba(255, 153, 153, 0.5)',
-      'rgba(51, 51, 255, 0.5)',
-      'rgba(255, 51, 153, 0.5)',
-      'rgba(51, 255, 255, 0.5)',
-      'rgba(255, 255, 153, 0.5)',
-      'rgba(153, 51, 51, 0.5)',
-    ];
-    if (!carId) return 'rgba(0, 0, 0, 0.5)';
-    const index = carId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    return colors[index];
-  };
 
   const mappedBookings = filteredBookings?.map((booking) => ({
     id: booking.id,
@@ -124,7 +97,6 @@ function renderEventContent(
     <button
       className={styles.bookingDescription}
       onClick={openProp}
-      style={{ width: '100%', height: '100%', border: 'none', background: 'transparent', padding: 0, cursor: 'pointer' }}
       type='button'
     >
       <b>{eventInfo.timeText}</b>
