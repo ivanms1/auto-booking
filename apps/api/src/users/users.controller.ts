@@ -36,8 +36,8 @@ export class UserController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createUser(@Body() createUser: Prisma.UserCreateInput): Promise<User> {
-    return this.userService.createUser(createUser);
+  async createUser(@UserDecoded() user: User, @Body() createUser: Prisma.UserCreateInput): Promise<User> {
+    return this.userService.createUser(createUser, user);
   }
 
   @Delete(':id')

@@ -5,11 +5,14 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 import styles from './Users.module.css';
 import { userQueryKeys } from '@/services/users/request';
 import CustomTable from '@/components/CustomTable';
 import type { User } from '@/models/user';
 import { dateFormatter } from '@/utils/dateFormatter';
+import useGetCurrentUser from '@/hooks/useGetCurrentUser';
+import Button from '@/components/Button';
 
 const columnHelper = createColumnHelper<User>();
 
@@ -42,6 +45,8 @@ const columns = [
 
 function Users() {
   const { data } = useQuery({ ...userQueryKeys.list() });
+  const { user } = useGetCurrentUser();
+  const navigate = useNavigate();
 
   const table = useReactTable({
     data: data ?? [],
@@ -51,7 +56,23 @@ function Users() {
 
   return (
     <div className={styles.main}>
-      <h1>Users</h1>
+      <div>
+        <h1>
+          Users
+          {user?.role === 'ADMIN' ? (
+            <Button
+              onClick={() => {
+                navigate('/bookingscar');
+              }}
+              outline
+            >
+              Add User
+            </Button>
+          ) : (
+            ''
+          )}
+        </h1>
+      </div>
       <CustomTable<User> table={table} />
     </div>
   );

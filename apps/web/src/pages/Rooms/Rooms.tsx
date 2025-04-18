@@ -5,11 +5,13 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 import styles from './Rooms.module.css';
 import { roomQueryKeys } from '@/services/rooms/request';
 import CustomTable from '@/components/CustomTable';
 import type { Room } from '@/models/room';
 import { dateFormatter } from '@/utils/dateFormatter';
+import Button from '@/components/Button';
 
 const columnHelper = createColumnHelper<Room>();
 
@@ -30,6 +32,7 @@ const columns = [
 
 function Rooms() {
   const { data } = useQuery({ ...roomQueryKeys.list() });
+  const navigate = useNavigate();
 
   const table = useReactTable({
     data: data ?? [],
@@ -39,7 +42,7 @@ function Rooms() {
 
   return (
     <div className={styles.main}>
-      <h1>Rooms</h1>
+      <h1>Rooms<Button onClick={()=> { navigate('/bookingsroom'); }} outline>Calendar</Button></h1>
       <CustomTable<Room> table={table} />
     </div>
   );

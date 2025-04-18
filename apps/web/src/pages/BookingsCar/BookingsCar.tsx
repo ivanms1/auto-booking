@@ -4,6 +4,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { useDisclosure } from '@mantine/hooks';
+import type { EventApi } from '@fullcalendar/core';
 import BookingDrawer from './BookingDrawer';
 import DrawerCreate from './DrawerCreate';
 import styles from './Bookings.module.css';
@@ -12,6 +13,8 @@ import type { Booking } from '@/models/booking';
 import { bookingQueryKeys } from '@/services/bookings/request';
 import { carQueryKeys } from '@/services/cars/request';
 import { roomQueryKeys } from '@/services/rooms/request';
+import { userQueryKeys } from '@/services/users/request';
+import { getColorForCarId } from '@/utils/getColorForCarId';
 
 interface Event {
   timeText: string;
@@ -23,19 +26,24 @@ interface Event {
   };
 }
 
-function Bookings() {
+function BookingsCar() {
   const { data: bookings } = useQuery({ ...bookingQueryKeys.list() });
+  const { data: users } = useQuery({ ...userQueryKeys.list() });
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [opened, { open, close }] = useDisclosure(false);
   const { data: carData } = useQuery({ ...carQueryKeys.list() });
   const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
 
-  const mappedBookings = bookings?.map((booking) => ({
+  const filteredBookings = bookings?.filter((booking) => booking.carId);
+
+  const mappedBookings = filteredBookings?.map((booking) => ({
     id: booking.id,
     title: booking.title,
     start: booking.startDate,
     end: booking.endDate,
     extendedProps: { booking },
+    description: booking.description,
+    backgroundColor: getColorForCarId(booking.carId),
   }));
 
   const renderEventWithOpen = (eventInfo: Event) => {
@@ -45,8 +53,6 @@ function Bookings() {
     });
   };
 
-  
-
   return (
     <div className={styles.main}>
       <BookingDrawer
@@ -54,9 +60,9 @@ function Bookings() {
         onClose={() => {
           setSelectedBooking(null);
         }}
-
         roomData={roomData}
         selectedBooking={selectedBooking}
+        users={users}
       />
       <DrawerCreate
         carData={carData}
@@ -65,13 +71,16 @@ function Bookings() {
         roomData={roomData}
       />
       <div className={styles.title}>
-        <h1>Bookings</h1>
+        <h1>Car Bookings</h1>
         <Button onClick={open} size='lg' variant='success'>
           CREATE BOOKING
         </Button>
       </div>
       <FullCalendar
         eventContent={renderEventWithOpen}
+        eventDidMount={(info: { event: EventApi; el: HTMLElement }) => {
+          info.el.style.backgroundColor = (info.event.extendedProps.booking as Booking & { backgroundColor: string }).backgroundColor;
+        }}
         events={mappedBookings}
         initialView='dayGridMonth'
         plugins={[dayGridPlugin, interactionPlugin]}
@@ -96,4 +105,4 @@ function renderEventContent(
   );
 }
 
-export default Bookings;
+export default BookingsCar;

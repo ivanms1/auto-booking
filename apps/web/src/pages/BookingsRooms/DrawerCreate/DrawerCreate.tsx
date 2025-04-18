@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -51,7 +51,6 @@ const bookingSchema = z
       .refine((value) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value), {
         message: 'The date and time must be in the format YYYY-MM-DDTHH:MM',
       }),
-    bookingType: z.union([z.literal('roomId'), z.literal('carId')]),
     bookingValue: z.string(),
     description: z.string(),
   })
@@ -73,7 +72,6 @@ export type BookingSchemaType = z.infer<typeof bookingSchema>;
 function DrawerCreate({
   opened,
   onClose,
-  carData,
   roomData,
 }: {
   opened: boolean;
@@ -83,10 +81,8 @@ function DrawerCreate({
 }) {
   const bookingMutation = useCreateBooking();
   const {
-    watch,
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors },
   } = useForm<BookingSchemaType>({
@@ -96,10 +92,11 @@ function DrawerCreate({
 
   const onSubmit: SubmitHandler<BookingSchemaType> = (data) => {
     const dataToCreate = {
-      [data.bookingType]: data.bookingValue,
+      roomId: data.bookingValue,
       title: data.title,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
+      description: data.description,
     };
 
     bookingMutation.mutate(dataToCreate, {
@@ -125,37 +122,6 @@ function DrawerCreate({
     });
   };
 
-  const currentBookingType = watch('bookingType');
-
-  const options =
-    currentBookingType === 'roomId'
-      ? roomData?.map((room) => {
-          return { value: room.id, label: room.name };
-        })
-      : carData?.map((car) => {
-          return { value: car.id, label: car.model };
-        });
-
-  useEffect(() => {
-    if (currentBookingType === 'roomId') {
-      setValue(
-        'bookingValue',
-        roomData && roomData.length > 0 ? roomData[0].id : ''
-      );
-    } else {
-      setValue(
-        'bookingValue',
-        carData && carData.length > 0 ? carData[0].id : ''
-      );
-    }
-  }, [carData, currentBookingType, roomData, setValue]);
-
-  useEffect(() => {
-    reset({
-      bookingValue: roomData?.[0]?.id ?? '',
-      bookingType: 'roomId',
-    });
-  }, [reset, roomData]);
 
   return (
     <Drawer onClose={onClose} opened={opened} position='right' size='60%'>
@@ -163,7 +129,7 @@ function DrawerCreate({
         <h1 className={styles.title}>Create Booking</h1>
         <div className={styles.line} />
         <div className={styles.mainBox}>
-          <p className={styles.formTitle}>Booking Form</p>
+          <p className={styles.formTitle}>Room Booking Form</p>
           <div className={styles.line2} />
           <form
             className={styles.form}
@@ -213,41 +179,19 @@ function DrawerCreate({
               <p className={styles.errorAlert}>{errors.endDate.message}</p>
             ) : null}
             <div className={styles.inputForm3}>
-              <p className={styles.pradio}>Services</p>
+              <p className={styles.pradio}>Select Room</p>
               <div className={styles.inputRadio}>
-                <div className={styles.radios}>
-                  <Input
-                    id='roomId'
-                    type='radio'
-                    value='roomId'
-                    {...register('bookingType')}
-                  />
-                  <label className={styles.labelRadio} htmlFor='roomId'>
-                    Room
-                  </label>
-                </div>
-                <div>
-                  <Input
-                    id='carId'
-                    type='radio'
-                    value='carId'
-                    {...register('bookingType')}
-                  />
-                  <label className={styles.labelRadio} htmlFor='carId'>
-                    Car
-                  </label>
-                </div>
                 <select className={styles.select} {...register('bookingValue')}>
-                  {options?.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
+                  {roomData?.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-            {errors.bookingType?.message ? (
-              <p className={styles.errorAlert}>{errors.bookingType.message}</p>
+            {errors.bookingValue?.message ? (
+              <p className={styles.errorAlert}>{errors.bookingValue.message}</p>
             ) : null}
 
             <div className={styles.input1}>
@@ -276,3 +220,4 @@ function DrawerCreate({
 }
 
 export default DrawerCreate;
+

@@ -15,6 +15,7 @@ import Button from '@/components/Button';
 import { dateFormatter } from '@/utils/dateFormatter';
 import type { Car } from '@/models/car';
 import type { Room } from '@/models/room';
+import type { User } from '@/models/user';
 
 const editBookingSchema = z
   .object({
@@ -60,12 +61,14 @@ function BookingDrawer({
   selectedBooking,
   onClose,
   carData,
-  roomData
+  roomData,
+  users
 }: {
   selectedBooking: Booking | null;
   onClose: () => void;
   carData: Car[] | undefined;
-    roomData: Room[] | undefined;
+  roomData: Room[] | undefined;
+  users: User[] | undefined;
 }) {
   const {
     register,
@@ -79,6 +82,7 @@ function BookingDrawer({
   const bookingMutationUpdate = useUpdateBooking();
   const queryClient = useQueryClient();
   const [editOpen, setEditOpen] = useState(false);
+  
 
   function onDelete(id: string) {
     bookingMutationDelete.mutate(
@@ -157,11 +161,11 @@ function BookingDrawer({
   ? roomData?.find((room) => room.id === selectedBooking.roomId)?.name
   : carData?.find((car) => car.id === selectedBooking?.carId)?.model;
 
-        
-
   if (!selectedBooking) {
     return null;
   }
+  
+  const currentUser = users?.find(user => user.id === selectedBooking.authorId);
   
 
   return (
@@ -176,7 +180,8 @@ function BookingDrawer({
           <div>
             <h1>Detalles de la Reserva</h1>
             <h3 className={styles.titledetails}>{selectedBooking.title}</h3>
-            <p className={styles.p}><strong>Sala/Coche:</strong>{option}</p>
+            <p className={styles.p}><strong>Car:</strong>{option}</p>
+            <p className={styles.p}><strong>Author:</strong>{currentUser?.name}</p>
             <p className={styles.p}>
               <strong>Start:</strong>
               {dateFormatter({
