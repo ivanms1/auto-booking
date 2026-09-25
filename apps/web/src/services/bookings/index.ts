@@ -21,7 +21,7 @@ export function useCreateBooking(
 }
 
 export function useUpdateBooking(
-  onSuccess?: (
+  _onSuccess?: (
     data: Booking,
     variables: { id: string; data: BookingUpdate },
     context?: unknown
@@ -35,7 +35,7 @@ export function useUpdateBooking(
 }
 
 export const useDeleteBooking = (
-  onSuccess?: (
+  _onSuccess?: (
     data: boolean,
     variables: { id: string },
     context?: unknown

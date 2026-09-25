@@ -16,4 +16,5 @@ export interface Booking {
   room: Room | undefined;
   author: User;
   description: string | undefined;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
 }

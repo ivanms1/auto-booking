@@ -10,6 +10,8 @@ import Rooms from '@/pages/Rooms';
 import ProtectedRoutes from '@/components/ProtectedRoutes';
 import BookingsCar from '@/pages/BookingsCar/BookingsCar';
 import BookingsRoom from '@/pages/BookingsRooms/BookingsRoom';
+import AdminRoute from '@/components/AdminRoute';
+import PendingBookings from '@/pages/PendingBookings';
 
 const routerPath = createBrowserRouter([
   {id: 'protectedroutes',
@@ -53,6 +55,18 @@ const routerPath = createBrowserRouter([
             id: 'rooms',
             path: '/rooms',
             element: <Rooms />,
+          },
+          {
+            id: 'pendingBookings',
+            path: '/pendingBookings',
+            element: <AdminRoute />,
+            children: [
+              {
+                id: 'pendingBookingsPage',
+                path: '',
+                element: <PendingBookings />,
+              },
+            ],
           },
         ],
       },

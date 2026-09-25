@@ -5,7 +5,7 @@ export const fetchResponseToServiceData = <T>(
   res: AxiosResponse,
   model: string
 ): T => {
-  return res.data?.[model] as T;
+  return (res.data as Record<string, unknown>)[model] as T;
 };
 
 export const serviceFetch = async <T>(

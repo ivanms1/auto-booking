@@ -24,6 +24,82 @@ export interface BookingUpdate {
 export class BookingService {
   constructor(private prisma: PrismaService) {}
 
+  async getPendingBookings(): Promise<Booking[]> {
+    return this.prisma.booking.findMany({
+      where: {
+        status: 'PENDING',
+      },
+    });
+  }
+
+  async approveBooking(id: string, user: User): Promise<Booking> {
+  if (user.role !== 'ADMIN') {
+    throw new BadRequestException('Only admins can approve bookings');
+  }
+
+  const bookingToApprove = await this.prisma.booking.findUnique({
+    where: { id },
+  });
+
+  if (!bookingToApprove) {
+    throw new BadRequestException('Booking not found');
+  }
+
+  const overlappingBookings = await this.prisma.booking.findMany({
+    where: {
+      AND: [
+        {
+          OR: [
+            { roomId: bookingToApprove.roomId ?? undefined },
+            { carId: bookingToApprove.carId ?? undefined },
+          ],
+        },
+        {
+          startDate: {
+            lt: bookingToApprove.endDate,
+          },
+        },
+        {
+          endDate: {
+            gt: bookingToApprove.startDate,
+          },
+        },
+        {
+          id: {
+            not: id,
+          },
+        },
+        {
+          status: 'APPROVED',
+        },
+      ],
+    },
+  });
+
+  if (overlappingBookings.length > 0) {
+    throw new BadRequestException('Overlap Booking', {
+      cause: new Error(),
+      description: 'There is another reservation in the schedule.',
+    });
+  }
+
+  return this.prisma.booking.update({
+    where: { id },
+    data: { status: 'APPROVED' },
+  });
+}
+
+  async rejectBooking(id: string, user: User): Promise<Booking> {
+    if (user.role !== 'ADMIN') {
+      throw new BadRequestException('Only admins can reject bookings');
+    }
+
+    return this.prisma.booking.update({
+      where: { id },
+      data: { status: 'REJECTED' },
+    });
+  }
+
   async booking(id: string): Promise<Booking | null> {
     return this.prisma.booking.findUnique({
       where: { id },
@@ -40,12 +116,12 @@ export class BookingService {
 
   async createBooking(data: CreateInput, user: User): Promise<Booking> {
     const { roomId, carId, startDate, endDate, ...rest } = data;
-    
+
     const overlappingBookings = await this.prisma.booking.findMany({
       where: {
         OR: [
           { roomId: roomId ? roomId : undefined },
-          { carId: carId ? carId : undefined }
+          { carId: carId ? carId : undefined },
         ],
         AND: [
           {
@@ -58,19 +134,25 @@ export class BookingService {
               gt: startDate,
             },
           },
+          {
+            status: 'APPROVED',
+          },
         ],
       },
     });
-  
-    if (overlappingBookings.length > 0) {
-      throw new BadRequestException('Overlap Booking', { cause: new Error(), description: 'There is another reservation in the schedule.' })
-    }
 
+    if (overlappingBookings.length > 0) {
+      throw new BadRequestException('Overlap Booking', {
+        cause: new Error(),
+        description: 'There is another reservation in the schedule.',
+      });
+    }
 
     const createData: Prisma.BookingCreateInput = {
       ...rest,
       startDate,
       endDate,
+      status: 'PENDING',
       author: {
         connect: {
           id: user.id,
@@ -96,12 +178,12 @@ export class BookingService {
     data: BookingUpdate;
   }): Promise<Booking> {
     const { data, where } = params;
-    const dataToUpdate = await this.prisma.booking.findUnique({where})
+    const dataToUpdate = await this.prisma.booking.findUnique({ where });
 
     const { startDate, endDate, ...rest } = data;
 
-    const roomId = dataToUpdate?.roomId
-    const carId = dataToUpdate?.carId
+    const roomId = dataToUpdate?.roomId;
+    const carId = dataToUpdate?.carId;
 
     const overlappingBookings = await this.prisma.booking.findMany({
       where: {
@@ -109,7 +191,7 @@ export class BookingService {
           {
             OR: [
               { roomId: roomId ? roomId : undefined },
-              { carId: carId ? carId : undefined }
+              { carId: carId ? carId : undefined },
             ],
           },
           {
@@ -127,20 +209,26 @@ export class BookingService {
               not: where.id,
             },
           },
+          {
+            status: 'APPROVED',
+          },
         ],
       },
     });
 
     if (overlappingBookings.length > 0) {
-      throw new BadRequestException('Overlap Booking', { cause: new Error(), description: 'There is another reservation in the schedule.' })
+      throw new BadRequestException('Overlap Booking', {
+        cause: new Error(),
+        description: 'There is another reservation in the schedule.',
+      });
     }
 
     const createData: BookingUpdate = {
       ...rest,
       startDate,
-      endDate
+      endDate,
     };
-    
+
     return this.prisma.booking.update({
       data: createData,
       where,

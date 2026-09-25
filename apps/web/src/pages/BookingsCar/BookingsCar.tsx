@@ -33,8 +33,9 @@ function BookingsCar() {
   const [opened, { open, close }] = useDisclosure(false);
   const { data: carData } = useQuery({ ...carQueryKeys.list() });
   const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
-
-  const filteredBookings = bookings?.filter((booking) => booking.carId);
+  const filteredBookings = bookings?.filter(
+    (booking) => booking.carId && booking.status === 'APPROVED'
+  );
 
   const mappedBookings = filteredBookings?.map((booking) => ({
     id: booking.id,
@@ -79,7 +80,11 @@ function BookingsCar() {
       <FullCalendar
         eventContent={renderEventWithOpen}
         eventDidMount={(info: { event: EventApi; el: HTMLElement }) => {
-          info.el.style.backgroundColor = (info.event.extendedProps.booking as Booking & { backgroundColor: string }).backgroundColor;
+          info.el.style.backgroundColor = (
+            info.event.extendedProps.booking as Booking & {
+              backgroundColor: string;
+            }
+          ).backgroundColor;
         }}
         events={mappedBookings}
         initialView='dayGridMonth'

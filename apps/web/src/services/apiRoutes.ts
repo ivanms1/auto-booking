@@ -30,6 +30,11 @@ export const API_ROUTES = {
     email: 'users/update-email',
     password: 'users/password'
   },
+  pendingBookings: {
+    list: '/bookings/pending',
+    approve: '/bookings/:id/approve',
+    reject: '/bookings/:id/reject',
+  },
   login: '/auth/login',
   authuser: '/auth/user'
 } as const;

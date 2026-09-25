@@ -18,6 +18,30 @@ import { SearchBookingsDto } from './dto/search-bookings.dto';
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
+  @Get('pending')
+  @UseGuards(JwtAuthGuard)
+  async getPendingBookings(): Promise<Booking[]> {
+    return this.bookingService.getPendingBookings();
+  }
+
+  @Post(':id/approve')
+  @UseGuards(JwtAuthGuard)
+  async approveBooking(
+    @Param('id') id: string,
+    @UserDecoded() user: User
+  ): Promise<Booking> {
+    return this.bookingService.approveBooking(id, user);
+  }
+
+  @Post(':id/reject')
+  @UseGuards(JwtAuthGuard)
+  async rejectBooking(
+    @Param('id') id: string,
+    @UserDecoded() user: User
+  ): Promise<Booking> {
+    return this.bookingService.rejectBooking(id, user);
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async getBooking(@Param('id') id: string): Promise<Booking | null> {
