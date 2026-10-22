@@ -23,6 +23,11 @@ const ITEMS = [
   { label: 'Users', path: '/users', icon: <IconUser {...iconProps} /> },
   { label: 'Cars', path: '/cars', icon: <IconCar {...iconProps} /> },
   { label: 'Rooms', path: '/rooms', icon: <IconDoor {...iconProps} /> },
+  {
+    label: 'My Bookings',
+    path: '/myBookings',
+    icon: <IconCheckbox {...iconProps} />,
+  },
 ];
 
 function Sidebar() {
@@ -52,7 +57,7 @@ function Sidebar() {
             className={classNames(styles.link, {
               [styles.active]: location.pathname === '/pendingBookings',
             })}
-            to="/pendingBookings"
+            to='/pendingBookings'
           >
             <IconCheckbox {...iconProps} /> Pending Bookings
           </Link>

@@ -1,4 +1,6 @@
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { API_ROUTES } from '../apiRoutes';
+import { QUERY_KEYS } from '../queryKeys';
 import { getRoute } from '@/utils/route';
 import { serviceFetch } from '@/utils/service';
 import type { Booking } from '@/models/booking';
@@ -28,3 +30,13 @@ export function rejectBooking(id: string): Promise<Booking> {
     method: METHODS.POST,
   });
 }
+
+export const pendingBookingQueryKeys = createQueryKeys(
+  QUERY_KEYS.PENDING_BOOKINGS,
+  {
+    list: () => ({
+      queryKey: ['list'],
+      queryFn: getPendingBookings,
+    }),
+  }
+);

@@ -1,0 +1,12 @@
+.main {
+  padding: 24px;
+}
+
+.main h1 {
+  margin-bottom: 24px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}

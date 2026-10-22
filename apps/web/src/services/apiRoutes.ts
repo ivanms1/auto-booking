@@ -19,6 +19,7 @@ export const API_ROUTES = {
     create: '/bookings',
     update: '/bookings/:id',
     delete: '/bookings/:id',
+    my: '/bookings/my',
   },
   users: {
     list: '/users',
@@ -28,7 +29,7 @@ export const API_ROUTES = {
     delete: '/users/:id',
     upload: 'users/upload-image',
     email: 'users/update-email',
-    password: 'users/password'
+    password: 'users/password',
   },
   pendingBookings: {
     list: '/bookings/pending',
@@ -36,5 +37,5 @@ export const API_ROUTES = {
     reject: '/bookings/:id/reject',
   },
   login: '/auth/login',
-  authuser: '/auth/user'
+  authuser: '/auth/user',
 } as const;

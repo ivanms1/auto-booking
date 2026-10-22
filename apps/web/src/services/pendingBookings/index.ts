@@ -1,12 +1,17 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
-import { getPendingBookings, approveBooking, rejectBooking } from './request';
+import {
+  approveBooking,
+  pendingBookingQueryKeys,
+  rejectBooking,
+} from './request';
 import type { Booking } from '@/models/booking';
 
 export function useGetPendingBookings() {
-  return useQuery<Booking[], AxiosError<Error>>(
-    { queryKey: ['pendingBookings'], queryFn: getPendingBookings }
-  );
+  return useQuery({
+    ...pendingBookingQueryKeys.list(),
+    staleTime: 0,
+  });
 }
 
 export function useApproveBooking(

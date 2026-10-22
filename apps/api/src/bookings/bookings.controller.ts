@@ -11,8 +11,9 @@ import {
 import { Prisma, User, type Booking } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
-import { BookingService, BookingUpdate } from './bookings.service';
+import { BookingService } from './bookings.service';
 import { SearchBookingsDto } from './dto/search-bookings.dto';
+import { UpdateBookingDto } from './dto/update-booking.dto';
 
 @Controller('bookings')
 export class BookingController {
@@ -20,8 +21,14 @@ export class BookingController {
 
   @Get('pending')
   @UseGuards(JwtAuthGuard)
-  async getPendingBookings(): Promise<Booking[]> {
-    return this.bookingService.getPendingBookings();
+  async getPendingBookings(@UserDecoded() user: User): Promise<Booking[]> {
+    return this.bookingService.getPendingBookings(user);
+  }
+
+  @Get('my')
+  @UseGuards(JwtAuthGuard)
+  async getMyBookings(@UserDecoded() user: User): Promise<Booking[]> {
+    return this.bookingService.getMyBookings(user);
   }
 
   @Post(':id/approve')
@@ -65,16 +72,24 @@ export class BookingController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async deleteBooking(@Param('id') id: string): Promise<Booking | null> {
-    return this.bookingService.deleteBooking({ id });
+  async deleteBooking(
+    @Param('id') id: string,
+    @UserDecoded() user: User
+  ): Promise<Booking> {
+    return this.bookingService.deleteBooking({ where: { id }, user });
   }
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   async updateBooking(
+    @UserDecoded() user: User,
     @Param('id') id: string,
-    @Body() updateBooking: BookingUpdate
+    @Body() updateBooking: UpdateBookingDto
   ): Promise<Booking | null> {
-    return this.bookingService.updateBooking({ where: { id }, data: updateBooking });
+    return this.bookingService.updateBooking({
+      where: { id },
+      data: updateBooking,
+      user,
+    });
   }
 }

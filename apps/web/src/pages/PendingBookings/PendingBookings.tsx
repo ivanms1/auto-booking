@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-table';
 import { useQueryClient } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
+import type { AxiosError } from 'axios';
 import styles from './PendingBookings.module.css';
 import {
   useGetPendingBookings,
@@ -16,6 +17,8 @@ import {
 import CustomTable from '@/components/CustomTable';
 import Button from '@/components/Button';
 import type { Booking } from '@/models/booking';
+import { pendingBookingQueryKeys } from '@/services/pendingBookings/request';
+import { bookingQueryKeys } from '@/services/bookings/request';
 
 const columnHelper = createColumnHelper<Booking>();
 
@@ -24,6 +27,19 @@ const columns = [
     header: () => <span>Title</span>,
     cell: (info) => <span>{info.getValue()}</span>,
   }),
+  columnHelper.accessor((booking) => booking.author?.name ?? 'Unknown', {
+    id: 'author',
+    header: () => <span>Author</span>,
+    cell: (info) => <span>{info.getValue()}</span>,
+  }),
+  columnHelper.accessor(
+    (booking) => booking.room?.name ?? booking.car?.model ?? 'Unknown',
+    {
+      id: 'resource',
+      header: () => <span>Room / Car</span>,
+      cell: (info) => <span>{info.getValue()}</span>,
+    }
+  ),
   columnHelper.accessor('startDate', {
     header: () => <span>Start Date</span>,
     cell: (info) => <span>{new Date(info.getValue()).toLocaleString()}</span>,
@@ -79,31 +95,34 @@ function ActionsCell({ booking }: { booking: Booking }) {
   const queryClient = useQueryClient();
   const approveMutation = useApproveBooking();
   const rejectMutation = useRejectBooking();
+  const isActionPending = approveMutation.isPending || rejectMutation.isPending;
+
+  const handleMutationError = (error: AxiosError<Error>) => {
+    notifications.show({
+      title: 'Error',
+      message: error.response?.data.message ?? 'Unknown Error',
+      color: 'red',
+    });
+  };
 
   const handleApprove = () => {
     approveMutation.mutate(
       { id: booking.id },
       {
         onSuccess: () => {
-          void queryClient.invalidateQueries({ queryKey: ['pendingBookings'] });
-          void queryClient.invalidateQueries({ queryKey: ['bookings'] });
+          void queryClient.invalidateQueries({
+            queryKey: pendingBookingQueryKeys.list().queryKey,
+          });
+          void queryClient.invalidateQueries({
+            queryKey: bookingQueryKeys._def,
+          });
           notifications.show({
             title: 'Success',
             message: 'Booking approved successfully',
             color: 'green',
           });
         },
-        onError: (error) => {
-          const errorMessage = error.response?.data.message
-            ? error.response.data.message
-            : 'Unknown Error';
-
-          notifications.show({
-            title: 'Error',
-            message: errorMessage,
-            color: 'red',
-          });
-        },
+        onError: handleMutationError,
       }
     );
   };
@@ -113,35 +132,33 @@ function ActionsCell({ booking }: { booking: Booking }) {
       { id: booking.id },
       {
         onSuccess: () => {
-          void queryClient.invalidateQueries({ queryKey: ['pendingBookings'] });
-          void queryClient.invalidateQueries({ queryKey: ['bookings'] });
+          void queryClient.invalidateQueries({
+            queryKey: pendingBookingQueryKeys.list().queryKey,
+          });
+          void queryClient.invalidateQueries({
+            queryKey: bookingQueryKeys._def,
+          });
           notifications.show({
             title: 'Success',
             message: 'Booking rejected successfully',
             color: 'blue',
           });
         },
-        onError: (error) => {
-          const errorMessage = error.response?.data.message
-            ? error.response.data.message
-            : 'Unknown Error';
-
-          notifications.show({
-            title: 'Error',
-            message: errorMessage,
-            color: 'red',
-          });
-        },
+        onError: handleMutationError,
       }
     );
   };
 
   return (
     <div className={styles.actions}>
-      <Button onClick={handleApprove} variant='success'>
+      <Button
+        disabled={isActionPending}
+        onClick={handleApprove}
+        variant='success'
+      >
         Approve
       </Button>
-      <Button onClick={handleReject} variant='danger'>
+      <Button disabled={isActionPending} onClick={handleReject} variant='danger'>
         Reject
       </Button>
     </div>

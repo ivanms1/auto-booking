@@ -1,8 +1,8 @@
-import type { MutateOptions} from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
+import type { MutateOptions } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 import type { BookingUpdate, BookingInput } from './request';
-import { createBooking, deleteBooking, updateBooking  } from './request';
+import { createBooking, deleteBooking, updateBooking, bookingQueryKeys, getMyBookings } from './request';
 import type { DefaultQueryKeyWithoutData } from '@/interfaces/query';
 import type { Booking } from '@/models/booking';
 
@@ -28,7 +28,11 @@ export function useUpdateBooking(
   ) => void,
   onError?: (error: AxiosError<Error>) => void
 ) {
-  return useMutation<Booking, AxiosError<Error>, { id: string; data: BookingUpdate }>({
+  return useMutation<
+    Booking,
+    AxiosError<Error>,
+    { id: string; data: BookingUpdate }
+  >({
     mutationFn: ({ id, data }) => updateBooking(id, data),
     onError,
   });
@@ -40,10 +44,17 @@ export const useDeleteBooking = (
     variables: { id: string },
     context?: unknown
   ) => void,
-  onError?: (error: AxiosError<Error>) => void,
+  onError?: (error: AxiosError<Error>) => void
 ) => {
   return useMutation<string, AxiosError<Error>, { id: string }>({
     mutationFn: ({ id }) => deleteBooking(id),
     onError,
   });
 };
+
+export function useGetMyBookings() {
+  return useQuery<Booking[], AxiosError<Error>>({
+    queryKey: bookingQueryKeys.my().queryKey,
+    queryFn: getMyBookings,
+  });
+}
