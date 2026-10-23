@@ -51,14 +51,14 @@ export class BookingController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getBooking(@Param('id') id: string): Promise<Booking | null> {
-    return this.bookingService.booking(id);
+  async getBooking(@Param('id') id: string, @UserDecoded() user: User): Promise<Booking | null> {
+    return this.bookingService.booking(id, user);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getBookings(@Param() params: SearchBookingsDto): Promise<Booking[]> {
-    return this.bookingService.bookings(params);
+  async getBookings(@Param() params: SearchBookingsDto, @UserDecoded() user: User): Promise<Booking[]> {
+    return this.bookingService.bookings(params, user);
   }
 
   @Post()

@@ -203,19 +203,40 @@ export class BookingService {
     }
   }
 
-  async booking(id: string): Promise<Booking | null> {
-    return this.prisma.booking.findUnique({
-      where: { id },
+  async booking(id: string, user: User): Promise<Booking> {
+    const visibility: Prisma.BookingWhereInput =
+      user.role === 'ADMIN'
+        ? {}
+        : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
+
+    const booking = await this.prisma.booking.findFirst({
+      where: { id, ...visibility },
     });
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    return booking;
   }
 
-  async bookings(params: SearchBookingsDto): Promise<Booking[]> {
-    const { skip, take } = params;
-    return this.prisma.booking.findMany({
-      skip,
-      take,
-    });
-  }
+  async bookings(
+  params: SearchBookingsDto,
+  user: User
+): Promise<Booking[]> {
+  const { skip, take } = params;
+
+  const visibility: Prisma.BookingWhereInput =
+    user.role === 'ADMIN'
+      ? {}
+      : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
+
+  return this.prisma.booking.findMany({
+    where: visibility,
+    skip,
+    take,
+  });
+}
 
   async createBooking(data: CreateInput, user: User): Promise<Booking> {
     const { roomId, carId, startDate, endDate, ...rest } = data;
