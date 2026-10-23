@@ -9,6 +9,8 @@ import { notifications } from '@mantine/notifications';
 import styles from './DrawerCreate.module.css';
 import type { Room } from '@/models/room';
 import { useCreateBooking } from '@/services/bookings';
+import { bookingQueryKeys } from '@/services/bookings/request';
+import { pendingBookingQueryKeys } from '@/services/pendingBookings/request';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import type { Car } from '@/models/car';
@@ -102,7 +104,12 @@ function DrawerCreate({
     bookingMutation.mutate(dataToCreate, {
       onSuccess: () => {
         reset();
-        void queryClient.invalidateQueries({ queryKey: ['bookings'] });
+        void queryClient.invalidateQueries({
+          queryKey: bookingQueryKeys._def,
+        });
+        void queryClient.invalidateQueries({
+          queryKey: pendingBookingQueryKeys.list().queryKey,
+        });
         notifications.show({
           title: 'Success',
           message: 'Successful booking creation',
@@ -121,7 +128,6 @@ function DrawerCreate({
       },
     });
   };
-
 
   return (
     <Drawer onClose={onClose} opened={opened} position='right' size='60%'>
@@ -220,4 +226,3 @@ function DrawerCreate({
 }
 
 export default DrawerCreate;
-

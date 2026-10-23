@@ -34,7 +34,9 @@ function BookingsRoom() {
   const { data: carData } = useQuery({ ...carQueryKeys.list() });
   const { data: roomData } = useQuery({ ...roomQueryKeys.list() });
 
-  const filteredBookings = bookings?.filter((booking) => booking.roomId);
+  const filteredBookings = bookings?.filter(
+    (booking) => booking.roomId && booking.status === 'APPROVED'
+  );
 
   const mappedBookings = filteredBookings?.map((booking) => ({
     id: booking.id,

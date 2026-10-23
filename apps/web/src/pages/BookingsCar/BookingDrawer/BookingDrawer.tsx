@@ -15,6 +15,8 @@ import Button from '@/components/Button';
 import { dateFormatter } from '@/utils/dateFormatter';
 import type { Car } from '@/models/car';
 import type { Room } from '@/models/room';
+import { bookingQueryKeys } from '@/services/bookings/request';
+import { pendingBookingQueryKeys } from '@/services/pendingBookings/request';
 import type { User } from '@/models/user';
 
 const editBookingSchema = z
@@ -130,10 +132,17 @@ function BookingDrawer({
       {
         onSuccess: () => {
           reset();
-          void queryClient.invalidateQueries({ queryKey: ['bookings'] });
+
+          void queryClient.invalidateQueries({
+            queryKey: bookingQueryKeys._def,
+          });
+          void queryClient.invalidateQueries({
+            queryKey: pendingBookingQueryKeys.list().queryKey,
+          });
+
           notifications.show({
             title: 'Success',
-            message: 'Successful booking update',
+            message: 'Changes submitted for re-approval',
             color: 'green',
           });
         },
