@@ -14,6 +14,7 @@ export interface Booking {
   carId: string | undefined;
   car: Car | undefined;
   room: Room | undefined;
-  author: User;
+  author?: Pick<User, 'id' | 'name'>;
   description: string | undefined;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
 }

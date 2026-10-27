@@ -47,6 +47,7 @@ function Users() {
   const { data } = useQuery({ ...userQueryKeys.list() });
   const { user } = useGetCurrentUser();
   const navigate = useNavigate();
+  
 
   const table = useReactTable({
     data: data ?? [],

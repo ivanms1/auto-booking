@@ -4,12 +4,13 @@ import { rem } from '@mantine/core';
 import {
   IconHome,
   IconUser,
-  IconBrandBooking,
+  IconCheckbox,
   IconCar,
   IconDoor,
 } from '@tabler/icons-react';
 import classNames from 'classnames';
 import styles from './Sidebar.module.css';
+import useGetCurrentUser from '@/hooks/useGetCurrentUser';
 
 const iconProps = {
   color: 'var(--light)',
@@ -22,10 +23,16 @@ const ITEMS = [
   { label: 'Users', path: '/users', icon: <IconUser {...iconProps} /> },
   { label: 'Cars', path: '/cars', icon: <IconCar {...iconProps} /> },
   { label: 'Rooms', path: '/rooms', icon: <IconDoor {...iconProps} /> },
+  {
+    label: 'My Bookings',
+    path: '/myBookings',
+    icon: <IconCheckbox {...iconProps} />,
+  },
 ];
 
 function Sidebar() {
   const location = useLocation();
+  const { user } = useGetCurrentUser();
   return (
     <div className={styles.sidebar}>
       <div className={styles.links}>
@@ -45,6 +52,16 @@ function Sidebar() {
             {item.icon} {item.label}
           </Link>
         ))}
+        {user?.role === 'ADMIN' && (
+          <Link
+            className={classNames(styles.link, {
+              [styles.active]: location.pathname === '/pendingBookings',
+            })}
+            to='/pendingBookings'
+          >
+            <IconCheckbox {...iconProps} /> Pending Bookings
+          </Link>
+        )}
       </div>
     </div>
   );

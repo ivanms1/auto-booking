@@ -13,9 +13,9 @@ const METHODS = {
 } as const;
 
 export interface BookingUpdate {
-  startDate: Date,
-  endDate: Date,
-  description: string | undefined
+  startDate: Date;
+  endDate: Date;
+  description: string | undefined;
 }
 
 export interface BookingsResponse {
@@ -24,10 +24,10 @@ export interface BookingsResponse {
   total_count: number;
 }
 
- export interface BookingInput {
-  title: string,
-  startDate: Date,
-  endDate: Date,
+export interface BookingInput {
+  title: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 export function getBookings(): Promise<Booking[]> {
@@ -52,7 +52,10 @@ export function createBooking(data: BookingInput): Promise<Booking> {
   });
 }
 
-export function updateBooking(id: string, data: BookingUpdate): Promise<Booking> {
+export function updateBooking(
+  id: string,
+  data: BookingUpdate
+): Promise<Booking> {
   return serviceFetch({
     url: getRoute(API_ROUTES.bookings.update, { id }),
     method: METHODS.PUT,
@@ -67,10 +70,22 @@ export function deleteBooking(id: string): Promise<string> {
   });
 }
 
+export function getMyBookings(): Promise<Booking[]> {
+  return serviceFetch({
+    url: getRoute(API_ROUTES.bookings.my),
+    method: METHODS.GET,
+  });
+}
+
+
 export const bookingQueryKeys = createQueryKeys(QUERY_KEYS.BOOKINGS, {
   list: () => ({
     queryKey: ['bookings'],
     queryFn: getBookings,
+  }),
+  my: () => ({
+    queryKey: ['bookings', 'my'],
+    queryFn: getMyBookings,
   }),
   detail: (id: string) => ({
     queryKey: ['bookings', id],

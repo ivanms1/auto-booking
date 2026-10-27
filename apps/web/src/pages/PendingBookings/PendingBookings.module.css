@@ -1,0 +1,15 @@
+.main h1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.main h1 button,
+.actions button {
+  margin-left: 10px;
+}
