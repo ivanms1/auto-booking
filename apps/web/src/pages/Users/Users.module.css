@@ -29,3 +29,8 @@
   flex-direction: row;
   align-items: center;
 }
+
+.fallbackAvatar {
+  width: 100%;
+  height: 100%;
+}

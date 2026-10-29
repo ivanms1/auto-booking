@@ -68,15 +68,21 @@ export class UserService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput, user: User): Promise<User> {
+  async createUser(
+    data: Prisma.UserCreateInput,
+    user: User
+  ): Promise<UserReturn> {
+
+    const email = data.email.trim().toLowerCase();
+
     if (user.role !== 'ADMIN') {
       throw new UnauthorizedException('Unauthorized');
     }
 
     const existingUser = await this.prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email },
     });
-  
+
     if (existingUser) {
       throw new BadRequestException('Email already in use');
     }
@@ -85,7 +91,18 @@ export class UserService {
 
     data.password = hashedPassword;
     return this.prisma.user.create({
-      data,
+      data: {
+        ...data,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        avatar: true,
+      },
     });
   }
 
@@ -133,10 +150,8 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    
-    
 
-    if (!data.address1 || !data.location|| !data.name || !data.zipCode) {
+    if (!data.address1 || !data.location || !data.name || !data.zipCode) {
       throw new Error('Missing Argumengts');
     }
 
@@ -193,13 +208,15 @@ export class UserService {
     });
   }
 
-  async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
+  async uploadImageToCloudinary(file: { buffer: Buffer; mimetype: string; originalname: string }, user: User) {
     const where: Prisma.UserWhereUniqueInput = { id: user.id };
 
     try {
       const response = await this.cloudinary.uploadImage(file);
-      const data: Prisma.UserUpdateInput = { avatar: String(response.secure_url) };
-      
+      const data: Prisma.UserUpdateInput = {
+        avatar: String(response.secure_url),
+      };
+
       return await this.prisma.user.update({
         data,
         where,

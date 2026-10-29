@@ -36,7 +36,10 @@ export class UserController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createUser(@UserDecoded() user: User, @Body() createUser: Prisma.UserCreateInput): Promise<User> {
+  async createUser(
+    @UserDecoded() user: User,
+    @Body() createUser: Prisma.UserCreateInput
+  ): Promise<UserReturn> {
     return this.userService.createUser(createUser, user);
   }
 
@@ -87,7 +90,8 @@ export class UserController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @UserDecoded() user: User,
-    @UploadedFile() file: Express.Multer.File
+    @UploadedFile()
+    file: { buffer: Buffer; mimetype: string; originalname: string }
   ) {
     return this.userService.uploadImageToCloudinary(file, user);
   }
