@@ -1,20 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useNavigate } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
 import styles from './Users.module.css';
+import CreateUserDrawer from './CreateUserDrawer';
 import { userQueryKeys } from '@/services/users/request';
 import CustomTable from '@/components/CustomTable';
 import type { User } from '@/models/user';
 import { dateFormatter } from '@/utils/dateFormatter';
 import useGetCurrentUser from '@/hooks/useGetCurrentUser';
 import Button from '@/components/Button';
+import ProfilePicture from '@/assets/svg/27716.svg?react';
 
 const columnHelper = createColumnHelper<User>();
+
+function UserAvatar({ src }: { src?: string | null }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  if (!src || imageFailed) {
+    return <ProfilePicture className={styles.fallbackAvatar} />;
+  }
+
+  return (
+    <img
+      alt='Profile'
+      className={styles.profilePicture}
+      onError={() => {
+        setImageFailed(true);
+      }}
+      src={src}
+    />
+  );
+}
 
 const columns = [
   columnHelper.accessor('name', {
@@ -23,7 +44,7 @@ const columns = [
       return (
         <span className={styles.span}>
           <div className={styles.avatarContent}>
-            <img alt='profile' className={styles.profilePicture} src={avatar} />
+            <UserAvatar src={avatar} />
           </div>
           {info.getValue()}
         </span>
@@ -46,8 +67,7 @@ const columns = [
 function Users() {
   const { data } = useQuery({ ...userQueryKeys.list() });
   const { user } = useGetCurrentUser();
-  const navigate = useNavigate();
-  
+  const [opened, { open, close }] = useDisclosure(false);
 
   const table = useReactTable({
     data: data ?? [],
@@ -61,20 +81,14 @@ function Users() {
         <h1>
           Users
           {user?.role === 'ADMIN' ? (
-            <Button
-              onClick={() => {
-                navigate('/bookingscar');
-              }}
-              outline
-            >
+            <Button onClick={open} outline>
               Add User
             </Button>
-          ) : (
-            ''
-          )}
+          ) : null}
         </h1>
       </div>
       <CustomTable<User> table={table} />
+      <CreateUserDrawer onClose={close} opened={opened} />
     </div>
   );
 }
