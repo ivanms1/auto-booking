@@ -44,7 +44,7 @@ const columns = [
       return (
         <span className={styles.span}>
           <div className={styles.avatarContent}>
-            <UserAvatar src={avatar} />
+            <UserAvatar key={avatar} src={avatar}/>
           </div>
           {info.getValue()}
         </span>

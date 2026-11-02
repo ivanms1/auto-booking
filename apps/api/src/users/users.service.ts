@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -72,12 +73,11 @@ export class UserService {
     data: Prisma.UserCreateInput,
     user: User
   ): Promise<UserReturn> {
+    if (user.role !== 'ADMIN') {
+      throw new ForbiddenException('No Authorization to create user');
+    }
 
     const email = data.email.trim().toLowerCase();
-
-    if (user.role !== 'ADMIN') {
-      throw new UnauthorizedException('Unauthorized');
-    }
 
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
@@ -89,10 +89,10 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(data.password, roundsOfHashing);
 
-    data.password = hashedPassword;
     return this.prisma.user.create({
       data: {
         ...data,
+        email,
         password: hashedPassword,
       },
       select: {
@@ -208,7 +208,10 @@ export class UserService {
     });
   }
 
-  async uploadImageToCloudinary(file: { buffer: Buffer; mimetype: string; originalname: string }, user: User) {
+  async uploadImageToCloudinary(
+    file: Express.Multer.File,
+    user: User
+  ) {
     const where: Prisma.UserWhereUniqueInput = { id: user.id };
 
     try {
