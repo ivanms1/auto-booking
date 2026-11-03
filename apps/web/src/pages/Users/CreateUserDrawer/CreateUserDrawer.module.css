@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  color: var(--900);
+  font-size: 15px;
+}
+
+.errorAlert {
+  color: var(--danger);
+  font-size: 12px;
+  margin: 0;
+}
+
+.submitButton {
+  align-self: flex-end;
+  margin-top: 0.5rem;
+}

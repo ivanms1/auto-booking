@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -68,24 +69,40 @@ export class UserService {
     });
   }
 
-  async createUser(data: Prisma.UserCreateInput, user: User): Promise<User> {
+  async createUser(
+    data: Prisma.UserCreateInput,
+    user: User
+  ): Promise<UserReturn> {
     if (user.role !== 'ADMIN') {
-      throw new UnauthorizedException('Unauthorized');
+      throw new ForbiddenException('No Authorization to create user');
     }
 
+    const email = data.email.trim().toLowerCase();
+
     const existingUser = await this.prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email },
     });
-  
+
     if (existingUser) {
       throw new BadRequestException('Email already in use');
     }
 
     const hashedPassword = await bcrypt.hash(data.password, roundsOfHashing);
 
-    data.password = hashedPassword;
     return this.prisma.user.create({
-      data,
+      data: {
+        ...data,
+        email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        avatar: true,
+      },
     });
   }
 
@@ -133,10 +150,8 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    
-    
 
-    if (!data.address1 || !data.location|| !data.name || !data.zipCode) {
+    if (!data.address1 || !data.location || !data.name || !data.zipCode) {
       throw new Error('Missing Argumengts');
     }
 
@@ -168,8 +183,9 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    const email = data.email;
 
-    if (!data.email) {
+    if (typeof email !== 'string' || !email.trim()) {
       throw new Error('Missing Email');
     }
 
@@ -188,7 +204,10 @@ export class UserService {
     }
 
     return this.prisma.user.update({
-      data,
+      data: {
+        ...data,
+        email: email.trim().toLowerCase(),
+      },
       where,
     });
   }
@@ -198,8 +217,10 @@ export class UserService {
 
     try {
       const response = await this.cloudinary.uploadImage(file);
-      const data: Prisma.UserUpdateInput = { avatar: String(response.secure_url) };
-      
+      const data: Prisma.UserUpdateInput = {
+        avatar: String(response.secure_url),
+      };
+
       return await this.prisma.user.update({
         data,
         where,

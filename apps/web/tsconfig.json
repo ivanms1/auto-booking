@@ -4,15 +4,14 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"],
-      "components/*": ["components/*"],
-      "hooks/*": ["hooks/*"],
-      "pages/*": ["pages/*"],
-      "assets/*": ["assets/*"],
-      "services/*": ["services/*"],
-      "utils/*": ["utils/*"]
+      "@/*": ["./src/*"],
+      "components/*": ["./src/components/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "pages/*": ["./src/pages/*"],
+      "assets/*": ["./src/assets/*"],
+      "services/*": ["./src/services/*"],
+      "utils/*": ["./src/utils/*"]
     },
     "moduleResolution": "Bundler",
     "types": ["vite/client", "vite-plugin-svgr/client"],

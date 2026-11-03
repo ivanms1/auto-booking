@@ -9,7 +9,7 @@ export class CloudinaryService {
     throw new Error('Method not implemented.');
   }
   async uploadImage(
-    file: Express.Multer.File,
+    file: { buffer: Buffer },
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise((resolve, reject) => {
       const upload = v2.uploader.upload_stream((error, result) => {

@@ -11,11 +11,16 @@ import type { AuthEntity } from './entity/auth.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService
+  ) {}
 
   async login(email: string, password: string): Promise<AuthEntity> {
-
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await this.prisma.user.findUnique({
+      where: { email: normalizedEmail },
+    });
 
     if (!user) {
       throw new NotFoundException(`No user found for email: ${email}`);
