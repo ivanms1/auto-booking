@@ -183,8 +183,9 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
+    const email = data.email;
 
-    if (!data.email) {
+    if (typeof email !== 'string' || !email.trim()) {
       throw new Error('Missing Email');
     }
 
@@ -203,15 +204,15 @@ export class UserService {
     }
 
     return this.prisma.user.update({
-      data,
+      data: {
+        ...data,
+        email: email.trim().toLowerCase(),
+      },
       where,
     });
   }
 
-  async uploadImageToCloudinary(
-    file: Express.Multer.File,
-    user: User
-  ) {
+  async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
     const where: Prisma.UserWhereUniqueInput = { id: user.id };
 
     try {

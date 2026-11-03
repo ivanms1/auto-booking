@@ -1,7 +1,7 @@
 {
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": {
-    "types": ["node", "express", "multer"],
+    "types": ["node", "express", "multer", "jest"],
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
