@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma} from '@prisma/client';
 import type { Room, User } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -43,10 +43,20 @@ export class RoomService {
     if (user.role !== 'ADMIN') {
       throw new ForbiddenException('Only admins can update a room');
     }
-    return this.prisma.room.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.room.update({
+        data,
+        where,
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Room not found');
+      }
+      throw error;
+    }
   }
 
   async deleteRoom(
@@ -64,6 +74,12 @@ export class RoomService {
           error.code === 'P2003'
         ) {
           throw new ConflictException('You cannot delete this room because it is referenced by other records.');
+        }
+        if (
+          error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === 'P2025'
+        ) {
+          throw new NotFoundException('Room not found');
         }
         throw error;
       }

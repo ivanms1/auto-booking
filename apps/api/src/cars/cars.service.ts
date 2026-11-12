@@ -1,5 +1,10 @@
-import { ConflictException, ForbiddenException, Injectable } from '@nestjs/common';
-import { Prisma} from '@prisma/client';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import type { Car, User } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import type { CreateCarDto } from './dto/create-car.dto';
@@ -30,18 +35,31 @@ export class CarService {
     return this.prisma.car.create({ data });
   }
 
-  async updateCar(params: {
-    where: Prisma.CarWhereUniqueInput;
-    data: UpdateCarDto;
-  }, user: User): Promise<Car> {
+  async updateCar(
+    params: {
+      where: Prisma.CarWhereUniqueInput;
+      data: UpdateCarDto;
+    },
+    user: User
+  ): Promise<Car> {
     const { where, data } = params;
     if (user.role !== 'ADMIN') {
       throw new ForbiddenException('Only admins can update a car');
     }
-    return this.prisma.car.update({
-      data,
-      where,
-    });
+    try {
+      return await this.prisma.car.update({
+        data,
+        where,
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Car not found');
+      }
+      throw error;
+    }
   }
 
   async deleteCar(where: Prisma.CarWhereUniqueInput, user: User): Promise<Car> {
@@ -49,15 +67,23 @@ export class CarService {
       throw new ForbiddenException('Only admins can delete a car');
     }
     try {
-    return await this.prisma.car.delete({ where });
-  } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2003'
-    ) {
-      throw new ConflictException('You cannot delete this car because it is referenced by other records.');
+      return await this.prisma.car.delete({ where });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new ConflictException(
+          'You cannot delete this car because it is referenced by other records.'
+        );
+      }
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Car not found');
+      }
+      throw error;
     }
-    throw error;
-  }
   }
 }

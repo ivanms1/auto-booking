@@ -9,6 +9,8 @@ import type { User, Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma.service';
+import type { UpdateEmailDto } from './dto/update-email.dto';
+import type { UpdateProfileDto } from './dto/update-profile.dto';
 
 export const roundsOfHashing = 10;
 
@@ -147,7 +149,7 @@ export class UserService {
 
   async addUpdateUser(params: {
     where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
+    data: UpdateProfileDto;
   }): Promise<User> {
     const { where, data } = params;
 
@@ -155,60 +157,38 @@ export class UserService {
       throw new Error('Missing Argumengts');
     }
 
-    if (
-      data.email ||
-      data.password ||
-      data.createdAt ||
-      data.updatedAt ||
-      data.id ||
-      data.avatar
-    ) {
-      throw new Error('Wrong Arguments');
-    }
-
     return this.prisma.user.update({
-      data,
       where,
+      data: {
+        name: data.name,
+        location: data.location,
+        address1: data.address1,
+        zipCode: data.zipCode,
+        ...(data.address2 !== undefined && { address2: data.address2 }),
+      },
     });
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+  async deleteUser(id: string, requestingUser: User): Promise<User> {
+    if (requestingUser.id !== id && requestingUser.role !== 'ADMIN') {
+    throw new ForbiddenException('You cannot delete this user');
+  }
     return this.prisma.user.delete({
-      where,
+        where: { id } ,
     });
   }
 
   async updateEmail(params: {
     where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
+    data: UpdateEmailDto;
   }): Promise<User> {
     const { where, data } = params;
-    const email = data.email;
-
-    if (typeof email !== 'string' || !email.trim()) {
-      throw new Error('Missing Email');
-    }
-
-    if (
-      data.name ||
-      data.password ||
-      data.createdAt ||
-      data.updatedAt ||
-      data.id ||
-      data.address1 ||
-      data.address2 ||
-      data.location ||
-      data.zipCode
-    ) {
-      throw new Error('Wrong Arguments');
-    }
 
     return this.prisma.user.update({
-      data: {
-        ...data,
-        email: email.trim().toLowerCase(),
-      },
       where,
+      data: {
+        email: data.email.trim().toLowerCase(),
+      },
     });
   }
 

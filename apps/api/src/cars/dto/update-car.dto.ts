@@ -1,14 +1,18 @@
-import { Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Min,
+  ValidateIf,
+} from 'class-validator';
 
 export class UpdateCarDto {
-  @IsOptional()
+  @ValidateIf((_object, value) => value !== undefined)
   @IsString()
   @IsNotEmpty()
   model?: string;
 
-  @IsOptional()
-  @Type(() => Number)
+  @ValidateIf((_object, value) => value !== undefined)
   @IsInt()
   @Min(0)
   mileage?: number;
