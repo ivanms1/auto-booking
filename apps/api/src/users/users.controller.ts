@@ -49,7 +49,7 @@ export class UserController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteUser(@Param('id') id: string, @UserDecoded() requestingUser: User): Promise<User | null> {
-    return this.userService.deleteUser({ id }, requestingUser);
+    return this.userService.deleteUser( id , requestingUser);
   }
 
   @Put('update')

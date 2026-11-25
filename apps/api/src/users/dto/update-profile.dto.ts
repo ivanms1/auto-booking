@@ -3,8 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  Min,
-  ValidateIf,
+  Min
 } from 'class-validator';
 
 export class UpdateProfileDto {
@@ -24,7 +23,6 @@ export class UpdateProfileDto {
   @Min(0)
   zipCode!: number;
 
-  @ValidateIf((_object, value) => value !== undefined)
   @IsOptional()
   @IsString()
   address2?: string;

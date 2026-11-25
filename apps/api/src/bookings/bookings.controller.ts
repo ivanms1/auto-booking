@@ -8,12 +8,13 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { Prisma, User, type Booking } from '@prisma/client';
+import { User, type Booking } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
 import { BookingService } from './bookings.service';
 import { SearchBookingsDto } from './dto/search-bookings.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
+import { CreateBookingDto } from './dto/create-booking.dto';
 
 @Controller('bookings')
 export class BookingController {
@@ -65,7 +66,7 @@ export class BookingController {
   @UseGuards(JwtAuthGuard)
   async createBooking(
     @UserDecoded() user: User,
-    @Body() data: Prisma.BookingCreateInput
+    @Body() data: CreateBookingDto
   ): Promise<Booking> {
     return this.bookingService.createBooking(data, user);
   }

@@ -1,11 +1,13 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import type { User, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import type { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma.service';
@@ -171,11 +173,27 @@ export class UserService {
 
   async deleteUser(id: string, requestingUser: User): Promise<User> {
     if (requestingUser.id !== id && requestingUser.role !== 'ADMIN') {
-    throw new ForbiddenException('You cannot delete this user');
-  }
-    return this.prisma.user.delete({
-        where: { id } ,
-    });
+      throw new ForbiddenException('You cannot delete this user');
+    }
+    try {
+      return await this.prisma.user.delete({ where: { id } });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new ConflictException('Cannot delete a user with bookings');
+      }
+
+      throw error;
+    }
   }
 
   async updateEmail(params: {
@@ -184,12 +202,23 @@ export class UserService {
   }): Promise<User> {
     const { where, data } = params;
 
-    return this.prisma.user.update({
-      where,
-      data: {
-        email: data.email.trim().toLowerCase(),
-      },
-    });
+    try {
+      return await this.prisma.user.update({
+        where,
+        data: {
+          email: data.email.trim().toLowerCase(),
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('Email already in use');
+      }
+
+      throw error;
+    }
   }
 
   async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
