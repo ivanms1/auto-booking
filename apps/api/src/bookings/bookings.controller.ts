@@ -11,6 +11,7 @@ import {
 import { User, type Booking } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
+import type { BookingWithAuthor } from './bookings.service';
 import { BookingService } from './bookings.service';
 import { SearchBookingsDto } from './dto/search-bookings.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
@@ -52,13 +53,13 @@ export class BookingController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getBooking(@Param('id') id: string, @UserDecoded() user: User): Promise<Booking | null> {
+  async getBooking(@Param('id') id: string, @UserDecoded() user: User): Promise<BookingWithAuthor> {
     return this.bookingService.booking(id, user);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getBookings(@Param() params: SearchBookingsDto, @UserDecoded() user: User): Promise<Booking[]> {
+  async getBookings(@Param() params: SearchBookingsDto, @UserDecoded() user: User): Promise<BookingWithAuthor[]> {
     return this.bookingService.bookings(params, user);
   }
 

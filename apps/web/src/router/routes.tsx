@@ -36,7 +36,14 @@ const routerPath = createBrowserRouter([
           {
             id: 'users',
             path: '/users',
-            element: <Users />,
+            element: <AdminRoute />,
+            children: [
+              {
+                id: 'usersPage',
+                path: '',
+                element: <Users />,
+              },
+            ],
           },
           {
             id: 'bookingsCar',

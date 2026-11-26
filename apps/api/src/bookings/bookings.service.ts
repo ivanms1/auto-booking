@@ -11,6 +11,17 @@ import { PrismaService } from '../prisma.service';
 import type { SearchBookingsDto } from './dto/search-bookings.dto';
 import type { UpdateBookingDto } from './dto/update-booking.dto';
 
+export type BookingWithAuthor = Prisma.BookingGetPayload<{
+  include: {
+    author: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+  };
+}>;
+
 interface CreateInput {
   title: string;
   startDate: Date | string;
@@ -203,7 +214,7 @@ export class BookingService {
     }
   }
 
-  async booking(id: string, user: User): Promise<Booking> {
+  async booking(id: string, user: User): Promise<BookingWithAuthor> {
     const visibility: Prisma.BookingWhereInput =
       user.role === 'ADMIN'
         ? {}
@@ -211,6 +222,14 @@ export class BookingService {
 
     const booking = await this.prisma.booking.findFirst({
       where: { id, ...visibility },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!booking) {
@@ -221,22 +240,30 @@ export class BookingService {
   }
 
   async bookings(
-  params: SearchBookingsDto,
-  user: User
-): Promise<Booking[]> {
-  const { skip, take } = params;
+    params: SearchBookingsDto,
+    user: User
+  ): Promise<BookingWithAuthor[]> {
+    const { skip, take } = params;
 
-  const visibility: Prisma.BookingWhereInput =
-    user.role === 'ADMIN'
-      ? {}
-      : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
+    const visibility: Prisma.BookingWhereInput =
+      user.role === 'ADMIN'
+        ? {}
+        : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
 
-  return this.prisma.booking.findMany({
-    where: visibility,
-    skip,
-    take,
-  });
-}
+    return this.prisma.booking.findMany({
+      where: visibility,
+      skip,
+      take,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
 
   async createBooking(data: CreateInput, user: User): Promise<Booking> {
     const { roomId, carId, startDate, endDate, ...rest } = data;
