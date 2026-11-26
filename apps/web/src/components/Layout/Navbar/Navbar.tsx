@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Popover  } from '@mantine/core';
+import { Popover } from '@mantine/core';
 import styles from './Navbar.module.css';
 import Bell from '@/assets/svg/bell.svg?react';
 import ProfilePicture from '@/assets/svg/27716.svg?react';
@@ -29,29 +29,42 @@ function Navbar() {
     navigate('/login');
   }
 
-  
   return (
     <nav className={styles.navbar}>
-      <div className={styles.search}  />
+      <div className={styles.search} />
       <div className={styles.icons}>
         <div className={styles.icon}>
           <Bell />
         </div>
-        <Popover onChange={setOpened} opened={opened}  // Pasamos el estado 'opened' al Popover
-      position='bottom' shadow='md' width={150} withArrow>
+        <Popover
+          onChange={setOpened}
+          opened={opened} // Pasamos el estado 'opened' al Popover
+          position='bottom'
+          shadow='md'
+          width={150}
+          withArrow
+        >
           <Popover.Target>
             <div className={styles.avatarContent}>
-              {user?.avatar ? (
-                <button className={styles.avatarButton} onClick={() => { setOpened((o) => !o); }} type="button">
-                <img
-                  alt='ProfilePicture'
-                  className={styles.profilePicture}
-                  src={user.avatar}
-                />
-                </button>
-              ) : (
-                <ProfilePicture className={styles.imageInside} />
-              )}
+              <button
+                aria-expanded={opened}
+                aria-label='Open user menu'
+                className={styles.avatarButton}
+                onClick={() => {
+                  setOpened((current) => !current);
+                }}
+                type='button'
+              >
+                {user?.avatar ? (
+                  <img
+                    alt='ProfilePicture'
+                    className={styles.profilePicture}
+                    src={user.avatar}
+                  />
+                ) : (
+                  <ProfilePicture className={styles.imageInside} />
+                )}
+              </button>
             </div>
           </Popover.Target>
           <Popover.Dropdown>
@@ -62,7 +75,7 @@ function Navbar() {
                     className={styles.button}
                     onClick={() => {
                       handleClick('/profile');
-                      setOpened((o) => !o)
+                      setOpened((o) => !o);
                     }}
                     type='button'
                   >
