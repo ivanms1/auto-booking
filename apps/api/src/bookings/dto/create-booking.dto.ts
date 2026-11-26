@@ -22,9 +22,11 @@ export class CreateBookingDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   carId?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   roomId?: string;
 }
