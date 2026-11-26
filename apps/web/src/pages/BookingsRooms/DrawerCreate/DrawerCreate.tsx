@@ -51,7 +51,7 @@ const bookingSchema = z
       .refine((value) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value), {
         message: 'The date and time must be in the format YYYY-MM-DDTHH:MM',
       }),
-    bookingValue: z.string(),
+    bookingValue:   z.string().min(1, 'Select a room for booking'),
     description: z.string(),
   })
   .refine(
@@ -209,7 +209,7 @@ function DrawerCreate({
             {errors.description?.message ? (
               <p className={styles.errorAlert}>{errors.description.message}</p>
             ) : null}
-            <Button className={styles.submitButton} type='submit'>
+            <Button className={styles.submitButton} disabled={bookingMutation.isPending} type='submit'>
               Submit
             </Button>
           </form>

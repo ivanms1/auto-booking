@@ -56,6 +56,20 @@ export class BookingService {
     });
   }
 
+  private assertDateRange(
+    startDate: Date | string,
+    endDate: Date | string
+  ): void {
+    const start =
+      startDate instanceof Date ? startDate.getTime() : Date.parse(startDate);
+    const end =
+      endDate instanceof Date ? endDate.getTime() : Date.parse(endDate);
+
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+      throw new BadRequestException('endDate must be after startDate');
+    }
+  }
+
   async getMyBookings(user: User): Promise<Booking[]> {
     return this.prisma.booking.findMany({
       where: {
@@ -220,30 +234,35 @@ export class BookingService {
     return booking;
   }
 
-  async bookings(
-  params: SearchBookingsDto,
-  user: User
-): Promise<Booking[]> {
-  const { skip, take } = params;
+  async bookings(params: SearchBookingsDto, user: User): Promise<Booking[]> {
+    const { skip, take } = params;
 
-  const visibility: Prisma.BookingWhereInput =
-    user.role === 'ADMIN'
-      ? {}
-      : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
+    const visibility: Prisma.BookingWhereInput =
+      user.role === 'ADMIN'
+        ? {}
+        : { OR: [{ status: 'APPROVED' }, { authorId: user.id }] };
 
-  return this.prisma.booking.findMany({
-    where: visibility,
-    skip,
-    take,
-  });
-}
+    return this.prisma.booking.findMany({
+      where: visibility,
+      skip,
+      take,
+    });
+  }
 
   async createBooking(data: CreateInput, user: User): Promise<Booking> {
     const { roomId, carId, startDate, endDate, ...rest } = data;
+    const selectedCarId = carId?.trim() || undefined;
+    const selectedRoomId = roomId?.trim() || undefined;
+
+    if (Boolean(selectedCarId) === Boolean(selectedRoomId)) {
+      throw new BadRequestException('Select exactly one car or room');
+    }
+
+    this.assertDateRange(startDate, endDate);
 
     const overlappingBookings = await this.findApprovedOverlaps(this.prisma, {
-      roomId,
-      carId,
+      roomId: selectedRoomId,
+      carId: selectedCarId,
       startDate,
       endDate,
     });
@@ -267,17 +286,26 @@ export class BookingService {
       },
     };
 
-    if (roomId) {
-      createData.room = { connect: { id: roomId } };
+    if (selectedRoomId) {
+      createData.room = { connect: { id: selectedRoomId } };
     }
 
-    if (carId) {
-      createData.car = { connect: { id: carId } };
+    if (selectedCarId) {
+      createData.car = { connect: { id: selectedCarId } };
     }
 
-    return this.prisma.booking.create({
-      data: createData,
-    });
+    try {
+      return await this.prisma.booking.create({ data: createData });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('Selected car or room not found');
+      }
+
+      throw error;
+    }
   }
 
   async updateBooking(params: {
@@ -297,6 +325,7 @@ export class BookingService {
     }
 
     const { startDate, endDate, ...rest } = data;
+    this.assertDateRange(startDate, endDate);
 
     const overlappingBookings = await this.findApprovedOverlaps(this.prisma, {
       roomId: booking.roomId,
