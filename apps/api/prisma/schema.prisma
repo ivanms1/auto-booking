@@ -44,9 +44,9 @@ model Booking {
   endDate   DateTime
   startMileage Int?
   endMileage Int?
-  car       Car?      @relation(fields: [carId], references: [id])
+  car       Car?      @relation(fields: [carId], references: [id], onDelete: Restrict)
   author    User     @relation(fields: [authorId], references: [id])
-  room      Room?     @relation(fields: [roomId], references: [id])
+  room      Room?     @relation(fields: [roomId], references: [id], onDelete: Restrict)
   authorId  String
   carId     String?
   roomId    String?

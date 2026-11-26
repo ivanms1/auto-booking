@@ -1,14 +1,18 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import type { User, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import type { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma.service';
+import type { UpdateEmailDto } from './dto/update-email.dto';
+import type { UpdateProfileDto } from './dto/update-profile.dto';
 
 export const roundsOfHashing = 10;
 
@@ -147,7 +151,7 @@ export class UserService {
 
   async addUpdateUser(params: {
     where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
+    data: UpdateProfileDto;
   }): Promise<User> {
     const { where, data } = params;
 
@@ -155,61 +159,66 @@ export class UserService {
       throw new Error('Missing Argumengts');
     }
 
-    if (
-      data.email ||
-      data.password ||
-      data.createdAt ||
-      data.updatedAt ||
-      data.id ||
-      data.avatar
-    ) {
-      throw new Error('Wrong Arguments');
-    }
-
     return this.prisma.user.update({
-      data,
       where,
+      data: {
+        name: data.name,
+        location: data.location,
+        address1: data.address1,
+        zipCode: data.zipCode,
+        ...(data.address2 !== undefined && { address2: data.address2 }),
+      },
     });
   }
 
-  async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    return this.prisma.user.delete({
-      where,
-    });
+  async deleteUser(id: string, requestingUser: User): Promise<User> {
+    if (requestingUser.id !== id && requestingUser.role !== 'ADMIN') {
+      throw new ForbiddenException('You cannot delete this user');
+    }
+    try {
+      return await this.prisma.user.delete({ where: { id } });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new ConflictException('Cannot delete a user with bookings');
+      }
+
+      throw error;
+    }
   }
 
   async updateEmail(params: {
     where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
+    data: UpdateEmailDto;
   }): Promise<User> {
     const { where, data } = params;
-    const email = data.email;
 
-    if (typeof email !== 'string' || !email.trim()) {
-      throw new Error('Missing Email');
+    try {
+      return await this.prisma.user.update({
+        where,
+        data: {
+          email: data.email.trim().toLowerCase(),
+        },
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('Email already in use');
+      }
+
+      throw error;
     }
-
-    if (
-      data.name ||
-      data.password ||
-      data.createdAt ||
-      data.updatedAt ||
-      data.id ||
-      data.address1 ||
-      data.address2 ||
-      data.location ||
-      data.zipCode
-    ) {
-      throw new Error('Wrong Arguments');
-    }
-
-    return this.prisma.user.update({
-      data: {
-        ...data,
-        email: email.trim().toLowerCase(),
-      },
-      where,
-    });
   }
 
   async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
