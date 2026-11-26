@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { type User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
-import type { UserReturn } from './users.service';
+import type { UserReturn, UserUpdateReturn } from './users.service';
 import { UserService, InputPassword } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -48,7 +48,7 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@Param('id') id: string, @UserDecoded() requestingUser: User): Promise<User | null> {
+  async deleteUser(@Param('id') id: string, @UserDecoded() requestingUser: User): Promise<Pick<UserReturn, 'id'> | null> {
     return this.userService.deleteUser( id , requestingUser);
   }
 
@@ -57,7 +57,7 @@ export class UserController {
   async addUpdateUser(
     @UserDecoded() user: User,
     @Body() updateUser: UpdateProfileDto
-  ): Promise<User | null> {
+  ): Promise<UserUpdateReturn | null> {
     return this.userService.addUpdateUser({
       where: { id: user.id },
       data: updateUser,
@@ -69,7 +69,7 @@ export class UserController {
   async updateEmail(
     @UserDecoded() user: User,
     @Body() updateUser: UpdateEmailDto
-  ): Promise<User | null> {
+  ): Promise<UserReturn | null> {
     return this.userService.updateEmail({
       where: { id: user.id },
       data: updateUser,
@@ -81,7 +81,7 @@ export class UserController {
   async updatePassword(
     @UserDecoded() user: User,
     @Body() updatePassword: InputPassword
-  ): Promise<User | null> {
+  ): Promise<UserReturn | null> {
     return this.userService.updatePassword({
       where: { id: user.id },
       inputData: updatePassword,
