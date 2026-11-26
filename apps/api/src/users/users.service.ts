@@ -16,14 +16,29 @@ import type { UpdateProfileDto } from './dto/update-profile.dto';
 
 export const roundsOfHashing = 10;
 
-export interface UserReturn {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  avatar?: string | null;
-}
+export type UserUpdateReturn = Prisma.UserGetPayload<{
+  select: typeof userResponseSelect;
+}>;
+
+export type UserReturn =
+  Pick<User, 'id' | 'name' | 'email' | 'createdAt' | 'updatedAt' | 'avatar'> &
+  Partial<
+    Pick<User, 'role' | 'location' | 'address1' | 'address2' | 'zipCode'>
+  >;
+
+const userResponseSelect = {
+  id: true,
+  name: true,
+  email: true,
+  createdAt: true,
+  updatedAt: true,
+  role: true,
+  location: true,
+  address1: true,
+  address2: true,
+  zipCode: true,
+  avatar: true,
+} satisfies Prisma.UserSelect;
 
 export interface InputPassword {
   password: string;
@@ -113,7 +128,7 @@ export class UserService {
   async updatePassword(params: {
     where: Prisma.UserWhereUniqueInput;
     inputData: InputPassword;
-  }): Promise<User> {
+  }): Promise<UserReturn> {
     const { where, inputData } = params;
     const user = await this.prisma.user.findUnique({ where });
 
@@ -146,13 +161,14 @@ export class UserService {
     return this.prisma.user.update({
       data,
       where,
+      select: userResponseSelect,
     });
   }
 
   async addUpdateUser(params: {
     where: Prisma.UserWhereUniqueInput;
     data: UpdateProfileDto;
-  }): Promise<User> {
+  }): Promise<UserUpdateReturn> {
     const { where, data } = params;
 
     if (!data.address1 || !data.location || !data.name || !data.zipCode) {
@@ -168,15 +184,16 @@ export class UserService {
         zipCode: data.zipCode,
         ...(data.address2 !== undefined && { address2: data.address2 }),
       },
+      select: userResponseSelect,
     });
   }
 
-  async deleteUser(id: string, requestingUser: User): Promise<User> {
+  async deleteUser(id: string, requestingUser: User): Promise<Pick<UserReturn, 'id'>> {
     if (requestingUser.id !== id && requestingUser.role !== 'ADMIN') {
       throw new ForbiddenException('You cannot delete this user');
     }
     try {
-      return await this.prisma.user.delete({ where: { id } });
+      return await this.prisma.user.delete({ where: { id }, select: { id: true } });
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -199,7 +216,7 @@ export class UserService {
   async updateEmail(params: {
     where: Prisma.UserWhereUniqueInput;
     data: UpdateEmailDto;
-  }): Promise<User> {
+  }): Promise<UserReturn> {
     const { where, data } = params;
 
     try {
@@ -208,6 +225,7 @@ export class UserService {
         data: {
           email: data.email.trim().toLowerCase(),
         },
+        select: userResponseSelect,
       });
     } catch (error) {
       if (
@@ -221,7 +239,7 @@ export class UserService {
     }
   }
 
-  async uploadImageToCloudinary(file: Express.Multer.File, user: User) {
+  async uploadImageToCloudinary(file: Express.Multer.File, user: User): Promise<UserReturn> {
     const where: Prisma.UserWhereUniqueInput = { id: user.id };
 
     try {
@@ -233,6 +251,7 @@ export class UserService {
       return await this.prisma.user.update({
         data,
         where,
+        select: userResponseSelect,
       });
     } catch (error) {
       throw new BadRequestException('Invalid file type.');
