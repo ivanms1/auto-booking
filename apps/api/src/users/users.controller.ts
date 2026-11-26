@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { type User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserDecoded } from 'src/auth/user.decorator';
-import type { UserReturn } from './users.service';
+import type { UserListItem, UserReturn } from './users.service';
 import { UserService, InputPassword } from './users.service';
 import { SearchUsersDto } from './dto/search-users.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -27,14 +27,14 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getUser(@Param('id') id: string): Promise<UserReturn | null> {
-    return this.userService.user(id);
+  async getUser(@Param('id') id: string, @UserDecoded() requester: User): Promise<UserListItem | null> {
+    return this.userService.userForRequest(id, requester.role);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getUsers(@Param() params: SearchUsersDto): Promise<UserReturn[]> {
-    return this.userService.users(params);
+  async getUsers(@UserDecoded() requester: User, @Param() params: SearchUsersDto): Promise<UserListItem[]> {
+    return this.userService.users(params, requester.role);
   }
 
   @Post()

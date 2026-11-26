@@ -15,6 +15,32 @@ import type { UpdateEmailDto } from './dto/update-email.dto';
 import type { UpdateProfileDto } from './dto/update-profile.dto';
 
 export const roundsOfHashing = 10;
+const publicUserSelect = {
+  id: true,
+  name: true,
+} satisfies Prisma.UserSelect;
+
+const adminUserSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true,
+  avatar: true,
+  location: true,
+  address1: true,
+  address2: true,
+  zipCode: true,
+} satisfies Prisma.UserSelect;
+
+type PublicUser = Prisma.UserGetPayload<{
+  select: typeof publicUserSelect;
+}>;
+type AdminUser = Prisma.UserGetPayload<{
+  select: typeof adminUserSelect;
+}>;
+export type UserListItem = PublicUser | AdminUser;
 
 export interface UserReturn {
   id: string;
@@ -53,23 +79,38 @@ export class UserService {
     });
   }
 
-  async users(params: { skip?: number; take?: number }): Promise<UserReturn[]> {
+  async userForRequest(
+  id: string,
+  role: User['role']
+): Promise<PublicUser | AdminUser | null> {
+  if (role === 'ADMIN') {
+    return this.prisma.user.findUnique({
+      where: { id },
+      select: adminUserSelect,
+    });
+  }
+
+  return this.prisma.user.findUnique({
+    where: { id },
+    select: publicUserSelect,
+  });
+}
+
+  async users(params: { skip?: number; take?: number }, role: User['role']): Promise<UserListItem[]> {
     const { skip, take } = params;
+
+    if (role === 'ADMIN') {
     return this.prisma.user.findMany({
       skip,
       take,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        role: true,
-        avatar: true,
-        zipCode: true,
-        location: true,
-        address1: true,
-      },
+      select: adminUserSelect,
+    });
+  }
+
+    return this.prisma.user.findMany({
+      skip,
+      take,
+      select: publicUserSelect,
     });
   }
 

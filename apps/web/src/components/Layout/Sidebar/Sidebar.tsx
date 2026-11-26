@@ -20,7 +20,6 @@ const iconProps = {
 
 const ITEMS = [
   { label: 'Home', path: '/', icon: <IconHome {...iconProps} /> },
-  { label: 'Users', path: '/users', icon: <IconUser {...iconProps} /> },
   { label: 'Cars', path: '/cars', icon: <IconCar {...iconProps} /> },
   { label: 'Rooms', path: '/rooms', icon: <IconDoor {...iconProps} /> },
   {
@@ -52,6 +51,16 @@ function Sidebar() {
             {item.icon} {item.label}
           </Link>
         ))}
+        {user?.role === 'ADMIN' && (
+          <Link
+            className={classNames(styles.link, {
+              [styles.active]: location.pathname === '/users',
+            })}
+            to='/users'
+          >
+            <IconUser {...iconProps} /> Users
+          </Link>
+        )}
         {user?.role === 'ADMIN' && (
           <Link
             className={classNames(styles.link, {
